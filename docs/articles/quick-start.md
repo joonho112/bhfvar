@@ -1,0 +1,278 @@
+# Quick Start: Your First Variance Decomposition in 5 Minutes
+
+## Overview
+
+This vignette demonstrates the fastest path to performing variance
+decomposition with the bhfvar package. By the end of this 5-minute
+tutorial, you will be able to:
+
+1.  Prepare complex survey data for analysis
+2.  Fit the Bayesian Hybrid Framework model
+3.  Extract and interpret variance decomposition results
+4.  Obtain domain-specific estimates with appropriate shrinkage
+
+## 1. Minimal Example
+
+Let’s work through a complete analysis using the package’s synthetic
+dataset. This dataset mimics the structure of the National Survey of
+Early Care and Education (NSECE), with 50 states, 27 strata, and 356
+PSUs.
+
+``` r
+library(bhfvar)
+library(rstan)
+
+# Enable parallel processing
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = TRUE)
+
+# Step 1: Compile the Stan model (once per session)
+model <- compile_bhf_model()
+
+# Step 2: Load and prepare the data
+data(bhf_synthetic_data)
+
+prepared <- prepare_bhf_data(
+  data = bhf_synthetic_data,
+  outcome = "has_subsidy",
+  domain = "state",
+  strata = "stratum",
+  psu = "psu",
+  weights = "weight"
+)
+
+# Step 3: Fit the model
+fit <- bhf_fit(prepared, model = model, chains = 4, iter = 2000)
+
+# Step 4: Get results
+variance_decomposition(fit)
+```
+
+That’s it! You now have a complete Bayesian variance decomposition.
+
+## 2. Understanding the Data
+
+Let’s examine the synthetic dataset:
+
+``` r
+data(bhf_synthetic_data)
+
+# Structure
+str(bhf_synthetic_data)
+
+# First few rows
+head(bhf_synthetic_data)
+
+# Summary statistics
+cat("Total observations:", nrow(bhf_synthetic_data), "\n")
+cat("Number of states:", length(unique(bhf_synthetic_data$state)), "\n")
+cat("Number of strata:", length(unique(bhf_synthetic_data$stratum)), "\n")
+cat("Number of PSUs:", length(unique(bhf_synthetic_data$psu)), "\n")
+cat("Overall proportion with subsidy:", 
+    round(mean(bhf_synthetic_data$has_subsidy), 3), "\n")
+```
+
+The dataset contains:
+
+| Variable      | Description                                         |
+|---------------|-----------------------------------------------------|
+| `state`       | Domain identifier (State_01 to State_50)            |
+| `stratum`     | Design stratum (Stratum_01 to Stratum_27)           |
+| `psu`         | Primary Sampling Unit within stratum                |
+| `weight`      | Survey weight                                       |
+| `has_subsidy` | Binary outcome (1 = receives subsidy, 0 = does not) |
+
+## 3. Preparing Data for Stan
+
+The
+[`prepare_bhf_data()`](https://joonho112.github.io/bhfvar/reference/prepare_bhf_data.md)
+function transforms your data into the format required by the Stan
+model:
+
+``` r
+prepared <- prepare_bhf_data(
+  data = bhf_synthetic_data,
+  outcome = "has_subsidy",
+  domain = "state",
+  strata = "stratum",
+  psu = "psu",
+  weights = "weight",
+  use_deattenuation = TRUE  # Enable de-attenuation (default)
+)
+
+# Print summary
+print(prepared)
+```
+
+The output shows:
+
+- Sample size and number of domains/strata/PSUs
+- Outcome proportion
+- Whether de-attenuation is enabled
+
+## 4. Fitting the Model
+
+The
+[`bhf_fit()`](https://joonho112.github.io/bhfvar/reference/bhf_fit.md)
+function fits the Bayesian Hybrid Framework model via Stan:
+
+``` r
+fit <- bhf_fit(
+  data = prepared,
+  model = model,
+  chains = 4,       # Number of MCMC chains
+  iter = 2000,      # Total iterations per chain
+  warmup = 1000,    # Warmup iterations (discarded)
+  seed = 42         # For reproducibility
+)
+
+# Print fit summary
+print(fit)
+```
+
+The printed output includes:
+
+- Data dimensions
+- Sampling settings
+- Convergence diagnostics (divergences, Rhat, ESS)
+- Key parameter estimates
+
+## 5. Extracting Results
+
+### 5.1 Variance Decomposition
+
+The main result is the variance decomposition across three estimands:
+
+``` r
+vd <- variance_decomposition(fit)
+
+# The function prints a formatted summary and returns detailed results
+# Access specific components:
+cat("ICC on logit scale (Estimand A):", 
+    round(vd$logit$icc_mean, 4), "\n")
+cat("ICC on probability scale (Estimand B):", 
+    round(vd$prob$icc_mean, 4), "\n")
+cat("ICC de-attenuated (Estimand A*):", 
+    round(vd$deatten$icc_mean, 4), "\n")
+```
+
+### 5.2 Domain Estimates
+
+Get estimates for each domain (state):
+
+``` r
+# Marginal estimates (integrating out within-domain variation)
+estimates <- domain_estimates(fit, type = "marginal")
+
+# View the results
+head(estimates)
+
+# Key columns:
+# - domain: Domain name
+# - mean: Posterior mean probability
+# - q025, q975: 95% credible interval
+# - reliability: Shrinkage factor (higher = less shrinkage)
+# - pop_share: Population share of this domain
+```
+
+### 5.3 Overall Estimate
+
+Get the population-weighted overall proportion:
+
+``` r
+overall <- overall_estimate(fit)
+
+cat("Overall proportion:", round(overall$mean, 3), 
+    "(95% CI:", round(overall$q025, 3), "-", round(overall$q975, 3), ")\n")
+```
+
+## 6. Quick Diagnostic Check
+
+Always verify convergence before interpreting results:
+
+``` r
+# Check the fit object's diagnostics
+cat("Divergent transitions:", fit$diagnostics$n_divergent, "\n")
+cat("Max Rhat:", round(fit$diagnostics$rhat_max, 3), "\n")
+cat("Min ESS:", fit$diagnostics$ess_min, "\n")
+
+# Rules of thumb:
+# - Divergent transitions should be 0
+# - Rhat should be < 1.01 (ideally < 1.001)
+# - ESS should be > 400 for reliable inference
+```
+
+## 7. Complete Workflow Summary
+
+Here’s the complete workflow in a single code block:
+
+``` r
+# ============================================================
+# bhfvar Quick Start: Complete Workflow
+# ============================================================
+
+library(bhfvar)
+library(rstan)
+
+# Setup
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = TRUE)
+
+# 1. Compile model
+model <- compile_bhf_model()
+
+# 2. Load data
+data(bhf_synthetic_data)
+
+# 3. Prepare data
+prepared <- prepare_bhf_data(
+  data = bhf_synthetic_data,
+  outcome = "has_subsidy",
+  domain = "state",
+  strata = "stratum",
+  psu = "psu",
+  weights = "weight"
+)
+
+# 4. Fit model
+fit <- bhf_fit(prepared, model = model, chains = 4, iter = 2000)
+
+# 5. Results
+variance_decomposition(fit)          # Variance decomposition
+estimates <- domain_estimates(fit)   # Domain-specific estimates
+overall <- overall_estimate(fit)     # Overall estimate
+
+# 6. Check diagnostics
+print(fit)
+```
+
+## What’s Next?
+
+This quick start covered the essentials. For more detailed guidance:
+
+- **[Complete
+  Workflow](https://joonho112.github.io/bhfvar/articles/workflow.md)**:
+  Full analysis with interpretation and visualization
+- **[Methodology](https://joonho112.github.io/bhfvar/articles/methodology.md)**:
+  Understanding the Bayesian Hybrid Framework
+- **[Dual
+  Estimands](https://joonho112.github.io/bhfvar/articles/dual-estimands.md)**:
+  Deep dive into estimands A, B, and A\*
+- **[Diagnostics](https://joonho112.github.io/bhfvar/articles/diagnostics.md)**:
+  Comprehensive convergence checking
+
+## Summary Table
+
+| Step | Function | Purpose |
+|----|----|----|
+| 1 | [`compile_bhf_model()`](https://joonho112.github.io/bhfvar/reference/compile_bhf_model.md) | Compile Stan model (once per session) |
+| 2 | [`prepare_bhf_data()`](https://joonho112.github.io/bhfvar/reference/prepare_bhf_data.md) | Transform data for Stan |
+| 3 | [`bhf_fit()`](https://joonho112.github.io/bhfvar/reference/bhf_fit.md) | Fit the Bayesian model |
+| 4 | [`variance_decomposition()`](https://joonho112.github.io/bhfvar/reference/variance_decomposition.md) | Get ICC across estimands |
+| 5 | [`domain_estimates()`](https://joonho112.github.io/bhfvar/reference/domain_estimates.md) | Get domain-specific results |
+| 6 | [`overall_estimate()`](https://joonho112.github.io/bhfvar/reference/overall_estimate.md) | Get population-weighted overall |
+
+------------------------------------------------------------------------
+
+*For questions or feedback, please visit the [GitHub
+repository](https://github.com/joonho112/bhfvar).*

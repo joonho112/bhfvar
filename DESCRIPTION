@@ -1,0 +1,38 @@
+Package: bhfvar
+Title: Bayesian Hybrid Framework for Variance Decomposition in Complex Surveys
+Version: 0.3.0
+Authors@R: 
+    person("JoonHo", "Lee", email = "jlee296@ua.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0006-4019-8703"))
+Description: Implements the Bayesian Hybrid Framework for variance decomposition
+    in complex surveys with post-hoc domains. The package provides tools for
+    separating substantive geographic variation from design artifacts and sampling
+    noise, using Bayesian Pseudo-Likelihood estimation with multilevel models.
+    Key features include dual estimand framework (Policy vs Descriptive estimands),
+    de-attenuation for finite-sample variance inflation, and comprehensive
+    diagnostic and visualization tools.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: 
+    R (>= 4.0.0)
+Imports:
+    rstan (>= 2.26.0),
+    posterior (>= 1.0.0),
+    stats,
+    methods
+Suggests:
+    bayesplot,
+    loo,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    ggplot2,
+    dplyr,
+    tidyr
+LazyData: true
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://joonho112.github.io/bhfvar, https://github.com/joonho112/bhfvar
+BugReports: https://github.com/joonho112/bhfvar/issues

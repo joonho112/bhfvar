@@ -1,0 +1,63 @@
+#' Synthetic Survey Data for BHF Package Examples
+#'
+#' A synthetic dataset that mimics the structure of complex survey data
+#' for demonstrating the Bayesian Hybrid Framework methodology. This data
+#' was generated to have similar properties to the NSECE 2019 data used
+#' in the original paper, but contains no actual restricted data.
+#'
+#' @format A data frame with 1,598 observations and 5 variables:
+#' \describe{
+#'   \item{state}{State identifier (character). 50 unique states.}
+#'   \item{stratum}{Stratum identifier (character). 27 unique strata.}
+#'   \item{psu}{Primary Sampling Unit identifier (character). Nested within strata.}
+#'   \item{weight}{Survey sampling weight (numeric). Reflects unequal probability sampling.}
+#'   \item{has_subsidy}{Binary outcome variable (integer, 0/1). Indicates subsidy receipt.}
+#' }
+#'
+#' @details
+#' The data were generated with the following characteristics:
+#' \itemize{
+#'   \item Overall proportion of has_subsidy approximately 0.27
+#'   \item State-level random effects with SD approximately 0.5 (logit scale)
+#'   \item PSU-level random effects with SD approximately 0.3 (logit scale)
+#'   \item Realistic weight variation reflecting complex survey design
+#'   \item State population shares varying from small to large states
+#' }
+#'
+#' This synthetic data is suitable for:
+#' \itemize{
+#'   \item Testing package functions
+#'   \item Running package examples
+#'   \item Learning the BHF methodology
+#'   \item Verifying installation
+#' }
+#'
+#' @section Generation:
+#' Generated using Python script in dev/py/01_generate_synthetic_data.py.
+#' The generation process includes:
+#' \enumerate{
+#'   \item Hierarchical random effects (state and PSU levels)
+#'   \item Stratified, clustered sampling structure
+#'   \item Log-normal weight distribution
+#'   \item Binary outcomes from Bernoulli distribution
+#' }
+#'
+#' @source
+#' Synthetic data generated for the bhfvar package. Not derived from
+#' actual survey responses.
+#'
+#' @examples
+#' # Load the data
+#' data(bhf_synthetic_data)
+#'
+#' # View structure
+#' str(bhf_synthetic_data)
+#'
+#' # Summary statistics
+#' table(bhf_synthetic_data$has_subsidy)
+#' length(unique(bhf_synthetic_data$state))
+#'
+#' # State-level proportions
+#' aggregate(has_subsidy ~ state, data = bhf_synthetic_data, FUN = mean)
+#'
+"bhf_synthetic_data"

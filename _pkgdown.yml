@@ -1,0 +1,115 @@
+url: https://joonho112.github.io/bhfvar/
+
+template:
+  bootstrap: 5
+  bootswatch: flatly
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+
+home:
+  title: bhfvar - Bayesian Hybrid Framework for Variance Decomposition
+  description: >
+    R package for variance decomposition in complex surveys with post-hoc 
+    domains, addressing informative sampling and finite-sample variance 
+    inflation through Bayesian multilevel modeling.
+
+authors:
+  JoonHo Lee:
+    href: https://github.com/joonho112
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get Started
+      href: articles/quick-start.html
+    articles:
+      text: Articles
+      menu:
+        - text: "Applied Track"
+        - text: Introduction
+          href: articles/introduction.html
+        - text: Quick Start
+          href: articles/quick-start.html
+        - text: Diagnostics
+          href: articles/diagnostics.html
+        - text: "---"
+        - text: "Methodology Track"
+        - text: Bayesian Hybrid Framework
+          href: articles/methodology.html
+        - text: Dual Estimand Framework
+          href: articles/dual-estimands.html
+        - text: "---"
+        - text: "Reference"
+        - text: API Reference
+          href: articles/api-reference.html
+
+articles:
+  - title: Getting Started
+    navbar: ~
+    contents:
+      - introduction
+      - quick-start
+  - title: Applied Guide
+    navbar: ~
+    contents:
+      - diagnostics
+  - title: Methodology
+    navbar: ~
+    contents:
+      - methodology
+      - dual-estimands
+  - title: Reference
+    navbar: ~
+    contents:
+      - api-reference
+
+reference:
+  - title: Package
+    desc: Package overview
+    contents:
+      - bhfvar-package
+  - title: Model Compilation
+    desc: Functions for compiling the Stan model
+    contents:
+      - compile_bhf_model
+      - get_stan_file_path
+  - title: Data Preparation
+    desc: Functions for preparing survey data
+    contents:
+      - prepare_bhf_data
+      - validate_input_data
+      - validate_stan_data
+  - title: Model Fitting
+    desc: Functions for fitting the Bayesian model
+    contents:
+      - bhf_fit
+  - title: Result Extraction
+    desc: Functions for extracting and summarizing results
+    contents:
+      - variance_decomposition
+      - domain_estimates
+      - overall_estimate
+      - log_lik
+  - title: Utilities
+    desc: Helper functions
+    contents:
+      - calc_eff_n
+  - title: Data
+    desc: Example datasets
+    contents:
+      - bhf_synthetic_data
+
+news:
+  releases:
+    - text: "Version 0.3.0"
+      href: news/index.html
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with
