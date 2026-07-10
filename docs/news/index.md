@@ -19,7 +19,7 @@ with post-hoc domains.
 - **Dual Estimand Framework**:
 
   - Estimand A (Policy): Logit-scale variance decomposition
-  - Estimand B (Descriptive): Probability-scale variance decomposition  
+  - Estimand B (Descriptive): Probability-scale variance decomposition\
   - Estimand A\* (Policy Adjusted): De-attenuated variance decomposition
 
 - **De-attenuation**: Both implicit (Bayesian shrinkage) and explicit

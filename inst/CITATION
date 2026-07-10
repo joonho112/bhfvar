@@ -1,0 +1,27 @@
+citHeader("To cite bhfvar in publications, please cite both the methods paper and the package:")
+
+bibentry(
+  bibtype  = "Article",
+  header   = "Methodology (companion paper):",
+  title    = "Disentangling signal from noise: A Bayesian hybrid framework for variance decomposition in complex surveys with post-hoc domains",
+  author   = c(
+    person(given = "JoonHo", family = "Lee"),
+    person(given = "Alison", family = "Hooper")
+  ),
+  journal  = "Mathematics",
+  year     = "2026",
+  volume   = "14",
+  number   = "3",
+  pages    = "512",
+  doi      = "10.3390/math14030512"
+)
+
+bibentry(
+  bibtype  = "Manual",
+  header   = "Software:",
+  title    = "bhfvar: Bayesian Hybrid Framework for Variance Decomposition in Complex Surveys",
+  author   = person(given = "JoonHo", family = "Lee"),
+  year     = "2026",
+  note     = "R package version 0.3.0",
+  url      = "https://github.com/joonho112/bhfvar"
+)

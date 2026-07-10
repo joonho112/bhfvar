@@ -1,4 +1,4 @@
-pandoc: 3.6.3
+pandoc: '3.9'
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
@@ -8,7 +8,7 @@ articles:
   introduction: introduction.html
   methodology: methodology.html
   quick-start: quick-start.html
-last_built: 2026-01-24T17:53Z
+last_built: 2026-07-10T18:06Z
 urls:
   reference: https://joonho112.github.io/bhfvar/reference
   article: https://joonho112.github.io/bhfvar/articles

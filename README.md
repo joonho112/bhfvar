@@ -7,7 +7,7 @@
 
 ## Overview
 
-**bhfvar** (Bayesian Hybrid Framework for VARiance decomposition) implements the methodology from Lee & Hooper (2025) for variance decomposition in complex surveys with post-hoc domains.
+**bhfvar** (Bayesian Hybrid Framework for VARiance decomposition) implements the methodology from Lee & Hooper (2026) for variance decomposition in complex surveys with post-hoc domains.
 
 The package provides tools for:
 
@@ -20,7 +20,7 @@ The package provides tools for:
 ```r
 # Install from GitHub (requires devtools)
 # install.packages("devtools")
-devtools::install_github("joonho-lee/bhfvar")
+devtools::install_github("joonho112/bhfvar")
 ```
 
 ### Prerequisites
@@ -181,13 +181,17 @@ Level 1: PSUs (J clusters nested in strata)
 
 ## Citation
 
-If you use this package, please cite:
+If you use this package, please cite the companion paper:
 
 ```
-Lee, J., & Hooper, A. (2025). Disentangling Signal from Noise: A Bayesian 
-Hybrid Framework for Variance Decomposition in Complex Surveys with 
-Post-Hoc Domains. Mathematics.
+Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A Bayesian
+hybrid framework for variance decomposition in complex surveys with
+post-hoc domains. Mathematics, 14(3), 512.
+https://doi.org/10.3390/math14030512
 ```
+
+Run `citation("bhfvar")` in R for BibTeX entries for both the paper and the
+package itself.
 
 ## License
 MIT © JoonHo Lee

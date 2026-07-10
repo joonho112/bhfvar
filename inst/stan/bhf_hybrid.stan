@@ -1,8 +1,9 @@
 // Bayesian Hybrid Framework for Variance Decomposition in Complex Surveys
 // 
 // This Stan model implements the methodology described in:
-// Lee, J., & Hooper, A. (2025). Disentangling Signal from Noise: A Bayesian 
+// Lee, J., & Hooper, A. (2026). Disentangling Signal from Noise: A Bayesian
 // Hybrid Framework for Variance Decomposition in Complex Surveys with Post-Hoc Domains.
+// Mathematics, 14(3), 512. https://doi.org/10.3390/math14030512
 //
 // Key Features:
 // - Bayesian Pseudo-Likelihood for design consistency

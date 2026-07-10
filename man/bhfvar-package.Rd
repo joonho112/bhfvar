@@ -58,15 +58,16 @@ pre-compiled during package installation. This approach:
 }
 
 \references{
-Lee, J., & Hooper, A. (2025). Disentangling Signal from Noise: A Bayesian
-Hybrid Framework for Variance Decomposition in Complex Surveys with Post-Hoc
-Domains. \emph{Mathematics}.
+Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A Bayesian
+hybrid framework for variance decomposition in complex surveys with post-hoc
+domains. \emph{Mathematics}, 14(3), 512. \doi{10.3390/math14030512}
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/joonho-lee/bhfvar}
-  \item Report bugs at \url{https://github.com/joonho-lee/bhfvar/issues}
+  \item \url{https://joonho112.github.io/bhfvar}
+  \item \url{https://github.com/joonho112/bhfvar}
+  \item Report bugs at \url{https://github.com/joonho112/bhfvar/issues}
 }
 
 }

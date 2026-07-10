@@ -373,9 +373,9 @@ noise.
 
 ## References
 
-Lee, J., & Hooper, A. (2025). Disentangling signal from noise: A Bayesian 
-hybrid framework for variance decomposition in complex surveys with post-hoc 
-domains. *Mathematics* (under review).
+Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A Bayesian
+hybrid framework for variance decomposition in complex surveys with post-hoc
+domains. *Mathematics*, 14(3), 512. https://doi.org/10.3390/math14030512
 
 Rabe-Hesketh, S., & Skrondal, A. (2006). Multilevel modelling of complex 
 survey data. *Journal of the Royal Statistical Society: Series A*, 169(4), 

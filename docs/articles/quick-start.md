@@ -19,6 +19,7 @@ Early Care and Education (NSECE), with 50 states, 27 strata, and 356
 PSUs.
 
 ``` r
+
 library(bhfvar)
 library(rstan)
 
@@ -55,6 +56,7 @@ That’s it! You now have a complete Bayesian variance decomposition.
 Let’s examine the synthetic dataset:
 
 ``` r
+
 data(bhf_synthetic_data)
 
 # Structure
@@ -90,6 +92,7 @@ function transforms your data into the format required by the Stan
 model:
 
 ``` r
+
 prepared <- prepare_bhf_data(
   data = bhf_synthetic_data,
   outcome = "has_subsidy",
@@ -117,6 +120,7 @@ The
 function fits the Bayesian Hybrid Framework model via Stan:
 
 ``` r
+
 fit <- bhf_fit(
   data = prepared,
   model = model,
@@ -144,6 +148,7 @@ The printed output includes:
 The main result is the variance decomposition across three estimands:
 
 ``` r
+
 vd <- variance_decomposition(fit)
 
 # The function prints a formatted summary and returns detailed results
@@ -161,6 +166,7 @@ cat("ICC de-attenuated (Estimand A*):",
 Get estimates for each domain (state):
 
 ``` r
+
 # Marginal estimates (integrating out within-domain variation)
 estimates <- domain_estimates(fit, type = "marginal")
 
@@ -180,6 +186,7 @@ head(estimates)
 Get the population-weighted overall proportion:
 
 ``` r
+
 overall <- overall_estimate(fit)
 
 cat("Overall proportion:", round(overall$mean, 3), 
@@ -191,6 +198,7 @@ cat("Overall proportion:", round(overall$mean, 3),
 Always verify convergence before interpreting results:
 
 ``` r
+
 # Check the fit object's diagnostics
 cat("Divergent transitions:", fit$diagnostics$n_divergent, "\n")
 cat("Max Rhat:", round(fit$diagnostics$rhat_max, 3), "\n")
@@ -207,6 +215,7 @@ cat("Min ESS:", fit$diagnostics$ess_min, "\n")
 Here’s the complete workflow in a single code block:
 
 ``` r
+
 # ============================================================
 # bhfvar Quick Start: Complete Workflow
 # ============================================================

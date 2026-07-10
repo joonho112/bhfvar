@@ -64,7 +64,7 @@ compile_bhf_model <- function(verbose = TRUE, auto_write = TRUE) {
     stop(
       "Stan model file not found. ",
       "This usually means the package was not installed correctly.\n",
-      "Try reinstalling: remotes::install_github('joonho-lee/bhfvar')",
+      "Try reinstalling: remotes::install_github('joonho112/bhfvar')",
       call. = FALSE
     )
   }

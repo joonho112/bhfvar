@@ -15,6 +15,7 @@ converged to the target distribution. This vignette covers:
 After fitting a model, always check the basic diagnostics:
 
 ``` r
+
 library(bhfvar)
 
 # Fit model (assuming model and prepared exist)
@@ -40,6 +41,7 @@ cannot navigate accurately.
 **How to check**:
 
 ``` r
+
 cat("Divergent transitions:", fit$diagnostics$n_divergent, "\n")
 ```
 
@@ -54,6 +56,7 @@ cat("Divergent transitions:", fit$diagnostics$n_divergent, "\n")
 **Solutions**:
 
 ``` r
+
 # 1. Increase adapt_delta (default is 0.8)
 fit <- bhf_fit(prepared, model = model,
                control = list(adapt_delta = 0.95))
@@ -71,6 +74,7 @@ between chains. Values near 1 indicate chains have mixed well.
 **How to check**:
 
 ``` r
+
 cat("Maximum R-hat:", fit$diagnostics$rhat_max, "\n")
 
 # For detailed R-hat by parameter
@@ -95,6 +99,7 @@ samples are autocorrelated, so ESS \< actual samples.
 **How to check**:
 
 ``` r
+
 cat("Minimum ESS:", fit$diagnostics$ess_min, "\n")
 
 # Detailed ESS by parameter
@@ -141,6 +146,7 @@ summary(fit$stanfit)$summary[, c("n_eff")]
 ### 3.2 Warning Response Guide
 
 ``` r
+
 # If you see convergence warnings, try:
 
 # Step 1: More iterations
@@ -166,6 +172,7 @@ Trace plots show parameter values across iterations. Well-mixed chains
 look like “fuzzy caterpillars” with no trends.
 
 ``` r
+
 library(rstan)
 
 # Trace plots for key parameters
@@ -179,6 +186,7 @@ traceplot(fit$stanfit, pars = c("alpha", "sigma_state", "sigma_psu"))
 ### 4.2 Density Plots
 
 ``` r
+
 # Density plots comparing chains
 stan_dens(fit$stanfit, pars = c("alpha", "sigma_state", "sigma_psu"),
           separate_chains = TRUE)
@@ -191,6 +199,7 @@ stan_dens(fit$stanfit, pars = c("alpha", "sigma_state", "sigma_psu"),
 ### 4.3 Using bayesplot
 
 ``` r
+
 library(bayesplot)
 
 # Extract posterior draws
@@ -213,6 +222,7 @@ The model generates posterior predictive samples (`y_rep`) that can be
 compared to the observed data:
 
 ``` r
+
 library(bayesplot)
 
 # Extract observed and replicated data
@@ -234,6 +244,7 @@ ppc_stat_grouped(y, y_rep,
 ### 5.2 Checking Domain-Level Predictions
 
 ``` r
+
 # Compare predicted vs observed domain proportions
 estimates <- domain_estimates(fit, type = "marginal")
 
@@ -261,6 +272,7 @@ abline(0, 1, col = "red", lty = 2)
 ### 6.1 Leave-One-Out Cross-Validation
 
 ``` r
+
 library(loo)
 
 # Extract log-likelihood
@@ -292,6 +304,7 @@ plot(loo_result)
 Check if results are sensitive to prior choices:
 
 ``` r
+
 # Fit with tighter priors on variance components
 # (would require modifying the Stan model or using prior arguments)
 
@@ -302,6 +315,7 @@ Check if results are sensitive to prior choices:
 ### 7.2 Weight Scaling Sensitivity
 
 ``` r
+
 # Compare results with and without weight scaling
 # bhfvar uses Method 2 by default; compare with Method 1 or unweighted
 
@@ -327,6 +341,7 @@ cat("Unweighted ICC_B:", variance_decomposition(fit_unweighted)$prob$icc_mean, "
 **Diagnosis**:
 
 ``` r
+
 # Check which iterations diverged
 library(rstan)
 sampler_params <- get_sampler_params(fit$stanfit, inc_warmup = FALSE)
@@ -345,6 +360,7 @@ issues (extreme weights, sparse domains)
 **Diagnosis**:
 
 ``` r
+
 # Check which parameters have high R-hat
 summ <- summary(fit$stanfit)$summary
 high_rhat <- summ[summ[, "Rhat"] > 1.05, , drop = FALSE]
@@ -361,6 +377,7 @@ print(rownames(high_rhat))
 **Diagnosis**:
 
 ``` r
+
 # Check which parameters have low ESS
 summ <- summary(fit$stanfit)$summary
 low_ess <- summ[summ[, "n_eff"] < 400, , drop = FALSE]
@@ -391,6 +408,7 @@ Before reporting results, verify:
 ## 10. Example Complete Diagnostic Workflow
 
 ``` r
+
 library(bhfvar)
 library(rstan)
 library(bayesplot)

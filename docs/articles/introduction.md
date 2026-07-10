@@ -27,11 +27,13 @@ inference.
 ### Installation
 
 ``` r
+
 # From GitHub (development version)
 devtools::install_github("joonho112/bhfvar")
 ```
 
 ``` r
+
 library(bhfvar)
 library(rstan)
 ```
@@ -57,6 +59,7 @@ However, this approach faces two problems:
 **Problem 1: Design Artifacts**
 
 ``` r
+
 # Illustration of the problem (conceptual)
 # State A might have high subsidy rates NOT because of state policy,
 # but because it happens to contain PSUs from high-subsidy strata
@@ -70,6 +73,7 @@ However, this approach faces two problems:
 **Problem 2: Sampling Noise**
 
 ``` r
+
 # A state with only 5 sampled providers will have a noisy estimate
 # This noise gets counted as "between-state variance"
 
@@ -109,7 +113,6 @@ The bhfvar package implements several key methodological innovations:
 The core model is a weighted generalized linear mixed model:
 
 ``` math
-
 \eta_i = \alpha + u_{\text{state}[i]} + u_{\text{psu}[i]}
 ```
 
@@ -123,13 +126,11 @@ where:
 
 The outcome $`Y_i \in \{0, 1\}`$ follows:
 ``` math
-
 Y_i \mid \eta_i \sim \text{Bernoulli}(\text{logit}^{-1}(\eta_i))
 ```
 
 Survey weights are incorporated via the pseudo-likelihood:
 ``` math
-
 L_{\text{BPL}} = \prod_{i \in \mathcal{S}} [P(Y_i \mid \eta_i)]^{w_i^*}
 ```
 
@@ -141,6 +142,7 @@ decomposition:
 ### 1. Model Compilation and Data Preparation
 
 ``` r
+
 library(bhfvar)
 
 # Step 1: Compile the Stan model (once per session)
@@ -164,6 +166,7 @@ print(prepared)
 ### 2. Model Fitting
 
 ``` r
+
 # Step 3: Fit the Bayesian model
 fit <- bhf_fit(
   data = prepared,
@@ -178,6 +181,7 @@ print(fit)
 ### 3. Variance Decomposition
 
 ``` r
+
 # Step 4: Extract variance decomposition across all three estimands
 vd <- variance_decomposition(fit)
 
@@ -190,6 +194,7 @@ vd <- variance_decomposition(fit)
 ### 4. Domain Estimates
 
 ``` r
+
 # Step 5: Get domain-specific estimates with shrinkage
 estimates <- domain_estimates(fit, type = "marginal")
 
@@ -206,7 +211,6 @@ The package computes three distinct variance decomposition estimands:
 ### Estimand A: Policy (Logit Scale)
 
 ``` math
-
 \text{ICC}_A = \frac{\sigma^2_{\text{state}}}{\sigma^2_{\text{state}} + \sigma^2_{\text{psu}} + \pi^2/3}
 ```
 
@@ -217,7 +221,6 @@ estimation.
 ### Estimand B: Descriptive (Probability Scale)
 
 ``` math
-
 \text{ICC}_B = \frac{\text{Var}(p_s)}{\text{Var}(p_s) + E[p_s(1-p_s)]}
 ```
 
@@ -227,7 +230,6 @@ representing what a researcher would see in the data.
 ### Estimand A\*: Policy Adjusted (De-attenuated)
 
 ``` math
-
 \text{ICC}_{A^*} = \frac{\text{Var}(p_s) - \hat{V}}{\text{Var}(p_s) - \hat{V} + E[p_s(1-p_s)]}
 ```
 
@@ -253,6 +255,7 @@ In our motivating application (NSECE data on child care subsidy
 receipt), we found:
 
 ``` r
+
 # Illustrative results (from simulation studies)
 # 
 # Estimand A (logit):      ICC = 0.078 [0.032, 0.146]
@@ -352,9 +355,10 @@ versus noise.
 
 ## References
 
-Lee, J., & Hooper, A. (2025). Disentangling signal from noise: A
+Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A
 Bayesian hybrid framework for variance decomposition in complex surveys
-with post-hoc domains. *Mathematics* (under review).
+with post-hoc domains. *Mathematics*, 14(3), 512.
+<https://doi.org/10.3390/math14030512>
 
 Rabe-Hesketh, S., & Skrondal, A. (2006). Multilevel modelling of complex
 survey data. *Journal of the Royal Statistical Society: Series A*,

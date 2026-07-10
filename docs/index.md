@@ -3,7 +3,7 @@
 ## Overview
 
 **bhfvar** (Bayesian Hybrid Framework for VARiance decomposition)
-implements the methodology from Lee & Hooper (2025) for variance
+implements the methodology from Lee & Hooper (2026) for variance
 decomposition in complex surveys with post-hoc domains.
 
 The package provides tools for:
@@ -17,9 +17,10 @@ The package provides tools for:
 ## Installation
 
 ``` r
+
 # Install from GitHub (requires devtools)
 # install.packages("devtools")
-devtools::install_github("joonho-lee/bhfvar")
+devtools::install_github("joonho112/bhfvar")
 ```
 
 ### Prerequisites
@@ -35,6 +36,7 @@ This package requires a working C++ toolchain for Stan compilation:
 ## Quick Start
 
 ``` r
+
 library(bhfvar)
 
 # Step 1: Compile the Stan model (once per session)
@@ -77,6 +79,7 @@ Unlike packages that pre-compile Stan models during installation,
 `bhfvar` uses a manual compilation approach:
 
 ``` r
+
 # Compile once per R session
 model <- compile_bhf_model()
 ```
@@ -88,6 +91,7 @@ compilation process - No hidden cached objects causing mysterious errors
 ### Comprehensive Diagnostics
 
 ``` r
+
 # Model diagnostics
 fit$diagnostics
 
@@ -152,6 +156,7 @@ testing the package:
 ### Quick Test (from source)
 
 ``` r
+
 # From package root directory:
 setwd("path/to/bhfvar")
 source("dev/run_workflow.R")
@@ -177,11 +182,15 @@ De-attenuated ICC (Estimand A\*)
 
 ## Citation
 
-If you use this package, please cite:
+If you use this package, please cite the companion paper:
 
-    Lee, J., & Hooper, A. (2025). Disentangling Signal from Noise: A Bayesian
-    Hybrid Framework for Variance Decomposition in Complex Surveys with
-    Post-Hoc Domains. Mathematics.
+    Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A Bayesian
+    hybrid framework for variance decomposition in complex surveys with
+    post-hoc domains. Mathematics, 14(3), 512.
+    https://doi.org/10.3390/math14030512
+
+Run `citation("bhfvar")` in R for BibTeX entries for both the paper and
+the package itself.
 
 ## License
 

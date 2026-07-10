@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Understanding the Dual Estimand Framework: A, B, and A* • bhfvar</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Understanding the Dual Estimand Framework: A, B, and A*">
 <meta name="description" content="A detailed guide to the three variance decomposition estimands in bhfvar:  Policy (A), Descriptive (B), and Policy Adjusted (A*), with guidance on  which to use for different research questions.
@@ -82,7 +82,7 @@
       <h1>Understanding the Dual Estimand Framework: A, B, and A*</h1>
                         <h4 data-toc-skip class="author">JoonHo Lee</h4>
             
-            <h4 data-toc-skip class="date">2026-01-24</h4>
+            <h4 data-toc-skip class="date">2026-07-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joonho112/bhfvar/blob/HEAD/vignettes/dual-estimands.Rmd" class="external-link"><code>vignettes/dual-estimands.Rmd</code></a></small>
       <div class="d-none name"><code>dual-estimands.Rmd</code></div>
@@ -142,7 +142,7 @@ interpret the differences between them.</p>
 <h3 id="what-does-between-state-variance-mean">1.1 What Does “Between-State Variance” Mean?<a class="anchor" aria-label="anchor" href="#what-does-between-state-variance-mean"></a>
 </h3>
 <p>Consider the fitted Hybrid GLMM:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>η</mi><mi>i</mi></msub><mo>=</mo><mi>α</mi><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">psu</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>η</mi><mi>i</mi></msub><mo>=</mo><mi>α</mi><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">psu</mtext><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub></mrow><annotation encoding="application/x-tex">
 \eta_i = \alpha + u_{\text{state}[i]} + u_{\text{psu}[i]}
 </annotation></semantics></math></p>
 <p>After estimation, we have variance components
@@ -232,13 +232,13 @@ their latent propensity</li>
 <h3 id="definition-1">3.1 Definition<a class="anchor" aria-label="anchor" href="#definition-1"></a>
 </h3>
 <p>Estimand B operates on the probability scale:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">ICC</mtext><mi>B</mi></msub><mo>=</mo><mfrac><mrow><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo>−</mo><mover><mi>p</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><mrow><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo>−</mo><mover><mi>p</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><mo>⋅</mo><msub><mi>p</mi><mi>s</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">ICC</mtext><mi>B</mi></msub><mo>=</mo><mfrac><mrow><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo>−</mo><mover><mi>p</mi><mo accent="true">‾</mo></mover><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><mrow><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo>−</mo><mover><mi>p</mi><mo accent="true">‾</mo></mover><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo>+</mo><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><mo>⋅</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 \text{ICC}_B = \frac{\sum_{s} \pi_s (p_s - \bar{p})^2}{\sum_{s} \pi_s (p_s - \bar{p})^2 + \sum_{s} \pi_s \cdot p_s(1-p_s)}
 </annotation></semantics></math></p>
 <p>where:</p>
 <ul>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>s</mi></msub><mo>=</mo><msup><mtext mathvariant="normal">logit</mtext><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>α</mi><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>s</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p_s = \text{logit}^{-1}(c \cdot (\alpha + u_{\text{state}[s]}))</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>s</mi></msub><mo>=</mo><msup><mtext mathvariant="normal">logit</mtext><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo>⋅</mo><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p_s = \text{logit}^{-1}(c \cdot (\alpha + u_{\text{state}[s]}))</annotation></semantics></math>
 is the marginal probability for state
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
 </li>
@@ -320,11 +320,11 @@ proportions</li>
 </ol>
 <p>When domain sample sizes are small, sampling variance can be
 substantial:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>p</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo>=</mo><msub><mi>p</mi><mi>s</mi></msub><mo>+</mo><msub><mi>e</mi><mi>s</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><mtext mathvariant="normal">Var</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>e</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>p</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo>=</mo><msub><mi>p</mi><mi>s</mi></msub><mo>+</mo><msub><mi>e</mi><mi>s</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><mtext mathvariant="normal">Var</mtext><mo stretchy="false" form="prefix">(</mo><msub><mi>e</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">
 \hat{p}_s = p_s + e_s, \quad \text{Var}(e_s) = V_s
 </annotation></semantics></math></p>
 <p>The naive between-state variance estimate is inflated:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mtext mathvariant="normal">Var</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>p</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo>≈</mo><mtext mathvariant="normal">Var</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">[</mo><mtext mathvariant="normal">Var</mtext><mo stretchy="false" form="prefix">(</mo><msub><mover><mi>p</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>≈</mo><mtext mathvariant="normal">Var</mtext><mo stretchy="false" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">
 E[\text{Var}(\hat{p}_s)] \approx \text{Var}(p_s) + \sum_s \pi_s V_s
 </annotation></semantics></math></p>
 </div>
@@ -332,7 +332,7 @@ E[\text{Var}(\hat{p}_s)] \approx \text{Var}(p_s) + \sum_s \pi_s V_s
 <h3 id="definition-2">4.2 Definition<a class="anchor" aria-label="anchor" href="#definition-2"></a>
 </h3>
 <p>Estimand A* corrects for this inflation:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext><mo>*</mo></msubsup><mo>=</mo><mo>max</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext></msub><mo>−</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext><mo>*</mo></msubsup><mo>=</mo><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext></msub><mo>−</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 \text{Var}_{\text{between}}^{*} = \max\left(0, \text{Var}_{\text{between}} - 
 \sum_{s=1}^S \pi_s \hat{V}_s\right)
 </annotation></semantics></math></p>
@@ -584,7 +584,7 @@ between states.”</p>
 iteration</strong>:</p>
 <ol style="list-style-type: decimal">
 <li>Compute
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><annotation encoding="application/x-tex">\text{Var}_{\text{between}}^{(t)}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><annotation encoding="application/x-tex">\text{Var}_{\text{between}}^{(t)}</annotation></semantics></math>
 for iteration
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
 </li>
@@ -594,7 +594,7 @@ for iteration
 <li>Apply floor at small positive value (0.001) to avoid numerical
 issues</li>
 <li>Compute
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mtext mathvariant="normal">ICC</mtext><msup><mi>A</mi><mo>*</mo></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><annotation encoding="application/x-tex">\text{ICC}_{A^*}^{(t)}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mtext mathvariant="normal">ICC</mtext><msup><mi>A</mi><mo>*</mo></msup><mrow><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><annotation encoding="application/x-tex">\text{ICC}_{A^*}^{(t)}</annotation></semantics></math>
 </li>
 </ol>
 <p>This propagates uncertainty from the model parameters into the
@@ -669,9 +669,9 @@ signal versus noise.</p>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Lee, J., &amp; Hooper, A. (2025). Disentangling signal from noise: A
+<p>Lee, J., &amp; Hooper, A. (2026). Disentangling signal from noise: A
 Bayesian hybrid framework for variance decomposition in complex surveys
-with post-hoc domains. <em>Mathematics</em> (under review).</p>
+with post-hoc domains. <em>Mathematics</em>, 14(3), 512. <a href="https://doi.org/10.3390/math14030512" class="external-link uri">https://doi.org/10.3390/math14030512</a></p>
 <p>Zeger, S. L., Liang, K.-Y., &amp; Albert, P. S. (1988). Models for
 longitudinal data: A generalized estimating equation approach.
 <em>Biometrics</em>, 44(4), 1049–1060.</p>

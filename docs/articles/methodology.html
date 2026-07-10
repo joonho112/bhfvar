@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Methodology: The Bayesian Hybrid Framework • bhfvar</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Methodology: The Bayesian Hybrid Framework">
 <meta name="description" content="A detailed treatment of the Bayesian Hybrid Framework for variance  decomposition, including the statistical model, pseudo-likelihood,  and de-attenuation procedures.
@@ -82,7 +82,7 @@
       <h1>Methodology: The Bayesian Hybrid Framework</h1>
                         <h4 data-toc-skip class="author">JoonHo Lee</h4>
             
-            <h4 data-toc-skip class="date">2026-01-24</h4>
+            <h4 data-toc-skip class="date">2026-07-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joonho112/bhfvar/blob/HEAD/vignettes/methodology.Rmd" class="external-link"><code>vignettes/methodology.Rmd</code></a></small>
       <div class="d-none name"><code>methodology.Rmd</code></div>
@@ -125,10 +125,10 @@ p_s = \frac{\sum_{i \in U_s} Y_i}{N_s}
 is the set of population units in domain
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>s</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>U</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">|</mo></mrow></mrow><annotation encoding="application/x-tex">N_s = |U_s|</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>N</mi><mi>s</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">|</mo><msub><mi>U</mi><mi>s</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">N_s = |U_s|</annotation></semantics></math>.</p>
 <p>The population-level variance decomposition partitions total variance
 into between-domain and within-domain components:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">Var</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>Y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><munder><mrow><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo>−</mo><mover><mi>p</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><mo accent="true">⏟</mo></munder><mtext mathvariant="normal">Between-domain</mtext></munder><mo>+</mo><munder><munder><mrow><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><mo>⋅</mo><msub><mi>p</mi><mi>s</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mo accent="true">⏟</mo></munder><mtext mathvariant="normal">Within-domain</mtext></munder></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">Var</mtext><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munder><munder><mrow><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo>−</mo><mover><mi>p</mi><mo accent="true">‾</mo></mover><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><mo accent="true">⏟</mo></munder><mtext mathvariant="normal">Between-domain</mtext></munder><mo>+</mo><munder><munder><mrow><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><mo>⋅</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mo accent="true">⏟</mo></munder><mtext mathvariant="normal">Within-domain</mtext></munder></mrow><annotation encoding="application/x-tex">
 \text{Var}(Y) = \underbrace{\sum_{s=1}^S \pi_s (p_s - \bar{p})^2}_{\text{Between-domain}} + 
 \underbrace{\sum_{s=1}^S \pi_s \cdot p_s(1-p_s)}_{\text{Within-domain}}
 </annotation></semantics></math> where
@@ -149,7 +149,7 @@ differences:
 cost-efficiency. When the design is <strong>informative</strong>—meaning
 design features correlate with the outcome—the sample distribution
 differs from the population:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mtext mathvariant="normal">sample</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><mtext mathvariant="normal">stratum</mtext><mo>,</mo><mtext mathvariant="normal">PSU</mtext><mo stretchy="true" form="postfix">]</mo></mrow><mo>≠</mo><msub><mi>E</mi><mtext mathvariant="normal">population</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>Y</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mtext mathvariant="normal">sample</mtext></msub><mo stretchy="false" form="prefix">[</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><mtext mathvariant="normal">stratum</mtext><mo>,</mo><mtext mathvariant="normal">PSU</mtext><mo stretchy="false" form="postfix">]</mo><mo>≠</mo><msub><mi>E</mi><mtext mathvariant="normal">population</mtext></msub><mo stretchy="false" form="prefix">[</mo><msub><mi>Y</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">
 E_{\text{sample}}[Y_i \mid \text{stratum}, \text{PSU}] \neq E_{\text{population}}[Y_i]
 </annotation></semantics></math></p>
 <p>This creates a problem: observed between-domain variance
@@ -169,11 +169,11 @@ be distributed unevenly across domains)</li>
 <p>Even without informative sampling, estimating domain proportions
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>p</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><annotation encoding="application/x-tex">\hat{p}_s</annotation></semantics></math>
 from small samples introduces noise:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>p</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo>=</mo><msub><mi>p</mi><mi>s</mi></msub><mo>+</mo><msub><mi>e</mi><mi>s</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>e</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>0</mn><mo>,</mo><mspace width="1.0em"></mspace><mtext mathvariant="normal">Var</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>e</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>p</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo>=</mo><msub><mi>p</mi><mi>s</mi></msub><mo>+</mo><msub><mi>e</mi><mi>s</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><mi>E</mi><mo stretchy="false" form="prefix">[</mo><msub><mi>e</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">]</mo><mo>=</mo><mn>0</mn><mo>,</mo><mspace width="1.0em"></mspace><mtext mathvariant="normal">Var</mtext><mo stretchy="false" form="prefix">(</mo><msub><mi>e</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">
 \hat{p}_s = p_s + e_s, \quad E[e_s] = 0, \quad \text{Var}(e_s) = V_s
 </annotation></semantics></math></p>
 <p>The naive between-domain variance estimator is biased upward:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><msubsup><mover><mi>σ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">between</mtext><mn>2</mn></msubsup><mo stretchy="true" form="postfix">]</mo></mrow><mo>≈</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">between</mtext><mn>2</mn></msubsup><mo>+</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">[</mo><msubsup><mover><mi>σ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">between</mtext><mn>2</mn></msubsup><mo stretchy="false" form="postfix">]</mo><mo>≈</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">between</mtext><mn>2</mn></msubsup><mo>+</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><msub><mi>V</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">
 E[\hat{\sigma}^2_{\text{between}}] \approx \sigma^2_{\text{between}} + 
 \sum_{s=1}^S \pi_s V_s
 </annotation></semantics></math></p>
@@ -189,7 +189,7 @@ variance</strong>—noise that masquerades as signal.</p>
 </h3>
 <p>Standard likelihood-based inference treats observations as
 exchangeable:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>∏</mo><mrow><mi>i</mi><mo>∈</mo><mi>𝒮</mi></mrow></munder><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∏</mo><mrow><mi>i</mi><mo>∈</mo><mi mathvariant="script">𝒮</mi></mrow></munder><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 L(\theta) = \prod_{i \in \mathcal{S}} P(Y_i \mid \theta)
 </annotation></semantics></math></p>
 <p>Under informative sampling, this yields biased population estimates
@@ -201,11 +201,11 @@ smaller population shares.</p>
 </h3>
 <p>The Bayesian Pseudo-Likelihood approach (Savitsky &amp; Toth, 2016)
 exponentiates each likelihood contribution by the survey weight:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext mathvariant="normal">BPL</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>Y</mi><mo>∣</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munder><mo>∏</mo><mrow><mi>i</mi><mo>∈</mo><mi>𝒮</mi></mrow></munder><msup><mrow><mo stretchy="true" form="prefix">[</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><msubsup><mi>w</mi><mi>i</mi><mo>*</mo></msubsup></msup></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext mathvariant="normal">BPL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo>∣</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∏</mo><mrow><mi>i</mi><mo>∈</mo><mi mathvariant="script">𝒮</mi></mrow></munder><mo stretchy="false" form="prefix">[</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><msup><mo stretchy="false" form="postfix">]</mo><msubsup><mi>w</mi><mi>i</mi><mo>*</mo></msubsup></msup></mrow><annotation encoding="application/x-tex">
 L_{\text{BPL}}(Y \mid \theta) = \prod_{i \in \mathcal{S}} [P(Y_i \mid \theta)]^{w_i^*}
 </annotation></semantics></math></p>
 <p>The resulting <strong>pseudo-posterior</strong> is:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mtext mathvariant="normal">BPL</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><mi>Y</mi><mo>,</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∝</mo><msub><mi>L</mi><mtext mathvariant="normal">BPL</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>Y</mi><mo>∣</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><mi>P</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mtext mathvariant="normal">BPL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo>∣</mo><mi>Y</mi><mo>,</mo><mi>w</mi><mo stretchy="false" form="postfix">)</mo><mo>∝</mo><msub><mi>L</mi><mtext mathvariant="normal">BPL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo>∣</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>⋅</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 P_{\text{BPL}}(\theta \mid Y, w) \propto L_{\text{BPL}}(Y \mid \theta) \cdot P(\theta)
 </annotation></semantics></math></p>
 <p>This approach:</p>
@@ -227,7 +227,7 @@ population size cause:</p>
 </ul>
 <p>The bhfvar package uses <strong>Method 2 scaling</strong>
 (Pfeffermann et al., 1998):
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>w</mi><mi>i</mi><mo>*</mo></msubsup><mo>=</mo><msub><mi>w</mi><mi>i</mi></msub><mo>⋅</mo><mfrac><mi>n</mi><mrow><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>𝒮</mi></mrow></munder><msub><mi>w</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>w</mi><mi>i</mi><mo>*</mo></msubsup><mo>=</mo><msub><mi>w</mi><mi>i</mi></msub><mo>⋅</mo><mfrac><mi>n</mi><mrow><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi mathvariant="script">𝒮</mi></mrow></munder><msub><mi>w</mi><mi>i</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 w_i^* = w_i \cdot \frac{n}{\sum_{i \in \mathcal{S}} w_i}
 </annotation></semantics></math></p>
 <p>This scales weights to sum to the sample size
@@ -242,17 +242,17 @@ preserving relative importance while stabilizing estimation.</p>
 <h3 id="model-structure">3.1 Model Structure<a class="anchor" aria-label="anchor" href="#model-structure"></a>
 </h3>
 <p>The Hybrid GLMM models the log-odds of the outcome:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>η</mi><mi>i</mi></msub><mo>=</mo><mi>α</mi><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">psu</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>η</mi><mi>i</mi></msub><mo>=</mo><mi>α</mi><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">psu</mtext><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub></mrow><annotation encoding="application/x-tex">
 \eta_i = \alpha + u_{\text{state}[i]} + u_{\text{psu}[i]}
 </annotation></semantics></math></p>
 <p>with random effects:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>s</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">state</mtext><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">state</mtext><mn>2</mn></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 u_{\text{state}[s]} \sim N(0, \sigma^2_{\text{state}})
-</annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mrow><mtext mathvariant="normal">psu</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>j</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">psu</mtext><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+</annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mrow><mtext mathvariant="normal">psu</mtext><mo stretchy="false" form="prefix">[</mo><mi>j</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">psu</mtext><mn>2</mn></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 u_{\text{psu}[j]} \sim N(0, \sigma^2_{\text{psu}})
 </annotation></semantics></math></p>
 <p>The outcome follows:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><msub><mi>η</mi><mi>i</mi></msub><mo>∼</mo><mtext mathvariant="normal">Bernoulli</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msup><mtext mathvariant="normal">logit</mtext><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>η</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><msub><mi>η</mi><mi>i</mi></msub><mo>∼</mo><mtext mathvariant="normal">Bernoulli</mtext><mo stretchy="false" form="prefix">(</mo><msup><mtext mathvariant="normal">logit</mtext><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>η</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 Y_i \mid \eta_i \sim \text{Bernoulli}(\text{logit}^{-1}(\eta_i))
 </annotation></semantics></math></p>
 </div>
@@ -278,14 +278,14 @@ clustering.</p>
 </h3>
 <p>For identifiability and interpretability, we apply centering:</p>
 <p><strong>State effects</strong> use population-weighted centering:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><mo>⋅</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>s</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><mo>⋅</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">
 \sum_{s=1}^S \pi_s \cdot u_{\text{state}[s]} = 0
 </annotation></semantics></math></p>
 <p>This ensures
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
 represents the population mean log-odds.</p>
 <p><strong>PSU effects</strong> use within-stratum centering:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mo>∑</mo><mrow><mi>j</mi><mo>∈</mo><mi>h</mi></mrow></munder><msub><mi>u</mi><mrow><mtext mathvariant="normal">psu</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>j</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>=</mo><mn>0</mn><mspace width="1.0em"></mspace><mo>∀</mo><mi>h</mi></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mo>∑</mo><mrow><mi>j</mi><mo>∈</mo><mi>h</mi></mrow></munder><msub><mi>u</mi><mrow><mtext mathvariant="normal">psu</mtext><mo stretchy="false" form="prefix">[</mo><mi>j</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>=</mo><mn>0</mn><mspace width="1.0em"></mspace><mo>∀</mo><mi>h</mi></mrow><annotation encoding="application/x-tex">
 \sum_{j \in h} u_{\text{psu}[j]} = 0 \quad \forall h
 </annotation></semantics></math></p>
 <p>This prevents confounding between stratum and PSU effects.</p>
@@ -308,25 +308,25 @@ represents the population mean log-odds.</p>
 <tbody>
 <tr class="odd">
 <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></td>
-<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">logit</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>y</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mn>1.5</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\text{logit}(\bar{y}), 1.5)</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">logit</mtext><mo stretchy="false" form="prefix">(</mo><mover><mi>y</mi><mo accent="true">‾</mo></mover><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mn>1.5</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(\text{logit}(\bar{y}), 1.5)</annotation></semantics></math></td>
 <td>Centered on observed proportion</td>
 </tr>
 <tr class="even">
 <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mtext mathvariant="normal">state</mtext></msub><annotation encoding="application/x-tex">\sigma_{\text{state}}</annotation></semantics></math></td>
-<td>Half-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(0, 1)</annotation></semantics></math>
+<td>Half-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(0, 1)</annotation></semantics></math>
 </td>
 <td>Allows moderate heterogeneity</td>
 </tr>
 <tr class="odd">
 <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mtext mathvariant="normal">psu</mtext></msub><annotation encoding="application/x-tex">\sigma_{\text{psu}}</annotation></semantics></math></td>
-<td>Half-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0.5</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(0, 0.5)</annotation></semantics></math>
+<td>Half-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0.5</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(0, 0.5)</annotation></semantics></math>
 </td>
 <td>Tighter prior for design effects</td>
 </tr>
 </tbody>
 </table>
 <p>The non-centered parameterization improves MCMC sampling:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>s</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>=</mo><msub><mi>σ</mi><mtext mathvariant="normal">state</mtext></msub><mo>⋅</mo><msub><mi>z</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>s</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>z</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>s</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo>∼</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>=</mo><msub><mi>σ</mi><mtext mathvariant="normal">state</mtext></msub><mo>⋅</mo><msub><mi>z</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>z</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 u_{\text{state}[s]} = \sigma_{\text{state}} \cdot z_{\text{state}[s]}, \quad 
 z_{\text{state}[s]} \sim N(0, 1)
 </annotation></semantics></math></p>
@@ -339,7 +339,7 @@ z_{\text{state}[s]} \sim N(0, 1)
 <h3 id="logit-scale-estimand-a">4.1 Logit Scale (Estimand A)<a class="anchor" aria-label="anchor" href="#logit-scale-estimand-a"></a>
 </h3>
 <p>On the latent logit scale, variance components decompose additively:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">Var</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">state</mtext><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">psu</mtext><mn>2</mn></msubsup><mo>+</mo><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>3</mn></mfrac></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">Var</mtext><mo stretchy="false" form="prefix">(</mo><mi>η</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">state</mtext><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">psu</mtext><mn>2</mn></msubsup><mo>+</mo><mfrac><msup><mi>π</mi><mn>2</mn></msup><mn>3</mn></mfrac></mrow><annotation encoding="application/x-tex">
 \text{Var}(\eta) = \sigma^2_{\text{state}} + \sigma^2_{\text{psu}} + \frac{\pi^2}{3}
 </annotation></semantics></math></p>
 <p>The level-1 variance
@@ -356,18 +356,18 @@ comes from the logistic distribution.</p>
 <p>To compute variance on the probability scale, we transform state
 effects using the <strong>Zeger marginal adjustment</strong> (Zeger et
 al., 1988):
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>s</mi></msub><mo>=</mo><msup><mtext mathvariant="normal">logit</mtext><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>α</mi><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>s</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>s</mi></msub><mo>=</mo><msup><mtext mathvariant="normal">logit</mtext><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo>⋅</mo><mo stretchy="false" form="prefix">(</mo><mi>α</mi><mo>+</mo><msub><mi>u</mi><mrow><mtext mathvariant="normal">state</mtext><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mo stretchy="false" form="postfix">]</mo></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 p_s = \text{logit}^{-1}(c \cdot (\alpha + u_{\text{state}[s]}))
 </annotation></semantics></math> where:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><msqrt><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mn>0.346</mn><mo>⋅</mo><msubsup><mi>σ</mi><mtext mathvariant="normal">state</mtext><mn>2</mn></msubsup></mrow></mfrac></msqrt></mrow><annotation encoding="application/x-tex">
 c = \sqrt{\frac{1}{1 + 0.346 \cdot \sigma^2_{\text{state}}}}
 </annotation></semantics></math></p>
 <p>Between-state variance on the probability scale:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo>−</mo><mover><mi>p</mi><mo accent="true">‾</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>p</mi><mi>s</mi></msub><mo>−</mo><mover><mi>p</mi><mo accent="true">‾</mo></mover><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">
 \text{Var}_{\text{between}} = \sum_{s=1}^S \pi_s (p_s - \bar{p})^2
 </annotation></semantics></math></p>
 <p>Within-state (Bernoulli) variance:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">within</mtext></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><mo>⋅</mo><msub><mi>p</mi><mi>s</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">within</mtext></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><mo>⋅</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>s</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 \text{Var}_{\text{within}} = \sum_{s=1}^S \pi_s \cdot p_s(1-p_s)
 </annotation></semantics></math></p>
 </div>
@@ -376,7 +376,7 @@ c = \sqrt{\frac{1}{1 + 0.346 \cdot \sigma^2_{\text{state}}}}
 </h3>
 <p>The de-attenuated estimand corrects for finite-sample variance
 inflation:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext><mo>*</mo></msubsup><mo>=</mo><mo>max</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext></msub><mo>−</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext><mo>*</mo></msubsup><mo>=</mo><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mtext mathvariant="normal">Var</mtext><mtext mathvariant="normal">between</mtext></msub><mo>−</mo><munderover><mo>∑</mo><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow><mi>S</mi></munderover><msub><mi>π</mi><mi>s</mi></msub><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 \text{Var}_{\text{between}}^{*} = \max\left(0, \text{Var}_{\text{between}} - 
 \sum_{s=1}^S \pi_s \hat{V}_s\right)
 </annotation></semantics></math></p>

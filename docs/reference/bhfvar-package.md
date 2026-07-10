@@ -68,17 +68,20 @@ being pre-compiled during package installation. This approach:
 
 ## References
 
-Lee, J., & Hooper, A. (2025). Disentangling Signal from Noise: A
-Bayesian Hybrid Framework for Variance Decomposition in Complex Surveys
-with Post-Hoc Domains. *Mathematics*.
+Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A
+Bayesian hybrid framework for variance decomposition in complex surveys
+with post-hoc domains. *Mathematics*, 14(3), 512.
+[doi:10.3390/math14030512](https://doi.org/10.3390/math14030512)
 
 ## See also
 
 Useful links:
 
-- <https://github.com/joonho-lee/bhfvar>
+- <https://joonho112.github.io/bhfvar>
 
-- Report bugs at <https://github.com/joonho-lee/bhfvar/issues>
+- <https://github.com/joonho112/bhfvar>
+
+- Report bugs at <https://github.com/joonho112/bhfvar/issues>
 
 ## Author
 

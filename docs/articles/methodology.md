@@ -19,7 +19,6 @@ Consider a population of $`N`$ units partitioned into $`S`$
 non-overlapping domains (e.g., states). For a binary outcome $`Y`$, the
 population proportion in domain $`s`$ is:
 ``` math
-
 p_s = \frac{\sum_{i \in U_s} Y_i}{N_s}
 ```
 where $`U_s`$ is the set of population units in domain $`s`$ and
@@ -28,7 +27,6 @@ $`N_s = |U_s|`$.
 The population-level variance decomposition partitions total variance
 into between-domain and within-domain components:
 ``` math
-
 \text{Var}(Y) = \underbrace{\sum_{s=1}^S \pi_s (p_s - \bar{p})^2}_{\text{Between-domain}} + 
 \underbrace{\sum_{s=1}^S \pi_s \cdot p_s(1-p_s)}_{\text{Within-domain}}
 ```
@@ -38,7 +36,6 @@ $`\bar{p} = \sum_s \pi_s p_s`$.
 The **Intraclass Correlation Coefficient (ICC)** measures the proportion
 of variance attributable to between-domain differences:
 ``` math
-
 \text{ICC} = \frac{\text{Var}_{\text{between}}}{\text{Var}_{\text{total}}}
 ```
 
@@ -49,7 +46,6 @@ cost-efficiency. When the design is **informative**—meaning design
 features correlate with the outcome—the sample distribution differs from
 the population:
 ``` math
-
 E_{\text{sample}}[Y_i \mid \text{stratum}, \text{PSU}] \neq E_{\text{population}}[Y_i]
 ```
 
@@ -64,13 +60,11 @@ This creates a problem: observed between-domain variance conflates:
 Even without informative sampling, estimating domain proportions
 $`\hat{p}_s`$ from small samples introduces noise:
 ``` math
-
 \hat{p}_s = p_s + e_s, \quad E[e_s] = 0, \quad \text{Var}(e_s) = V_s
 ```
 
 The naive between-domain variance estimator is biased upward:
 ``` math
-
 E[\hat{\sigma}^2_{\text{between}}] \approx \sigma^2_{\text{between}} + 
 \sum_{s=1}^S \pi_s V_s
 ```
@@ -84,7 +78,6 @@ masquerades as signal.
 
 Standard likelihood-based inference treats observations as exchangeable:
 ``` math
-
 L(\theta) = \prod_{i \in \mathcal{S}} P(Y_i \mid \theta)
 ```
 
@@ -97,13 +90,11 @@ smaller population shares.
 The Bayesian Pseudo-Likelihood approach (Savitsky & Toth, 2016)
 exponentiates each likelihood contribution by the survey weight:
 ``` math
-
 L_{\text{BPL}}(Y \mid \theta) = \prod_{i \in \mathcal{S}} [P(Y_i \mid \theta)]^{w_i^*}
 ```
 
 The resulting **pseudo-posterior** is:
 ``` math
-
 P_{\text{BPL}}(\theta \mid Y, w) \propto L_{\text{BPL}}(Y \mid \theta) \cdot P(\theta)
 ```
 
@@ -123,7 +114,6 @@ Skrondal, 2006). Raw weights summing to the population size cause:
 
 The bhfvar package uses **Method 2 scaling** (Pfeffermann et al., 1998):
 ``` math
-
 w_i^* = w_i \cdot \frac{n}{\sum_{i \in \mathcal{S}} w_i}
 ```
 
@@ -136,23 +126,19 @@ importance while stabilizing estimation.
 
 The Hybrid GLMM models the log-odds of the outcome:
 ``` math
-
 \eta_i = \alpha + u_{\text{state}[i]} + u_{\text{psu}[i]}
 ```
 
 with random effects:
 ``` math
-
 u_{\text{state}[s]} \sim N(0, \sigma^2_{\text{state}})
 ```
 ``` math
-
 u_{\text{psu}[j]} \sim N(0, \sigma^2_{\text{psu}})
 ```
 
 The outcome follows:
 ``` math
-
 Y_i \mid \eta_i \sim \text{Bernoulli}(\text{logit}^{-1}(\eta_i))
 ```
 
@@ -178,7 +164,6 @@ For identifiability and interpretability, we apply centering:
 
 **State effects** use population-weighted centering:
 ``` math
-
 \sum_{s=1}^S \pi_s \cdot u_{\text{state}[s]} = 0
 ```
 
@@ -186,7 +171,6 @@ This ensures $`\alpha`$ represents the population mean log-odds.
 
 **PSU effects** use within-stratum centering:
 ``` math
-
 \sum_{j \in h} u_{\text{psu}[j]} = 0 \quad \forall h
 ```
 
@@ -204,7 +188,6 @@ The bhfvar package uses weakly informative priors:
 
 The non-centered parameterization improves MCMC sampling:
 ``` math
-
 u_{\text{state}[s]} = \sigma_{\text{state}} \cdot z_{\text{state}[s]}, \quad 
 z_{\text{state}[s]} \sim N(0, 1)
 ```
@@ -215,7 +198,6 @@ z_{\text{state}[s]} \sim N(0, 1)
 
 On the latent logit scale, variance components decompose additively:
 ``` math
-
 \text{Var}(\eta) = \sigma^2_{\text{state}} + \sigma^2_{\text{psu}} + \frac{\pi^2}{3}
 ```
 
@@ -223,7 +205,6 @@ The level-1 variance $`\pi^2/3`$ comes from the logistic distribution.
 
 The ICC on the logit scale is:
 ``` math
-
 \text{ICC}_A = \frac{\sigma^2_{\text{state}}}{\sigma^2_{\text{state}} + \sigma^2_{\text{psu}} + \pi^2/3}
 ```
 
@@ -232,24 +213,20 @@ The ICC on the logit scale is:
 To compute variance on the probability scale, we transform state effects
 using the **Zeger marginal adjustment** (Zeger et al., 1988):
 ``` math
-
 p_s = \text{logit}^{-1}(c \cdot (\alpha + u_{\text{state}[s]}))
 ```
 where:
 ``` math
-
 c = \sqrt{\frac{1}{1 + 0.346 \cdot \sigma^2_{\text{state}}}}
 ```
 
 Between-state variance on the probability scale:
 ``` math
-
 \text{Var}_{\text{between}} = \sum_{s=1}^S \pi_s (p_s - \bar{p})^2
 ```
 
 Within-state (Bernoulli) variance:
 ``` math
-
 \text{Var}_{\text{within}} = \sum_{s=1}^S \pi_s \cdot p_s(1-p_s)
 ```
 
@@ -258,7 +235,6 @@ Within-state (Bernoulli) variance:
 The de-attenuated estimand corrects for finite-sample variance
 inflation:
 ``` math
-
 \text{Var}_{\text{between}}^{*} = \max\left(0, \text{Var}_{\text{between}} - 
 \sum_{s=1}^S \pi_s \hat{V}_s\right)
 ```
@@ -333,7 +309,6 @@ are pulled toward the grand mean. The shrinkage intensity depends on:
 
 The **reliability** for domain $`s`$ quantifies shrinkage:
 ``` math
-
 R_s = \frac{\sigma^2_{\text{state}}}{\sigma^2_{\text{state}} + V_s}
 ```
 

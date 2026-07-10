@@ -23,7 +23,6 @@ interpret the differences between them.
 
 Consider the fitted Hybrid GLMM:
 ``` math
-
 \eta_i = \alpha + u_{\text{state}[i]} + u_{\text{psu}[i]}
 ```
 
@@ -61,7 +60,6 @@ to include or exclude them.
 
 Estimand A operates on the latent logit scale:
 ``` math
-
 \text{ICC}_A = \frac{\sigma^2_{\text{state}}}{\sigma^2_{\text{state}} + 
 \sigma^2_{\text{psu}} + \pi^2/3}
 ```
@@ -92,6 +90,7 @@ Use Estimand A when:
 ### 2.4 Accessing in bhfvar
 
 ``` r
+
 vd <- variance_decomposition(fit)
 
 # Logit-scale results
@@ -107,7 +106,6 @@ cat("95% CI:", vd$logit$icc_q025, "-", vd$logit$icc_q975, "\n")
 
 Estimand B operates on the probability scale:
 ``` math
-
 \text{ICC}_B = \frac{\sum_{s} \pi_s (p_s - \bar{p})^2}{\sum_{s} \pi_s (p_s - \bar{p})^2 + \sum_{s} \pi_s \cdot p_s(1-p_s)}
 ```
 
@@ -146,6 +144,7 @@ Use Estimand B when:
 ### 3.5 Accessing in bhfvar
 
 ``` r
+
 vd <- variance_decomposition(fit)
 
 # Probability-scale results
@@ -168,13 +167,11 @@ variation:
 When domain sample sizes are small, sampling variance can be
 substantial:
 ``` math
-
 \hat{p}_s = p_s + e_s, \quad \text{Var}(e_s) = V_s
 ```
 
 The naive between-state variance estimate is inflated:
 ``` math
-
 E[\text{Var}(\hat{p}_s)] \approx \text{Var}(p_s) + \sum_s \pi_s V_s
 ```
 
@@ -182,7 +179,6 @@ E[\text{Var}(\hat{p}_s)] \approx \text{Var}(p_s) + \sum_s \pi_s V_s
 
 Estimand A\* corrects for this inflation:
 ``` math
-
 \text{Var}_{\text{between}}^{*} = \max\left(0, \text{Var}_{\text{between}} - 
 \sum_{s=1}^S \pi_s \hat{V}_s\right)
 ```
@@ -192,7 +188,6 @@ $`s`$.
 
 The de-attenuated ICC is:
 ``` math
-
 \text{ICC}_{A^*} = \frac{\text{Var}_{\text{between}}^{*}}{\text{Var}_{\text{between}}^{*} + \text{Var}_{\text{within}}}
 ```
 
@@ -217,6 +212,7 @@ Use Estimand A\* when:
 ### 4.5 Accessing in bhfvar
 
 ``` r
+
 vd <- variance_decomposition(fit)
 
 # De-attenuated results
@@ -235,7 +231,6 @@ cat("ICC_B / ICC_A*:", round(vd$prob$icc_mean / vd$deatten$icc_mean, 2), "\n")
 
 In most applications, you’ll find:
 ``` math
-
 \text{ICC}_{A^*} < \text{ICC}_B \leq \text{ICC}_A
 ```
 
@@ -245,6 +240,7 @@ actually sampling noise.
 ### 5.2 Worked Example
 
 ``` r
+
 library(bhfvar)
 library(rstan)
 
@@ -283,6 +279,7 @@ print(comparison)
 ### 6.1 ICC Comparison Plot
 
 ``` r
+
 library(ggplot2)
 
 # Create comparison data frame
@@ -311,6 +308,7 @@ ggplot(icc_data, aes(x = Estimand, y = ICC)) +
 ### 6.2 Domain-Level View
 
 ``` r
+
 # Get domain estimates
 estimates <- domain_estimates(fit, type = "marginal")
 
@@ -387,6 +385,7 @@ The $`\hat{V}_s`$ are computed via Taylor linearization in
 [`prepare_bhf_data()`](https://joonho112.github.io/bhfvar/reference/prepare_bhf_data.md):
 
 ``` r
+
 # The prepared data includes sampling variances
 prepared$sampling_variances  # Vector of V_s
 
@@ -423,9 +422,10 @@ quantify how much of the observed variation is signal versus noise.
 
 ## References
 
-Lee, J., & Hooper, A. (2025). Disentangling signal from noise: A
+Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A
 Bayesian hybrid framework for variance decomposition in complex surveys
-with post-hoc domains. *Mathematics* (under review).
+with post-hoc domains. *Mathematics*, 14(3), 512.
+<https://doi.org/10.3390/math14030512>
 
 Zeger, S. L., Liang, K.-Y., & Albert, P. S. (1988). Models for
 longitudinal data: A generalized estimating equation approach.

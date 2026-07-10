@@ -21,6 +21,7 @@ Compiles the Stan model for the Bayesian Hybrid Framework.
 **Usage**
 
 ``` r
+
 compile_bhf_model(verbose = TRUE, auto_write = TRUE)
 ```
 
@@ -45,6 +46,7 @@ cached version (if `auto_write = TRUE`).
 **Examples**
 
 ``` r
+
 library(bhfvar)
 
 # Compile with default settings
@@ -61,6 +63,7 @@ Returns the file path to the Stan model file.
 **Usage**
 
 ``` r
+
 get_stan_file_path()
 ```
 
@@ -71,6 +74,7 @@ A character string with the full path to `bhf_hybrid.stan`.
 **Examples**
 
 ``` r
+
 # Get the path
 stan_path <- get_stan_file_path()
 cat(stan_path)
@@ -89,6 +93,7 @@ Transforms survey data into the format required by the Stan model.
 **Usage**
 
 ``` r
+
 prepare_bhf_data(
   data,
   outcome,
@@ -138,6 +143,7 @@ The function:
 **Examples**
 
 ``` r
+
 library(bhfvar)
 data(bhf_synthetic_data)
 
@@ -175,6 +181,7 @@ Fits the Bayesian Hybrid Framework model via Stan.
 **Usage**
 
 ``` r
+
 bhf_fit(
   data,
   model,
@@ -220,6 +227,7 @@ warnings issued if problems are detected.
 **Examples**
 
 ``` r
+
 library(bhfvar)
 library(rstan)
 
@@ -257,6 +265,7 @@ Extracts variance decomposition across all three estimands.
 **Usage**
 
 ``` r
+
 variance_decomposition(fit, prob = 0.95, print = TRUE)
 ```
 
@@ -285,6 +294,7 @@ A list with components:
 **Examples**
 
 ``` r
+
 # Basic extraction
 vd <- variance_decomposition(fit)
 
@@ -306,6 +316,7 @@ Extracts domain-specific probability estimates.
 **Usage**
 
 ``` r
+
 domain_estimates(fit, type = "marginal", prob = 0.95)
 ```
 
@@ -345,6 +356,7 @@ A data frame with columns:
 **Examples**
 
 ``` r
+
 # Marginal estimates (default)
 estimates <- domain_estimates(fit)
 head(estimates)
@@ -366,6 +378,7 @@ Extracts the population-weighted overall probability.
 **Usage**
 
 ``` r
+
 overall_estimate(fit, prob = 0.95)
 ```
 
@@ -388,6 +401,7 @@ A list with:
 **Examples**
 
 ``` r
+
 overall <- overall_estimate(fit)
 
 cat("Overall:", round(overall$mean, 3),
@@ -401,6 +415,7 @@ Extracts the log-likelihood matrix for LOO-CV.
 **Usage**
 
 ``` r
+
 log_lik(fit)
 ```
 
@@ -418,6 +433,7 @@ log-likelihood values.
 **Examples**
 
 ``` r
+
 library(loo)
 
 # Extract log-likelihood
@@ -440,6 +456,7 @@ Validates input data before preparation.
 **Usage**
 
 ``` r
+
 validate_input_data(data, outcome, domain, strata, psu, weights = NULL)
 ```
 
@@ -456,6 +473,7 @@ informative message if validation fails.
 **Examples**
 
 ``` r
+
 # Check data before preparation
 validate_input_data(
   bhf_synthetic_data, "has_subsidy", "state", "stratum", "psu", "weight"
@@ -469,6 +487,7 @@ Validates Stan data list before fitting.
 **Usage**
 
 ``` r
+
 validate_stan_data(stan_data)
 ```
 
@@ -485,6 +504,7 @@ Returns `TRUE` invisibly if validation passes.
 **Examples**
 
 ``` r
+
 prepared <- prepare_bhf_data(
   bhf_synthetic_data, "has_subsidy", "state", "stratum", "psu", "weight"
 )
@@ -501,12 +521,14 @@ Print method for prepared data objects.
 **Usage**
 
 ``` r
+
 print(x, ...)
 ```
 
 **Examples**
 
 ``` r
+
 prepared <- prepare_bhf_data(
   bhf_synthetic_data, "has_subsidy", "state", "stratum", "psu", "weight"
 )
@@ -520,12 +542,14 @@ Print method for fitted model objects.
 **Usage**
 
 ``` r
+
 print(x, ...)
 ```
 
 **Examples**
 
 ``` r
+
 print(fit)
 ```
 
@@ -536,12 +560,14 @@ Summary method providing variance decomposition and diagnostics.
 **Usage**
 
 ``` r
+
 summary(object, ...)
 ```
 
 **Examples**
 
 ``` r
+
 summary(fit)
 ```
 
@@ -566,6 +592,7 @@ A data frame with 1,598 observations of 5 variables:
 **Usage**
 
 ``` r
+
 data(bhf_synthetic_data)
 ```
 
@@ -577,6 +604,7 @@ and Education (NSECE) listed provider sample.
 **Examples**
 
 ``` r
+
 data(bhf_synthetic_data)
 str(bhf_synthetic_data)
 summary(bhf_synthetic_data)

@@ -44,9 +44,9 @@
 #' }
 #'
 #' @references
-#' Lee, J., & Hooper, A. (2025). Disentangling Signal from Noise: A Bayesian
-#' Hybrid Framework for Variance Decomposition in Complex Surveys with Post-Hoc
-#' Domains. \emph{Mathematics}.
+#' Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A Bayesian
+#' hybrid framework for variance decomposition in complex surveys with post-hoc
+#' domains. \emph{Mathematics}, 14(3), 512. \doi{10.3390/math14030512}
 #'
 #' @author JoonHo Lee \email{jlee296@@ua.edu}
 #'
