@@ -11,9 +11,9 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="bhfvar - Bayesian Hybrid Framework for Variance Decomposition">
-<meta name="description" content="R package for variance decomposition in complex surveys with post-hoc  domains, addressing informative sampling and finite-sample variance  inflation through Bayesian multilevel modeling.
+<meta name="description" content="Experimental article-informed R package for complex-survey variance decomposition for post-hoc domains in complex surveys, implementing the model of Lee &amp; Hooper (2026).
 ">
-<meta property="og:description" content="R package for variance decomposition in complex surveys with post-hoc  domains, addressing informative sampling and finite-sample variance  inflation through Bayesian multilevel modeling.
+<meta property="og:description" content="Experimental article-informed R package for complex-survey variance decomposition for post-hoc domains in complex surveys, implementing the model of Lee &amp; Hooper (2026).
 ">
 </head>
 <body>
@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,7 @@
     <li><a class="dropdown-item" href="articles/introduction.html">Introduction</a></li>
     <li><a class="dropdown-item" href="articles/quick-start.html">Quick Start</a></li>
     <li><a class="dropdown-item" href="articles/diagnostics.html">Diagnostics</a></li>
+    <li><a class="dropdown-item" href="articles/scientific-limitations.html">Scientific limitations</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Methodology Track</h6></li>
     <li><a class="dropdown-item" href="articles/methodology.html">Bayesian Hybrid Framework</a></li>
@@ -49,13 +50,14 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Reference</h6></li>
     <li><a class="dropdown-item" href="articles/api-reference.html">API Reference</a></li>
+    <li><a class="dropdown-item" href="articles/migration-0.5.0.html">Migration from 0.3.0</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="news/index.html">Version 0.3.0</a></li>
+    <li><a class="dropdown-item" href="news/index.html">Version 0.5.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="news/index.html">Changelog</a></li>
   </ul>
@@ -78,260 +80,174 @@
 </h1></div>
 <!-- badges: start -->
 
+<p><code>bhfvar</code> decomposes variance across post-hoc domains (such as states) in complex survey data, separating substantive domain variation from artifacts of the sampling design and from finite-sample noise. It implements the Bayesian hybrid framework of Lee &amp; Hooper (2026).</p>
 <div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+<h2 id="which-version-corresponds-to-the-article">Which version corresponds to the article?<a class="anchor" aria-label="anchor" href="#which-version-corresponds-to-the-article"></a>
 </h2>
-<p><strong>bhfvar</strong> (Bayesian Hybrid Framework for VARiance decomposition) implements the methodology from Lee &amp; Hooper (2026) for variance decomposition in complex surveys with post-hoc domains.</p>
-<p>The package provides tools for:</p>
+<p>The article cites <code>bhfvar</code> <strong>version 0.3.0</strong>. <strong>Version 0.5.0 is the version that implements the model given in Appendix A of the article.</strong></p>
+<table class="table">
+<thead><tr>
+<th>Article component</th>
+<th align="center">0.3.0</th>
+<th align="center">0.5.0</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Stratum random effect (Eq. 13)</td>
+<td align="center">—</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Population-weighted domain centering (Eq. 16)</td>
+<td align="center">—</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Within-stratum PSU centering (Eq. 17)</td>
+<td align="center">—</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Estimand A on the probability scale (Eq. 20)</td>
+<td align="center">—</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Estimand A* de-attenuation (Eq. 19)</td>
+<td align="center">—</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Estimand B, realized design mixture (Eq. 21)</td>
+<td align="center">—</td>
+<td align="center">yes</td>
+</tr>
+<tr>
+<td>Variance-component priors half-t(3, 0, 2.5)</td>
+<td align="center">—</td>
+<td align="center">yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>If you are following the article, use 0.5.0 or later.</strong> Results from 0.3.0 are not comparable. Version 0.3.0 remains available under the <code>v0.3.0</code> git tag for anyone who needs the exact code that existed at publication.</p>
+<p>Note that the exported function names are unchanged between the two versions, so 0.3.0 scripts will still run under 0.5.0 — but they will return different numbers. See <code><a href="articles/migration-0.5.0.html">vignette("migration-0.5.0")</a></code>.</p>
+</div>
+<div class="section level2">
+<h2 id="what-the-model-fits">What the model fits<a class="anchor" aria-label="anchor" href="#what-the-model-fits"></a>
+</h2>
+<pre class="text"><code><span><span class="fu">logit</span><span class="op">(</span><span class="va">p_i</span><span class="op">)</span> <span class="op">=</span> <span class="va">alpha</span> <span class="op">+</span> <span class="va">domain</span><span class="op">[</span><span class="va">s_i</span><span class="op">]</span> <span class="op">+</span> <span class="va">stratum</span><span class="op">[</span><span class="va">h_i</span><span class="op">]</span> <span class="op">+</span> <span class="va">psu_within_stratum</span><span class="op">[</span><span class="va">j_i</span><span class="op">]</span></span></code></pre>
+<p>Domain and stratum effects are crossed; PSU identifiers are nested within strata. Survey weights enter through a pseudo-likelihood and are globally scaled to mean one by default.</p>
+<p>Three estimands are reported on the probability scale:</p>
 <ul>
 <li>
-<strong>Separating signal from noise</strong>: Distinguish true geographic variation from sampling artifacts</li>
+<strong>A</strong> — the distribution induced by domain effects alone (policy estimand);</li>
 <li>
-<strong>Dual estimand framework</strong>: Policy-relevant (latent) vs. Descriptive (observed) variance decomposition</li>
+<strong>A*</strong> — A with a de-attenuation correction that removes estimated sampling variance from the between-domain component;</li>
 <li>
-<strong>De-attenuation</strong>: Correct for finite-sample variance inflation</li>
+<strong>B</strong> — the distribution including each domain’s realized mixture of stratum and PSU design effects (descriptive estimand).</li>
 </ul>
+<p>Latent-scale SDs and ICCs are reported separately.</p>
+</div>
+<div class="section level2">
+<h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
+</h2>
+<p>Posterior intervals are <strong>pseudo-posterior credible intervals</strong>. Their frequentist coverage has not been established, and a sandwich-type variance adjustment is not implemented in this version. A* conditions on the sampling variances as fixed and does not propagate their estimation uncertainty. The model is intercept-only with a binary outcome. The article’s restricted-data NSECE application is not reproduced by this package.</p>
+<p>See <code><a href="articles/scientific-limitations.html">vignette("scientific-limitations")</a></code> before using the package for substantive work.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install from GitHub (requires devtools)</span></span>
-<span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"joonho112/bhfvar"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
-</h3>
-<p>This package requires a working C++ toolchain for Stan compilation:</p>
-<ul>
-<li>
-<strong>Windows</strong>: Install <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">Rtools</a>
-</li>
-<li>
-<strong>macOS</strong>: Run <code>xcode-select --install</code> in Terminal</li>
-<li>
-<strong>Linux</strong>: Install build-essential (e.g., <code>sudo apt install build-essential</code>)</li>
-</ul>
-</div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"joonho112/bhfvar"</span><span class="op">)</span></span></code></pre></div>
+<p>A working C++ toolchain and <code>rstan</code> are required to compile the bundled Stan model. The model is compiled on demand rather than at install time.</p>
 </div>
 <div class="section level2">
-<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+<h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://joonho112.github.io/bhfvar">bhfvar</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://joonho112.github.io/bhfvar/">bhfvar</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Step 1: Compile the Stan model (once per session)</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compile_bhf_model.html">compile_bhf_model</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Step 2: Load example data</span></span>
+<span><span class="co"># 1. Prepare the crossed design</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">bhf_synthetic_data</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Step 3: Prepare data for Stan</span></span>
 <span><span class="va">prepared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prepare_bhf_data.html">prepare_bhf_data</a></span><span class="op">(</span></span>
 <span>  <span class="va">bhf_synthetic_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"has_subsidy"</span>,</span>
-<span>  domain <span class="op">=</span> <span class="st">"state"</span>,</span>
-<span>  strata <span class="op">=</span> <span class="st">"stratum"</span>,</span>
-<span>  psu <span class="op">=</span> <span class="st">"psu"</span>,</span>
-<span>  weights <span class="op">=</span> <span class="st">"weight"</span></span>
+<span>  outcome        <span class="op">=</span> <span class="st">"has_subsidy"</span>,</span>
+<span>  domain         <span class="op">=</span> <span class="st">"state"</span>,</span>
+<span>  strata         <span class="op">=</span> <span class="st">"stratum"</span>,</span>
+<span>  psu            <span class="op">=</span> <span class="st">"psu"</span>,</span>
+<span>  weights        <span class="op">=</span> <span class="st">"weight"</span>,</span>
+<span>  weight_scaling <span class="op">=</span> <span class="st">"mean_one"</span>,</span>
+<span>  deattenuation  <span class="op">=</span> <span class="st">"taylor"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Step 4: Fit the model</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>, chains <span class="op">=</span> <span class="fl">4</span>, iter <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
+<span><span class="co"># 2. Compile once per session</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compile_bhf_model.html">compile_bhf_model</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Step 5: Extract results</span></span>
-<span><span class="fu"><a href="reference/variance_decomposition.html">variance_decomposition</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/domain_estimates.html">domain_estimates</a></span><span class="op">(</span><span class="va">fit</span>, type <span class="op">=</span> <span class="st">"marginal"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># 3. Fit</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>, chains <span class="op">=</span> <span class="fl">4</span>, iter <span class="op">=</span> <span class="fl">2000</span>, seed <span class="op">=</span> <span class="fl">1234</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 4. Extract</span></span>
+<span><span class="va">vd</span>        <span class="op">&lt;-</span> <span class="fu"><a href="reference/variance_decomposition.html">variance_decomposition</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="va">domains_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/domain_estimates.html">domain_estimates</a></span><span class="op">(</span><span class="va">fit</span>, estimand <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span>
+<span><span class="va">domains_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/domain_estimates.html">domain_estimates</a></span><span class="op">(</span><span class="va">fit</span>, estimand <span class="op">=</span> <span class="st">"B"</span><span class="op">)</span></span>
+<span><span class="va">overall_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/overall_estimate.html">overall_estimate</a></span><span class="op">(</span><span class="va">fit</span>, estimand <span class="op">=</span> <span class="st">"B"</span><span class="op">)</span></span></code></pre></div>
+<p>Inspect <code>fit$diagnostics</code> before interpreting any fit. Report A, A<em>, and B together rather than selectively, and state the provenance of the sampling variances alongside A</em>.</p>
 </div>
 <div class="section level2">
-<h2 id="key-features">Key Features<a class="anchor" aria-label="anchor" href="#key-features"></a>
+<h2 id="public-api">Public API<a class="anchor" aria-label="anchor" href="#public-api"></a>
 </h2>
-<div class="section level3">
-<h3 id="three-estimands">Three Estimands<a class="anchor" aria-label="anchor" href="#three-estimands"></a>
-</h3>
 <table class="table">
 <colgroup>
-<col width="30%">
-<col width="21%">
-<col width="48%">
+<col width="50%">
+<col width="50%">
 </colgroup>
 <thead><tr>
-<th>Estimand</th>
-<th>Scale</th>
-<th>Interpretation</th>
+<th>Stage</th>
+<th>Functions</th>
 </tr></thead>
 <tbody>
 <tr>
+<td>Compile</td>
 <td>
-<strong>A</strong> (Policy)</td>
-<td>Logit</td>
-<td>Latent heterogeneity in underlying propensity</td>
+<code><a href="reference/compile_bhf_model.html">compile_bhf_model()</a></code>, <code><a href="reference/get_stan_file_path.html">get_stan_file_path()</a></code>
+</td>
 </tr>
 <tr>
-<td>
-<strong>B</strong> (Descriptive)</td>
-<td>Probability</td>
-<td>Observed heterogeneity in rates</td>
+<td>Prepare</td>
+<td><code><a href="reference/prepare_bhf_data.html">prepare_bhf_data()</a></code></td>
 </tr>
 <tr>
+<td>Fit</td>
+<td><code><a href="reference/bhf_fit.html">bhf_fit()</a></code></td>
+</tr>
+<tr>
+<td>Extract</td>
 <td>
-<strong>A</strong>* (Adjusted)</td>
-<td>Probability</td>
-<td>True heterogeneity after removing sampling noise</td>
+<code><a href="reference/variance_decomposition.html">variance_decomposition()</a></code>, <code><a href="reference/domain_estimates.html">domain_estimates()</a></code>, <code><a href="reference/overall_estimate.html">overall_estimate()</a></code>, <code><a href="reference/log_lik.html">log_lik()</a></code>
+</td>
+</tr>
+<tr>
+<td>Utility</td>
+<td><code><a href="reference/calc_eff_n.html">calc_eff_n()</a></code></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section level3">
-<h3 id="defensive-programming-approach">Defensive Programming Approach<a class="anchor" aria-label="anchor" href="#defensive-programming-approach"></a>
-</h3>
-<p>Unlike packages that pre-compile Stan models during installation, <code>bhfvar</code> uses a manual compilation approach:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Compile once per R session</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compile_bhf_model.html">compile_bhf_model</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Benefits:</strong> - More stable across R/Stan/C++ version combinations - Clear error messages when compilation fails - Full visibility into the compilation process - No hidden cached objects causing mysterious errors</p>
-</div>
-<div class="section level3">
-<h3 id="comprehensive-diagnostics">Comprehensive Diagnostics<a class="anchor" aria-label="anchor" href="#comprehensive-diagnostics"></a>
-</h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Model diagnostics</span></span>
-<span><span class="va">fit</span><span class="op">$</span><span class="va">diagnostics</span></span>
-<span></span>
-<span><span class="co"># Convergence checks</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Posterior predictive checks (requires bayesplot)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a></span><span class="op">)</span></span>
-<span><span class="va">y_rep</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span>, <span class="st">"y_rep"</span><span class="op">)</span><span class="op">$</span><span class="va">y_rep</span></span>
-<span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/PPC-distributions.html" class="external-link">ppc_dens_overlay</a></span><span class="op">(</span><span class="va">bhf_synthetic_data</span><span class="op">$</span><span class="va">has_subsidy</span>, <span class="va">y_rep</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="methodology">Methodology<a class="anchor" aria-label="anchor" href="#methodology"></a>
-</h2>
-<p>The package implements a Bayesian multilevel model with:</p>
-<ol style="list-style-type: decimal">
-<li>
-<strong>Pseudo-likelihood weighting</strong>: Incorporates survey weights via Method D2 scaling</li>
-<li>
-<strong>Non-centered parameterization</strong>: Improves MCMC sampling efficiency</li>
-<li>
-<strong>Marginal scaling</strong>: Converts logit-scale effects to probability scale using Zeger et al. (1988) approximation</li>
-<li>
-<strong>De-attenuation</strong>: Removes finite-sample variance inflation from ICC estimates</li>
-</ol>
-<div class="section level3">
-<h3 id="model-structure">Model Structure<a class="anchor" aria-label="anchor" href="#model-structure"></a>
-</h3>
-<pre><code><span><span class="va">y_i</span> <span class="op">~</span> <span class="fu">Bernoulli</span><span class="op">(</span><span class="va">p_i</span><span class="op">)</span></span>
-<span><span class="fu">logit</span><span class="op">(</span><span class="va">p_i</span><span class="op">)</span> <span class="op">=</span> <span class="va">alpha</span> <span class="op">+</span> <span class="va">u_state</span><span class="op">[</span><span class="va">s_i</span><span class="op">]</span> <span class="op">+</span> <span class="va">u_psu</span><span class="op">[</span><span class="va">j_i</span><span class="op">]</span></span>
-<span></span>
-<span><span class="va">u_state</span> <span class="op">~</span> <span class="fu">Normal</span><span class="op">(</span><span class="fl">0</span>, <span class="va">sigma_state</span><span class="op">)</span></span>
-<span><span class="va">u_psu</span> <span class="op">~</span> <span class="fu">Normal</span><span class="op">(</span><span class="fl">0</span>, <span class="va">sigma_psu</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="section level3">
-<h3 id="variance-decomposition">Variance Decomposition<a class="anchor" aria-label="anchor" href="#variance-decomposition"></a>
-</h3>
-<p><strong>Probability scale (Estimand B):</strong></p>
-<pre><code>Var_between = Sum_s{ pi_s * (p_s - p_bar)^2 }
-Var_within = Sum_s{ pi_s * p_s * (1 - p_s) }
-ICC_B = Var_between / (Var_between + Var_within)</code></pre>
-<p>**De-attenuated (Estimand A*):**</p>
-<pre><code>Var_between_adj = max(0, Var_between - V_hat)
-ICC_A* = Var_between_adj / (Var_between_adj + Var_within)</code></pre>
-<p>where <code>V_hat</code> is the estimated sampling variance due to survey design.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="development-scripts">Development Scripts<a class="anchor" aria-label="anchor" href="#development-scripts"></a>
-</h2>
-<p>The <code>dev/</code> folder contains step-by-step scripts for understanding and testing the package:</p>
-<table class="table">
-<colgroup>
-<col width="47%">
-<col width="52%">
-</colgroup>
-<thead><tr>
-<th>Script</th>
-<th>Purpose</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code>run_workflow.R</code></td>
-<td>
-<strong>Master script</strong> - runs complete workflow from source</td>
-</tr>
-<tr>
-<td><code>00_verify_environment.R</code></td>
-<td>Check R and Stan setup</td>
-</tr>
-<tr>
-<td><code>01_compile_model.R</code></td>
-<td>Manual Stan model compilation</td>
-</tr>
-<tr>
-<td><code>02_prepare_data.R</code></td>
-<td>Data preparation and validation</td>
-</tr>
-<tr>
-<td><code>03_fit_model.R</code></td>
-<td>Model fitting with diagnostics</td>
-</tr>
-<tr>
-<td><code>04_extract_results.R</code></td>
-<td>Result extraction and visualization</td>
-</tr>
-</tbody>
-</table>
-<div class="section level3">
-<h3 id="quick-test-from-source">Quick Test (from source)<a class="anchor" aria-label="anchor" href="#quick-test-from-source"></a>
-</h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># From package root directory:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"path/to/bhfvar"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"dev/run_workflow.R"</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="model-structure-2-level">Model Structure (2-Level)<a class="anchor" aria-label="anchor" href="#model-structure-2-level"></a>
-</h2>
-<p>This package implements a <strong>2-level hierarchical model</strong>:</p>
-<pre><code>Level 2: States (S domains)
-  - u_state[s] ~ Normal(0, sigma_state)
-
-Level 1: PSUs (J clusters nested in strata)
-  - u_psu[j] ~ Normal(0, sigma_psu)</code></pre>
-<p><strong>Key parameters:</strong> - <code>alpha</code>: Global intercept (logit scale) - <code>sigma_state</code>: Between-state standard deviation - <code>sigma_psu</code>: Between-PSU standard deviation</p>
-<p><strong>Generated quantities:</strong> - <code>icc_state</code>: ICC on logit scale (Estimand A) - <code>icc_prob</code>: ICC on probability scale (Estimand B) - <code>icc_deatten</code>: De-attenuated ICC (Estimand A*)</p>
+<p>There is no plotting API. Build graphics from the tidy extractor output.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>If you use this package, please cite the companion paper:</p>
-<pre><code>Lee, J., &amp; Hooper, A. (2026). Disentangling signal from noise: A Bayesian
-hybrid framework for variance decomposition in complex surveys with
-post-hoc domains. Mathematics, 14(3), 512.
-https://doi.org/10.3390/math14030512</code></pre>
-<p>Run <code>citation("bhfvar")</code> in R for BibTeX entries for both the paper and the package itself.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"bhfvar"</span><span class="op">)</span></span></code></pre></div>
+<blockquote>
+<p>Lee, J., &amp; Hooper, A. (2026). Disentangling signal from noise: A Bayesian hybrid framework for variance decomposition in complex surveys with post-hoc domains. <em>Mathematics</em>, 14(3), 512. <a href="https://doi.org/10.3390/math14030512" class="external-link uri">https://doi.org/10.3390/math14030512</a></p>
+</blockquote>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
 </h2>
 <p>MIT © JoonHo Lee</p>
-</div>
-<div class="section level2">
-<h2 id="contact">Contact<a class="anchor" aria-label="anchor" href="#contact"></a>
-</h2>
-<ul>
-<li>
-<strong>Author</strong>: JoonHo Lee</li>
-<li>
-<strong>Email</strong>: <a href="mailto:jlee296@ua.edu" class="email">jlee296@ua.edu</a>
-</li>
-<li>
-<strong>Institution</strong>: The University of Alabama</li>
-</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

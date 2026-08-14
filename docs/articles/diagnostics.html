@@ -5,16 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Model Diagnostics and Convergence Checking • bhfvar</title>
+<title>Diagnostics and Uncertainty Boundaries • bhfvar</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Model Diagnostics and Convergence Checking">
-<meta name="description" content="A comprehensive guide to assessing model convergence, diagnosing problems,  and validating results from bhfvar models.
-">
-<meta property="og:description" content="A comprehensive guide to assessing model convergence, diagnosing problems,  and validating results from bhfvar models.
-">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Diagnostics and Uncertainty Boundaries">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -24,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +38,7 @@
     <li><a class="dropdown-item" href="../articles/introduction.html">Introduction</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics.html">Diagnostics</a></li>
+    <li><a class="dropdown-item" href="../articles/scientific-limitations.html">Scientific limitations</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Methodology Track</h6></li>
     <li><a class="dropdown-item" href="../articles/methodology.html">Bayesian Hybrid Framework</a></li>
@@ -49,13 +46,14 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Reference</h6></li>
     <li><a class="dropdown-item" href="../articles/api-reference.html">API Reference</a></li>
+    <li><a class="dropdown-item" href="../articles/migration-0.5.0.html">Migration from 0.3.0</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.3.0</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul>
@@ -79,10 +77,8 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Model Diagnostics and Convergence Checking</h1>
-                        <h4 data-toc-skip class="author">JoonHo Lee</h4>
+      <h1>Diagnostics and Uncertainty Boundaries</h1>
             
-            <h4 data-toc-skip class="date">2026-07-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/joonho112/bhfvar/blob/HEAD/vignettes/diagnostics.Rmd" class="external-link"><code>vignettes/diagnostics.Rmd</code></a></small>
       <div class="d-none name"><code>diagnostics.Rmd</code></div>
@@ -91,555 +87,88 @@
     
     
 <div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+<h2 id="inspect-every-fit">Inspect every fit<a class="anchor" aria-label="anchor" href="#inspect-every-fit"></a>
 </h2>
-<p>Bayesian inference via MCMC requires verification that the sampler
-has converged to the target distribution. This vignette covers:</p>
-<ol style="list-style-type: decimal">
-<li>Essential diagnostic checks</li>
-<li>Interpreting warning messages</li>
-<li>Common problems and solutions</li>
-<li>Advanced diagnostics with bayesplot</li>
-</ol>
-</div>
-<div class="section level2">
-<h2 id="quick-diagnostic-check">1. Quick Diagnostic Check<a class="anchor" aria-label="anchor" href="#quick-diagnostic-check"></a>
-</h2>
-<p>After fitting a model, always check the basic diagnostics:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://joonho112.github.io/bhfvar">bhfvar</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Fit model (assuming model and prepared exist)</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>, chains <span class="op">=</span> <span class="fl">4</span>, iter <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Print includes diagnostics</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Access diagnostics directly</span></span>
-<span><span class="va">fit</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">n_divergent</span>    <span class="co"># Should be 0</span></span>
-<span><span class="va">fit</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">rhat_max</span>       <span class="co"># Should be &lt; 1.01</span></span>
-<span><span class="va">fit</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">ess_min</span>        <span class="co"># Should be &gt; 400</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="understanding-the-key-diagnostics">2. Understanding the Key Diagnostics<a class="anchor" aria-label="anchor" href="#understanding-the-key-diagnostics"></a>
-</h2>
-<div class="section level3">
-<h3 id="divergent-transitions">2.1 Divergent Transitions<a class="anchor" aria-label="anchor" href="#divergent-transitions"></a>
-</h3>
-<p><strong>What they are</strong>: Divergent transitions occur when the
-Hamiltonian Monte Carlo (HMC) sampler encounters regions of high
-curvature that it cannot navigate accurately.</p>
-<p><strong>How to check</strong>:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Divergent transitions:"</span>, <span class="va">fit</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">n_divergent</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Interpretation</strong>:</p>
-<table class="table">
-<thead><tr class="header">
-<th>Count</th>
-<th>Interpretation</th>
-<th>Action</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>0</td>
-<td>Good</td>
-<td>Proceed with analysis</td>
-</tr>
-<tr class="even">
-<td>1–10</td>
-<td>Concerning</td>
-<td>Investigate; may need reparameterization</td>
-</tr>
-<tr class="odd">
-<td>&gt;10</td>
-<td>Problematic</td>
-<td>Do not trust results; fix model</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Solutions</strong>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># 1. Increase adapt_delta (default is 0.8)</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>,</span>
-<span>               control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adapt_delta <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 2. Increase max_treedepth</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>,</span>
-<span>               control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adapt_delta <span class="op">=</span> <span class="fl">0.95</span>, max_treedepth <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="r-hat-potential-scale-reduction-factor">2.2 R-hat (Potential Scale Reduction Factor)<a class="anchor" aria-label="anchor" href="#r-hat-potential-scale-reduction-factor"></a>
-</h3>
-<p><strong>What it is</strong>: R-hat compares variance within chains to
-variance between chains. Values near 1 indicate chains have mixed
-well.</p>
-<p><strong>How to check</strong>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Maximum R-hat:"</span>, <span class="va">fit</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">rhat_max</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># For detailed R-hat by parameter</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span>, <span class="st">"Rhat"</span><span class="op">]</span></span></code></pre></div>
-<p><strong>Interpretation</strong>:</p>
-<table class="table">
-<thead><tr class="header">
-<th>R-hat</th>
-<th>Interpretation</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>&lt; 1.01</td>
-<td>Excellent convergence</td>
-</tr>
-<tr class="even">
-<td>1.01–1.05</td>
-<td>Acceptable, but more iterations might help</td>
-</tr>
-<tr class="odd">
-<td>1.05–1.1</td>
-<td>Concerning; increase iterations</td>
-</tr>
-<tr class="even">
-<td>&gt; 1.1</td>
-<td>Not converged; do not use results</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level3">
-<h3 id="effective-sample-size-ess">2.3 Effective Sample Size (ESS)<a class="anchor" aria-label="anchor" href="#effective-sample-size-ess"></a>
-</h3>
-<p><strong>What it is</strong>: ESS estimates the number of independent
-samples. MCMC samples are autocorrelated, so ESS &lt; actual
-samples.</p>
-<p><strong>How to check</strong>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Minimum ESS:"</span>, <span class="va">fit</span><span class="op">$</span><span class="va">diagnostics</span><span class="op">$</span><span class="va">ess_min</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Detailed ESS by parameter</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n_eff"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<p><strong>Interpretation</strong>:</p>
-<table class="table">
-<thead><tr class="header">
-<th>ESS</th>
-<th>Interpretation</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>&gt; 1000</td>
-<td>Excellent</td>
-</tr>
-<tr class="even">
-<td>400–1000</td>
-<td>Good for most purposes</td>
-</tr>
-<tr class="odd">
-<td>100–400</td>
-<td>May be adequate for means, not for tails</td>
-</tr>
-<tr class="even">
-<td>&lt; 100</td>
-<td>Run longer; do not trust results</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="section level2">
-<h2 id="interpreting-warning-messages">3. Interpreting Warning Messages<a class="anchor" aria-label="anchor" href="#interpreting-warning-messages"></a>
-</h2>
-<div class="section level3">
-<h3 id="common-warnings-and-their-meaning">3.1 Common Warnings and Their Meaning<a class="anchor" aria-label="anchor" href="#common-warnings-and-their-meaning"></a>
-</h3>
-<p><strong>“There were X divergent transitions”</strong></p>
-<pre><code>Warning: There were 5 divergent transitions after warmup.</code></pre>
-<p>→ The sampler encountered problematic geometry. Increase
-<code>adapt_delta</code>.</p>
-<p><strong>“R-hat values above 1.05”</strong></p>
-<pre><code>Warning: Some Rhat values &gt; 1.05, indicating potential convergence issues.</code></pre>
-<p>→ Chains haven’t mixed. Run longer or check model specification.</p>
-<p><strong>“Bulk ESS too low”</strong></p>
-<pre><code>Warning: Bulk Effective Samples Size (ESS) is too low.</code></pre>
-<p>→ Posterior means may be unreliable. Increase iterations.</p>
-<p><strong>“Tail ESS too low”</strong></p>
-<pre><code>Warning: Tail Effective Samples Size (ESS) is too low.</code></pre>
-<p>→ Credible interval endpoints may be unreliable. Increase
-iterations.</p>
-</div>
-<div class="section level3">
-<h3 id="warning-response-guide">3.2 Warning Response Guide<a class="anchor" aria-label="anchor" href="#warning-response-guide"></a>
-</h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># If you see convergence warnings, try:</span></span>
-<span></span>
-<span><span class="co"># Step 1: More iterations</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>,</span>
-<span>               chains <span class="op">=</span> <span class="fl">4</span>, iter <span class="op">=</span> <span class="fl">4000</span>, warmup <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Step 2: If still divergences, increase adapt_delta</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>,</span>
-<span>               chains <span class="op">=</span> <span class="fl">4</span>, iter <span class="op">=</span> <span class="fl">4000</span>,</span>
-<span>               control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adapt_delta <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Step 3: If still problems, increase max_treedepth</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>,</span>
-<span>               chains <span class="op">=</span> <span class="fl">4</span>, iter <span class="op">=</span> <span class="fl">4000</span>,</span>
-<span>               control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adapt_delta <span class="op">=</span> <span class="fl">0.99</span>, max_treedepth <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="visual-diagnostics">4. Visual Diagnostics<a class="anchor" aria-label="anchor" href="#visual-diagnostics"></a>
-</h2>
-<div class="section level3">
-<h3 id="trace-plots">4.1 Trace Plots<a class="anchor" aria-label="anchor" href="#trace-plots"></a>
-</h3>
-<p>Trace plots show parameter values across iterations. Well-mixed
-chains look like “fuzzy caterpillars” with no trends.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Trace plots for key parameters</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-traceplot.html" class="external-link">traceplot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"sigma_state"</span>, <span class="st">"sigma_psu"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Good trace plot</strong>: Chains overlap, no trends, looks
-like white noise</p>
-<p><strong>Bad trace plot</strong>: Chains don’t mix, visible trends,
-stuck periods</p>
-</div>
-<div class="section level3">
-<h3 id="density-plots">4.2 Density Plots<a class="anchor" aria-label="anchor" href="#density-plots"></a>
-</h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Density plots comparing chains</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stan_plot.html" class="external-link">stan_dens</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"sigma_state"</span>, <span class="st">"sigma_psu"</span><span class="op">)</span>,</span>
-<span>          separate_chains <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Good</strong>: Densities from different chains overlap
-substantially</p>
-<p><strong>Bad</strong>: Densities are very different across chains</p>
-</div>
-<div class="section level3">
-<h3 id="using-bayesplot">4.3 Using bayesplot<a class="anchor" aria-label="anchor" href="#using-bayesplot"></a>
-</h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Extract posterior draws</span></span>
-<span><span class="va">posterior</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">as.array</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># MCMC diagnostics</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="va">posterior</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"sigma_state"</span>, <span class="st">"sigma_psu"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_dens_overlay</a></span><span class="op">(</span><span class="va">posterior</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"sigma_state"</span>, <span class="st">"sigma_psu"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_rank_overlay</a></span><span class="op">(</span><span class="va">posterior</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"sigma_state"</span>, <span class="st">"sigma_psu"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Pairs plot to check correlations</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-scatterplots.html" class="external-link">mcmc_pairs</a></span><span class="op">(</span><span class="va">posterior</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"sigma_state"</span>, <span class="st">"sigma_psu"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="posterior-predictive-checks">5. Posterior Predictive Checks<a class="anchor" aria-label="anchor" href="#posterior-predictive-checks"></a>
-</h2>
-<div class="section level3">
-<h3 id="checking-model-fit">5.1 Checking Model Fit<a class="anchor" aria-label="anchor" href="#checking-model-fit"></a>
-</h3>
-<p>The model generates posterior predictive samples (<code>y_rep</code>)
-that can be compared to the observed data:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Extract observed and replicated data</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">fit</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">stan_data</span><span class="op">$</span><span class="va">y</span></span>
-<span><span class="va">y_rep</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span>, <span class="st">"y_rep"</span><span class="op">)</span><span class="op">$</span><span class="va">y_rep</span></span>
-<span></span>
-<span><span class="co"># Density overlay</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/PPC-distributions.html" class="external-link">ppc_dens_overlay</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">y_rep</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Proportion of 1s</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/PPC-test-statistics.html" class="external-link">ppc_stat</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">y_rep</span>, stat <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Grouped by domain (if desired)</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/PPC-test-statistics.html" class="external-link">ppc_stat_grouped</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">y_rep</span>, </span>
-<span>                 group <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">stan_data</span><span class="op">$</span><span class="va">state_id</span>,</span>
-<span>                 stat <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="checking-domain-level-predictions">5.2 Checking Domain-Level Predictions<a class="anchor" aria-label="anchor" href="#checking-domain-level-predictions"></a>
-</h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Compare predicted vs observed domain proportions</span></span>
-<span><span class="va">estimates</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/domain_estimates.html">domain_estimates</a></span><span class="op">(</span><span class="va">fit</span>, type <span class="op">=</span> <span class="st">"marginal"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Calculate observed proportions</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="va">observed</span> <span class="op">&lt;-</span> <span class="va">bhf_synthetic_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">state</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
-<span>    obs_prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">has_subsidy</span>, <span class="va">weight</span><span class="op">)</span>,</span>
-<span>    n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Merge and compare</span></span>
-<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">estimates</span>, <span class="va">observed</span>, by.x <span class="op">=</span> <span class="st">"domain"</span>, by.y <span class="op">=</span> <span class="st">"state"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">$</span><span class="va">obs_prop</span>, <span class="va">comparison</span><span class="op">$</span><span class="va">mean</span>,</span>
-<span>     xlab <span class="op">=</span> <span class="st">"Observed Proportion"</span>,</span>
-<span>     ylab <span class="op">=</span> <span class="st">"Model Estimate"</span>,</span>
-<span>     main <span class="op">=</span> <span class="st">"Observed vs. Predicted Domain Proportions"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, col <span class="op">=</span> <span class="st">"red"</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="model-comparison-with-loo-cv">6. Model Comparison with LOO-CV<a class="anchor" aria-label="anchor" href="#model-comparison-with-loo-cv"></a>
-</h2>
-<div class="section level3">
-<h3 id="leave-one-out-cross-validation">6.1 Leave-One-Out Cross-Validation<a class="anchor" aria-label="anchor" href="#leave-one-out-cross-validation"></a>
-</h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/loo/" class="external-link">loo</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Extract log-likelihood</span></span>
-<span><span class="va">ll</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/log_lik.html">log_lik</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Compute LOO</span></span>
-<span><span class="va">loo_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mc-stan.org/loo/reference/loo.html" class="external-link">loo</a></span><span class="op">(</span><span class="va">ll</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">loo_result</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Check Pareto k diagnostics</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">loo_result</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="interpreting-loo-results">6.2 Interpreting LOO Results<a class="anchor" aria-label="anchor" href="#interpreting-loo-results"></a>
-</h3>
-<p><strong>Pareto k values</strong>:</p>
-<table class="table">
-<thead><tr class="header">
-<th>k</th>
-<th>Interpretation</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>&lt; 0.5</td>
-<td>Good; reliable estimate</td>
-</tr>
-<tr class="even">
-<td>0.5–0.7</td>
-<td>Marginal; still useful</td>
-</tr>
-<tr class="odd">
-<td>0.7–1.0</td>
-<td>Poor; observation is influential</td>
-</tr>
-<tr class="even">
-<td>&gt; 1.0</td>
-<td>Very bad; consider removing or moment matching</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="section level2">
-<h2 id="sensitivity-analysis">7. Sensitivity Analysis<a class="anchor" aria-label="anchor" href="#sensitivity-analysis"></a>
-</h2>
-<div class="section level3">
-<h3 id="prior-sensitivity">7.1 Prior Sensitivity<a class="anchor" aria-label="anchor" href="#prior-sensitivity"></a>
-</h3>
-<p>Check if results are sensitive to prior choices:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Fit with tighter priors on variance components</span></span>
-<span><span class="co"># (would require modifying the Stan model or using prior arguments)</span></span>
-<span></span>
-<span><span class="co"># Compare key estimates across different prior specifications</span></span>
-<span><span class="co"># If results change substantially, priors are influential</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="weight-scaling-sensitivity">7.2 Weight Scaling Sensitivity<a class="anchor" aria-label="anchor" href="#weight-scaling-sensitivity"></a>
-</h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Compare results with and without weight scaling</span></span>
-<span><span class="co"># bhfvar uses Method 2 by default; compare with Method 1 or unweighted</span></span>
-<span></span>
-<span><span class="co"># Prepare data without weights (for comparison)</span></span>
-<span><span class="va">prepared_unweighted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_bhf_data.html">prepare_bhf_data</a></span><span class="op">(</span></span>
-<span>  <span class="va">bhf_synthetic_data</span>, <span class="st">"has_subsidy"</span>, <span class="st">"state"</span>, <span class="st">"stratum"</span>, <span class="st">"psu"</span>,</span>
-<span>  weights <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">fit_unweighted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared_unweighted</span>, model <span class="op">=</span> <span class="va">model</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Compare ICC estimates</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Weighted ICC_B:"</span>, <span class="fu"><a href="../reference/variance_decomposition.html">variance_decomposition</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">prob</span><span class="op">$</span><span class="va">icc_mean</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Unweighted ICC_B:"</span>, <span class="fu"><a href="../reference/variance_decomposition.html">variance_decomposition</a></span><span class="op">(</span><span class="va">fit_unweighted</span><span class="op">)</span><span class="op">$</span><span class="va">prob</span><span class="op">$</span><span class="va">icc_mean</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="troubleshooting-guide">8. Troubleshooting Guide<a class="anchor" aria-label="anchor" href="#troubleshooting-guide"></a>
-</h2>
-<div class="section level3">
-<h3 id="problem-divergent-transitions">8.1 Problem: Divergent Transitions<a class="anchor" aria-label="anchor" href="#problem-divergent-transitions"></a>
-</h3>
-<p><strong>Symptoms</strong>: Warning about divergent transitions;
-unreliable estimates</p>
-<p><strong>Diagnosis</strong>:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Check which iterations diverged</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span>
-<span><span class="va">sampler_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-class.html" class="external-link">get_sampler_params</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span>, inc_warmup <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">divergent</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sampler_params</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="st">"divergent__"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">divergent</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Solutions</strong>: 1. Increase <code>adapt_delta</code> to
-0.95 or 0.99 2. Reparameterize (bhfvar already uses non-centered) 3.
-Check for data issues (extreme weights, sparse domains)</p>
-</div>
-<div class="section level3">
-<h3 id="problem-poor-mixing">8.2 Problem: Poor Mixing<a class="anchor" aria-label="anchor" href="#problem-poor-mixing"></a>
-</h3>
-<p><strong>Symptoms</strong>: R-hat &gt; 1.05; chains don’t overlap in
-trace plots</p>
-<p><strong>Diagnosis</strong>:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Check which parameters have high R-hat</span></span>
-<span><span class="va">summ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
-<span><span class="va">high_rhat</span> <span class="op">&lt;-</span> <span class="va">summ</span><span class="op">[</span><span class="va">summ</span><span class="op">[</span>, <span class="st">"Rhat"</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">1.05</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">high_rhat</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Solutions</strong>: 1. Run longer (increase
-<code>iter</code>) 2. Increase warmup period 3. Check for multimodality
-or identification issues</p>
-</div>
-<div class="section level3">
-<h3 id="problem-low-ess">8.3 Problem: Low ESS<a class="anchor" aria-label="anchor" href="#problem-low-ess"></a>
-</h3>
-<p><strong>Symptoms</strong>: ESS &lt; 400 for key parameters</p>
-<p><strong>Diagnosis</strong>:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Check which parameters have low ESS</span></span>
-<span><span class="va">summ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
-<span><span class="va">low_ess</span> <span class="op">&lt;-</span> <span class="va">summ</span><span class="op">[</span><span class="va">summ</span><span class="op">[</span>, <span class="st">"n_eff"</span><span class="op">]</span> <span class="op">&lt;</span> <span class="fl">400</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">low_ess</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Solutions</strong>: 1. Run longer 2. Use thinning (set
-<code>thin = 2</code> or higher) 3. Check for slow-mixing parameters</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="diagnostic-checklist">9. Diagnostic Checklist<a class="anchor" aria-label="anchor" href="#diagnostic-checklist"></a>
-</h2>
-<p>Before reporting results, verify:</p>
-<ul class="task-list">
-<li><label><input type="checkbox"><strong>No divergent
-transitions</strong> (or understood and addressed)</label></li>
-<li><label><input type="checkbox"><strong>R-hat &lt; 1.01</strong> for
-all parameters of interest</label></li>
-<li><label><input type="checkbox"><strong>ESS &gt; 400</strong> for
-all parameters of interest</label></li>
-<li><label><input type="checkbox"><strong>Trace plots</strong> show
-good mixing</label></li>
-<li><label><input type="checkbox"><strong>Posterior predictive
-checks</strong> show reasonable fit</label></li>
-<li><label><input type="checkbox"><strong>LOO-CV</strong> shows no
-highly influential observations</label></li>
-<li><label><input type="checkbox"><strong>Sensitivity
-analysis</strong> shows robust results</label></li>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="va">fit</span><span class="op">$</span><span class="va">diagnostics</span></span></code></pre></div>
+<p>The diagnostics contract contains:</p>
+<ul>
+<li>
+<code>n_divergent</code>;</li>
+<li>
+<code>max_treedepth_configured</code>,
+<code>max_treedepth_observed</code>, and
+<code>max_depth_hits</code>;</li>
+<li>
+<code>rhat_max</code>, <code>rhat_all_ok</code>, and
+<code>rhat_n</code> for structural parameters;</li>
+<li>
+<code>n_eff_min</code>, <code>n_eff_median</code>, and
+<code>n_eff_n</code>.</li>
 </ul>
+<p>The last fields are explicitly labeled legacy rstan
+<code>n_eff</code>; they are not bulk or tail ESS.
+<code><a href="../reference/bhf_fit.html">bhf_fit()</a></code> warns at any divergence, R-hat at least 1.05,
+legacy <code>n_eff</code> below 100, or a configured tree-depth hit.
+Those warnings are screening rules, not proof that an otherwise quiet
+fit is scientifically valid.</p>
+<p>Tune through the named public arguments:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span></span>
+<span>  <span class="va">prepared</span>,</span>
+<span>  model <span class="op">=</span> <span class="va">model</span>,</span>
+<span>  chains <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  iter <span class="op">=</span> <span class="fl">4000</span>,</span>
+<span>  warmup <span class="op">=</span> <span class="fl">2000</span>,</span>
+<span>  adapt_delta <span class="op">=</span> <span class="fl">0.99</span>,</span>
+<span>  max_treedepth <span class="op">=</span> <span class="fl">15</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1234</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Do not pass a <code>control</code> list through <code>...</code>; the
+public function constructs it from <code>adapt_delta</code> and
+<code>max_treedepth</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="example-complete-diagnostic-workflow">10. Example Complete Diagnostic Workflow<a class="anchor" aria-label="anchor" href="#example-complete-diagnostic-workflow"></a>
+<h2 id="pseudo-posterior-intervals">Pseudo-posterior intervals<a class="anchor" aria-label="anchor" href="#pseudo-posterior-intervals"></a>
 </h2>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://joonho112.github.io/bhfvar">bhfvar</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/bayesplot/" class="external-link">bayesplot</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Fit model</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compile_bhf_model.html">compile_bhf_model</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">bhf_synthetic_data</span><span class="op">)</span></span>
-<span><span class="va">prepared</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_bhf_data.html">prepare_bhf_data</a></span><span class="op">(</span></span>
-<span>  <span class="va">bhf_synthetic_data</span>, <span class="st">"has_subsidy"</span>, <span class="st">"state"</span>, <span class="st">"stratum"</span>, <span class="st">"psu"</span>, <span class="st">"weight"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_fit.html">bhf_fit</a></span><span class="op">(</span><span class="va">prepared</span>, model <span class="op">=</span> <span class="va">model</span>, chains <span class="op">=</span> <span class="fl">4</span>, iter <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 1. Check summary diagnostics</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 2. Visual diagnostics</span></span>
-<span><span class="va">posterior</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">as.array</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Trace plots</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-traces.html" class="external-link">mcmc_trace</a></span><span class="op">(</span><span class="va">posterior</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"sigma_state"</span>, <span class="st">"sigma_psu"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Density overlays</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_dens_overlay</a></span><span class="op">(</span><span class="va">posterior</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"sigma_state"</span>, <span class="st">"sigma_psu"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 3. Posterior predictive check</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">prepared</span><span class="op">$</span><span class="va">stan_data</span><span class="op">$</span><span class="va">y</span></span>
-<span><span class="va">y_rep</span> <span class="op">&lt;-</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">stanfit</span>, <span class="st">"y_rep"</span><span class="op">)</span><span class="op">$</span><span class="va">y_rep</span></span>
-<span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/PPC-distributions.html" class="external-link">ppc_dens_overlay</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">y_rep</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 4. LOO-CV</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/loo/" class="external-link">loo</a></span><span class="op">)</span></span>
-<span><span class="va">ll</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/log_lik.html">log_lik</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="va">loo_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mc-stan.org/loo/reference/loo.html" class="external-link">loo</a></span><span class="op">(</span><span class="va">ll</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">loo_result</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 5. If all checks pass, proceed with inference</span></span>
-<span><span class="fu"><a href="../reference/variance_decomposition.html">variance_decomposition</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+<p>The fitted target is a survey-weighted pseudo-likelihood. R-hat and
+effective sample size concern numerical exploration of that target; they
+do not establish frequentist coverage or correct design-based
+uncertainty. Sandwich adjustment is not implemented. Interpret credible
+intervals with this limitation.</p>
 </div>
 <div class="section level2">
-<h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
+<h2 id="fixed-vhat-limitation">Fixed-vhat limitation<a class="anchor" aria-label="anchor" href="#fixed-vhat-limitation"></a>
 </h2>
-<p>Proper diagnostic checking is essential for reliable Bayesian
-inference. The key checks are:</p>
-<table class="table">
-<thead><tr class="header">
-<th>Diagnostic</th>
-<th>Threshold</th>
-<th>Interpretation</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Divergences</td>
-<td>0</td>
-<td>Sampler navigated geometry successfully</td>
-</tr>
-<tr class="even">
-<td>R-hat</td>
-<td>&lt; 1.01</td>
-<td>Chains have mixed</td>
-</tr>
-<tr class="odd">
-<td>ESS</td>
-<td>&gt; 400</td>
-<td>Sufficient independent samples</td>
-</tr>
-<tr class="even">
-<td>Trace plots</td>
-<td>Fuzzy caterpillars</td>
-<td>Visual confirmation of mixing</td>
-</tr>
-<tr class="odd">
-<td>PPC</td>
-<td>Data in range</td>
-<td>Model captures data features</td>
-</tr>
-<tr class="even">
-<td>LOO</td>
-<td>k &lt; 0.7</td>
-<td>No highly influential observations</td>
-</tr>
-</tbody>
-</table>
-<p>When diagnostics fail, <strong>do not proceed with
-inference</strong>. Address the underlying issues first.</p>
+<p>Taylor or supplied domain sampling variances enter A* as fixed
+values. Their estimation uncertainty is not propagated. Always retain
+<code>fit$provenance$sampling_variances</code> and
+<code>vd$A_star$provenance</code> with results.</p>
 </div>
 <div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 id="log-likelihood-scope">Log-likelihood scope<a class="anchor" aria-label="anchor" href="#log-likelihood-scope"></a>
 </h2>
-<p>Vehtari, A., Gelman, A., &amp; Gabry, J. (2017). Practical Bayesian
-model evaluation using leave-one-out cross-validation and WAIC.
-<em>Statistics and Computing</em>, 27(5), 1413–1432.</p>
-<p>Gabry, J., Simpson, D., Vehtari, A., Betancourt, M., &amp; Gelman, A.
-(2019). Visualization in Bayesian workflow. <em>Journal of the Royal
-Statistical Society: Series A</em>, 182(2), 389–402.</p>
-<hr>
-<p><em>For questions or feedback, please visit the <a href="https://github.com/joonho112/bhfvar" class="external-link">GitHub
-repository</a>.</em></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ll</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/log_lik.html">log_lik</a></span><span class="op">(</span><span class="va">fit</span>, kind <span class="op">=</span> <span class="st">"pseudo"</span>, aggregate <span class="op">=</span> <span class="st">"observation"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">ll</span>, <span class="st">"scope"</span><span class="op">)</span></span></code></pre></div>
+<p>The pseudo form emits a warning. <code>aggregate = "psu"</code> or
+<code>"stratum"</code> sums stored contributions; it does not refit
+after leaving out a unit and does not establish ordinary cluster-level
+LOO or WAIC validity. The raw form is an unweighted Bernoulli
+diagnostic, not the fitted target.</p>
+</div>
+<div class="section level2">
+<h2 id="what-diagnostics-do-and-do-not-tell-you">What diagnostics do and do not tell you<a class="anchor" aria-label="anchor" href="#what-diagnostics-do-and-do-not-tell-you"></a>
+</h2>
+<p>Sampler diagnostics answer one question: did the sampler explore the
+posterior properly? They do not tell you whether the resulting intervals
+have the frequentist coverage you might expect.</p>
+<p>In internal testing, every fit passed the sampler diagnostics while
+interval coverage was still below nominal for several quantities.
+Sampler health is necessary but not sufficient. Treat clean diagnostics
+as a precondition for interpreting a fit, not as evidence about
+calibration.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

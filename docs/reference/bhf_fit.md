@@ -13,7 +13,7 @@ bhf_fit(
   warmup = floor(iter/2),
   seed = 1234,
   cores = NULL,
-  adapt_delta = 0.9,
+  adapt_delta = 0.95,
   max_treedepth = 12,
   refresh = 200,
   ...
@@ -60,8 +60,7 @@ bhf_fit(
 - adapt_delta:
 
   Numeric between 0 and 1. Target acceptance probability. Higher values
-  (e.g., 0.95) reduce divergent transitions but slow sampling. Default
-  is 0.90.
+  reduce divergent transitions but slow sampling. Default is 0.95.
 
 - max_treedepth:
 
@@ -80,6 +79,22 @@ bhf_fit(
 ## Value
 
 An object of class `bhf_fit` containing:
+
+- schema_version:
+
+  Version of the fit-object contract
+
+- contract_id:
+
+  Stable fit-object contract identifier
+
+- package_version:
+
+  Package version that created the fit
+
+- model_sha256:
+
+  SHA-256 fingerprint of the Stan source
 
 - stanfit:
 
@@ -101,6 +116,11 @@ An object of class `bhf_fit` containing:
 
   MCMC diagnostics summary
 
+- provenance:
+
+  Data, weight, population-share, sampling-variance, prior,
+  sampling-control, and session metadata
+
 ## Details
 
 The model uses a non-centered parameterization for random effects, which
@@ -114,6 +134,10 @@ typically improves sampling efficiency. Key parameters are:
 
   Between-domain standard deviation
 
+- sigma_stratum:
+
+  Between-stratum design standard deviation
+
 - sigma_psu:
 
   Between-PSU standard deviation (within stratum)
@@ -126,7 +150,8 @@ The function automatically checks for:
 
 - Low Rhat values (should be \< 1.05)
 
-- Adequate effective sample size (should be \> 100)
+- Legacy rstan `n_eff` (should be \> 100; this is not labeled as bulk or
+  tail ESS)
 
 - Tree depth saturation
 

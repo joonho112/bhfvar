@@ -15,9 +15,14 @@ prepare_bhf_data(
   psu,
   weights,
   population_shares = NULL,
-  use_deattenuation = TRUE,
+  weight_scaling = c("mean_one", "legacy_d2"),
+  deattenuation = NULL,
+  sampling_variances = NULL,
+  sampling_variance_method = NULL,
+  use_deattenuation = NULL,
   prior_alpha_mean = NULL,
-  prior_alpha_sd = 1.5
+  prior_alpha_sd = 0.5,
+  sigma_state_prior = names(sigma_state_prior_catalog())
 )
 ```
 
@@ -49,14 +54,35 @@ prepare_bhf_data(
 
 - population_shares:
 
-  Optional numeric vector of length S (number of domains) containing
-  population shares for each domain. Must sum to 1. If NULL, shares are
-  estimated from the weighted data.
+  Optional named positive numeric vector whose names exactly match the
+  observed complete-case domains. Values are normalized to sum to one in
+  canonical domain order. If NULL, shares are estimated from retained
+  raw survey weights.
+
+- weight_scaling:
+
+  Likelihood-weight scaling method. The default `"mean_one"` scales raw
+  weights globally to sum to the retained sample size. `"legacy_d2"` is
+  a warned sensitivity/reproduction path.
+
+- deattenuation:
+
+  Character mode: `"taylor"` (default), `"supplied"`, or `"none"`.
+
+- sampling_variances:
+
+  Named nonnegative domain sampling variances for
+  `deattenuation = "supplied"`.
+
+- sampling_variance_method:
+
+  Provenance label for supplied variances: `"external_taylor"`,
+  `"external_replicate"`, or `"external_other"`.
 
 - use_deattenuation:
 
-  Logical. If TRUE (default), computes and applies de-attenuation
-  adjustment for finite-sample variance inflation.
+  Deprecated logical compatibility argument. Use `deattenuation`
+  instead.
 
 - prior_alpha_mean:
 
@@ -65,11 +91,26 @@ prepare_bhf_data(
 
 - prior_alpha_sd:
 
-  Numeric. Prior SD for the intercept. Default is 1.5.
+  Numeric. Prior SD for the intercept. Default is 0.5.
+
+- sigma_state_prior:
+
+  Article prior-sensitivity selector for the state random-effect SD.
+  Exactly one of `"half_t3_2.5"` (baseline), `"half_normal_1"`,
+  `"half_cauchy_2.5"`, or `"half_t3_5"`. Stratum and PSU SD priors
+  remain half-t(3, 0, 2.5).
 
 ## Value
 
 An object of class `bhf_data` containing:
+
+- schema_version:
+
+  Prepared-data schema version.
+
+- contract_id:
+
+  Stable prepared-data contract identifier.
 
 - stan_data:
 
@@ -78,6 +119,18 @@ An object of class `bhf_data` containing:
 - mapping:
 
   List containing domain/strata/PSU label mappings
+
+- row_provenance:
+
+  Original/retained/dropped row mapping and ledger.
+
+- provenance:
+
+  Consolidated row, weight, share, vhat, and prior metadata.
+
+- analysis_data:
+
+  Compact retained analysis frame with raw and likelihood weights.
 
 - domain_summary:
 
@@ -98,9 +151,8 @@ This function performs several critical transformations:
 
 - Weight Scaling:
 
-  Weights are scaled using Method D2 from Pfeffermann et al. (1998) to
-  have effective sample size within each domain. This is critical for
-  proper pseudo-likelihood estimation.
+  Positive raw weights are retained and globally normalized once in R to
+  have mean one.
 
 - Sampling Variance Estimation:
 
@@ -112,19 +164,22 @@ This function performs several critical transformations:
   Creates the nested PSU-within-stratum structure required by the Stan
   model.
 
-## Weight Scaling (Method D2)
+## Weight Scaling
 
-Weights are scaled so that for each domain s: \$\$w^\*\_i = w_i \times
-\frac{n^{eff}\_s}{\sum\_{i \in s} w_i}\$\$ where \\n^{eff}\_s = (\sum
-w_i)^2 / \sum w_i^2\\ is the effective sample size. This ensures the
-pseudo-likelihood contributes appropriate information.
+The default likelihood weight is \$\$w^\*\_i = w_i \times
+\frac{N}{\sum_i w_i},\$\$ so the scaled weights sum to the retained
+sample size N while preserving all raw-weight ratios. Legacy D2 scaling
+is available only through the explicit warned
+`weight_scaling = "legacy_d2"` sensitivity path; it receives a final
+global sum-N normalization in R.
 
-## Sampling Variance Estimation
+## Sampling-variance contract
 
-The estimated sampling variance for domain s is: \$\$\hat{V}\_s =
-\frac{deff_s \times \hat{p}\_s(1-\hat{p}\_s)}{n_s}\$\$ where \\deff_s\\
-is the design effect. A default value of 1.5 is used when the design
-effect cannot be reliably estimated.
+The default `deattenuation = "taylor"` uses the retained raw survey
+weights and the one-stage stratified PSU design. Singleton strata fail
+explicitly; no cap, floor, or default design effect is substituted.
+`deattenuation = "supplied"` treats named domain variances as fixed
+external inputs. Their estimation uncertainty is not propagated.
 
 ## Examples
 

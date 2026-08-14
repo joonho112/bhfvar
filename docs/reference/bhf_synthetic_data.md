@@ -1,9 +1,9 @@
 # Synthetic Survey Data for BHF Package Examples
 
-A synthetic dataset that mimics the structure of complex survey data for
-demonstrating the Bayesian Hybrid Framework methodology. This data was
-generated to have similar properties to the NSECE 2019 data used in the
-original paper, but contains no actual restricted data.
+A legacy synthetic dataset retained for examples and 0.3.0 migration. It
+mimics a complex survey structure but contains no restricted NSECE data.
+It is not the scientific-validation fixture and must not be used to
+claim reproduction of the article's restricted-data results.
 
 ## Usage
 
@@ -65,18 +65,12 @@ This synthetic data is suitable for:
 
 - Verifying installation
 
-## Generation
+## Provenance
 
-Generated using Python script in dev/py/01_generate_synthetic_data.py.
-The generation process includes:
-
-1.  Hierarchical random effects (state and PSU levels)
-
-2.  Stratified, clustered sampling structure
-
-3.  Log-normal weight distribution
-
-4.  Binary outcomes from Bernoulli distribution
+The exact historical generator is not part of the current source
+contract. The package preserves this data object for compatibility;
+scientific validation uses separately versioned fixtures and frozen
+provenance.
 
 ## Examples
 

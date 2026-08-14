@@ -23,10 +23,6 @@ Functions for preparing survey data
 
 - [`prepare_bhf_data()`](https://joonho112.github.io/bhfvar/reference/prepare_bhf_data.md)
   : Prepare Data for BHF Model
-- [`validate_input_data()`](https://joonho112.github.io/bhfvar/reference/validate_input_data.md)
-  : Validate Input Data
-- [`validate_stan_data()`](https://joonho112.github.io/bhfvar/reference/validate_stan_data.md)
-  : Validate Stan Data
 
 ## Model Fitting
 
@@ -40,13 +36,13 @@ Functions for fitting the Bayesian model
 Functions for extracting and summarizing results
 
 - [`variance_decomposition()`](https://joonho112.github.io/bhfvar/reference/variance_decomposition.md)
-  : Extract Variance Decomposition Results
+  : Extract Article-Aligned Variance Decomposition Results
 - [`domain_estimates()`](https://joonho112.github.io/bhfvar/reference/domain_estimates.md)
-  : Extract Domain-Level Estimates
+  : Extract Domain-Level Estimand A or B Probabilities
 - [`overall_estimate()`](https://joonho112.github.io/bhfvar/reference/overall_estimate.md)
-  : Extract Overall Population Estimate
+  : Extract an Overall Estimand A or B Population Probability
 - [`log_lik()`](https://joonho112.github.io/bhfvar/reference/log_lik.md)
-  : Extract Log-Likelihood for LOO-CV
+  : Extract Raw or Pseudo Pointwise Log-Likelihood Contributions
 
 ## Utilities
 

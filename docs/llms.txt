@@ -1,206 +1,144 @@
 # bhfvar: Bayesian Hybrid Framework for Variance Decomposition
 
-## Overview
+`bhfvar` decomposes variance across post-hoc domains (such as states) in
+complex survey data, separating substantive domain variation from
+artifacts of the sampling design and from finite-sample noise. It
+implements the Bayesian hybrid framework of Lee & Hooper (2026).
 
-**bhfvar** (Bayesian Hybrid Framework for VARiance decomposition)
-implements the methodology from Lee & Hooper (2026) for variance
-decomposition in complex surveys with post-hoc domains.
+## Which version corresponds to the article?
 
-The package provides tools for:
+The article cites `bhfvar` **version 0.3.0**. **Version 0.5.0 is the
+version that implements the model given in Appendix A of the article.**
 
-- **Separating signal from noise**: Distinguish true geographic
-  variation from sampling artifacts
-- **Dual estimand framework**: Policy-relevant (latent) vs. Descriptive
-  (observed) variance decomposition
-- **De-attenuation**: Correct for finite-sample variance inflation
+| Article component                             | 0.3.0 | 0.5.0 |
+|-----------------------------------------------|:-----:|:-----:|
+| Stratum random effect (Eq. 13)                |   —   |  yes  |
+| Population-weighted domain centering (Eq. 16) |   —   |  yes  |
+| Within-stratum PSU centering (Eq. 17)         |   —   |  yes  |
+| Estimand A on the probability scale (Eq. 20)  |   —   |  yes  |
+| Estimand A\* de-attenuation (Eq. 19)          |   —   |  yes  |
+| Estimand B, realized design mixture (Eq. 21)  |   —   |  yes  |
+| Variance-component priors half-t(3, 0, 2.5)   |   —   |  yes  |
+
+**If you are following the article, use 0.5.0 or later.** Results from
+0.3.0 are not comparable. Version 0.3.0 remains available under the
+`v0.3.0` git tag for anyone who needs the exact code that existed at
+publication.
+
+Note that the exported function names are unchanged between the two
+versions, so 0.3.0 scripts will still run under 0.5.0 — but they will
+return different numbers. See
+[`vignette("migration-0.5.0")`](https://joonho112.github.io/bhfvar/articles/migration-0.5.0.md).
+
+## What the model fits
+
+``` text
+logit(p_i) = alpha + domain[s_i] + stratum[h_i] + psu_within_stratum[j_i]
+```
+
+Domain and stratum effects are crossed; PSU identifiers are nested
+within strata. Survey weights enter through a pseudo-likelihood and are
+globally scaled to mean one by default.
+
+Three estimands are reported on the probability scale:
+
+- **A** — the distribution induced by domain effects alone (policy
+  estimand);
+- **A\*** — A with a de-attenuation correction that removes estimated
+  sampling variance from the between-domain component;
+- **B** — the distribution including each domain’s realized mixture of
+  stratum and PSU design effects (descriptive estimand).
+
+Latent-scale SDs and ICCs are reported separately.
+
+## Scope
+
+Posterior intervals are **pseudo-posterior credible intervals**. Their
+frequentist coverage has not been established, and a sandwich-type
+variance adjustment is not implemented in this version. A\* conditions
+on the sampling variances as fixed and does not propagate their
+estimation uncertainty. The model is intercept-only with a binary
+outcome. The article’s restricted-data NSECE application is not
+reproduced by this package.
+
+See
+[`vignette("scientific-limitations")`](https://joonho112.github.io/bhfvar/articles/scientific-limitations.md)
+before using the package for substantive work.
 
 ## Installation
 
 ``` r
 
-# Install from GitHub (requires devtools)
-# install.packages("devtools")
-devtools::install_github("joonho112/bhfvar")
+# install.packages("remotes")
+remotes::install_github("joonho112/bhfvar")
 ```
 
-### Prerequisites
+A working C++ toolchain and `rstan` are required to compile the bundled
+Stan model. The model is compiled on demand rather than at install time.
 
-This package requires a working C++ toolchain for Stan compilation:
-
-- **Windows**: Install
-  [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
-- **macOS**: Run `xcode-select --install` in Terminal
-- **Linux**: Install build-essential (e.g.,
-  `sudo apt install build-essential`)
-
-## Quick Start
+## Workflow
 
 ``` r
 
 library(bhfvar)
 
-# Step 1: Compile the Stan model (once per session)
-model <- compile_bhf_model()
-
-# Step 2: Load example data
+# 1. Prepare the crossed design
 data(bhf_synthetic_data)
-
-# Step 3: Prepare data for Stan
 prepared <- prepare_bhf_data(
   bhf_synthetic_data,
-  outcome = "has_subsidy",
-  domain = "state",
-  strata = "stratum",
-  psu = "psu",
-  weights = "weight"
+  outcome        = "has_subsidy",
+  domain         = "state",
+  strata         = "stratum",
+  psu            = "psu",
+  weights        = "weight",
+  weight_scaling = "mean_one",
+  deattenuation  = "taylor"
 )
 
-# Step 4: Fit the model
-fit <- bhf_fit(prepared, model = model, chains = 4, iter = 2000)
-
-# Step 5: Extract results
-variance_decomposition(fit)
-domain_estimates(fit, type = "marginal")
-```
-
-## Key Features
-
-### Three Estimands
-
-| Estimand | Scale | Interpretation |
-|----|----|----|
-| **A** (Policy) | Logit | Latent heterogeneity in underlying propensity |
-| **B** (Descriptive) | Probability | Observed heterogeneity in rates |
-| **A**\* (Adjusted) | Probability | True heterogeneity after removing sampling noise |
-
-### Defensive Programming Approach
-
-Unlike packages that pre-compile Stan models during installation,
-`bhfvar` uses a manual compilation approach:
-
-``` r
-
-# Compile once per R session
+# 2. Compile once per session
 model <- compile_bhf_model()
+
+# 3. Fit
+fit <- bhf_fit(prepared, model = model, chains = 4, iter = 2000, seed = 1234)
+
+# 4. Extract
+vd        <- variance_decomposition(fit)
+domains_A <- domain_estimates(fit, estimand = "A")
+domains_B <- domain_estimates(fit, estimand = "B")
+overall_B <- overall_estimate(fit, estimand = "B")
 ```
 
-**Benefits:** - More stable across R/Stan/C++ version combinations -
-Clear error messages when compilation fails - Full visibility into the
-compilation process - No hidden cached objects causing mysterious errors
+Inspect `fit$diagnostics` before interpreting any fit. Report A, A*, and
+B together rather than selectively, and state the provenance of the
+sampling variances alongside A*.
 
-### Comprehensive Diagnostics
+## Public API
 
-``` r
-
-# Model diagnostics
-fit$diagnostics
-
-# Convergence checks
-print(fit)
-
-# Posterior predictive checks (requires bayesplot)
-library(bayesplot)
-y_rep <- rstan::extract(fit$stanfit, "y_rep")$y_rep
-bayesplot::ppc_dens_overlay(bhf_synthetic_data$has_subsidy, y_rep[1:50, ])
-```
-
-## Methodology
-
-The package implements a Bayesian multilevel model with:
-
-1.  **Pseudo-likelihood weighting**: Incorporates survey weights via
-    Method D2 scaling
-2.  **Non-centered parameterization**: Improves MCMC sampling efficiency
-3.  **Marginal scaling**: Converts logit-scale effects to probability
-    scale using Zeger et al. (1988) approximation
-4.  **De-attenuation**: Removes finite-sample variance inflation from
-    ICC estimates
-
-### Model Structure
-
-    y_i ~ Bernoulli(p_i)
-    logit(p_i) = alpha + u_state[s_i] + u_psu[j_i]
-
-    u_state ~ Normal(0, sigma_state)
-    u_psu ~ Normal(0, sigma_psu)
-
-### Variance Decomposition
-
-**Probability scale (Estimand B):**
-
-    Var_between = Sum_s{ pi_s * (p_s - p_bar)^2 }
-    Var_within = Sum_s{ pi_s * p_s * (1 - p_s) }
-    ICC_B = Var_between / (Var_between + Var_within)
-
-\*\*De-attenuated (Estimand A\*):\*\*
-
-    Var_between_adj = max(0, Var_between - V_hat)
-    ICC_A* = Var_between_adj / (Var_between_adj + Var_within)
-
-where `V_hat` is the estimated sampling variance due to survey design.
-
-## Development Scripts
-
-The `dev/` folder contains step-by-step scripts for understanding and
-testing the package:
-
-| Script | Purpose |
+| Stage | Functions |
 |----|----|
-| `run_workflow.R` | **Master script** - runs complete workflow from source |
-| `00_verify_environment.R` | Check R and Stan setup |
-| `01_compile_model.R` | Manual Stan model compilation |
-| `02_prepare_data.R` | Data preparation and validation |
-| `03_fit_model.R` | Model fitting with diagnostics |
-| `04_extract_results.R` | Result extraction and visualization |
+| Compile | [`compile_bhf_model()`](https://joonho112.github.io/bhfvar/reference/compile_bhf_model.md), [`get_stan_file_path()`](https://joonho112.github.io/bhfvar/reference/get_stan_file_path.md) |
+| Prepare | [`prepare_bhf_data()`](https://joonho112.github.io/bhfvar/reference/prepare_bhf_data.md) |
+| Fit | [`bhf_fit()`](https://joonho112.github.io/bhfvar/reference/bhf_fit.md) |
+| Extract | [`variance_decomposition()`](https://joonho112.github.io/bhfvar/reference/variance_decomposition.md), [`domain_estimates()`](https://joonho112.github.io/bhfvar/reference/domain_estimates.md), [`overall_estimate()`](https://joonho112.github.io/bhfvar/reference/overall_estimate.md), [`log_lik()`](https://joonho112.github.io/bhfvar/reference/log_lik.md) |
+| Utility | [`calc_eff_n()`](https://joonho112.github.io/bhfvar/reference/calc_eff_n.md) |
 
-### Quick Test (from source)
-
-``` r
-
-# From package root directory:
-setwd("path/to/bhfvar")
-source("dev/run_workflow.R")
-```
-
-## Model Structure (2-Level)
-
-This package implements a **2-level hierarchical model**:
-
-    Level 2: States (S domains)
-      - u_state[s] ~ Normal(0, sigma_state)
-
-    Level 1: PSUs (J clusters nested in strata)
-      - u_psu[j] ~ Normal(0, sigma_psu)
-
-**Key parameters:** - `alpha`: Global intercept (logit scale) -
-`sigma_state`: Between-state standard deviation - `sigma_psu`:
-Between-PSU standard deviation
-
-**Generated quantities:** - `icc_state`: ICC on logit scale (Estimand
-A) - `icc_prob`: ICC on probability scale (Estimand B) - `icc_deatten`:
-De-attenuated ICC (Estimand A\*)
+There is no plotting API. Build graphics from the tidy extractor output.
 
 ## Citation
 
-If you use this package, please cite the companion paper:
+``` r
 
-    Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A Bayesian
-    hybrid framework for variance decomposition in complex surveys with
-    post-hoc domains. Mathematics, 14(3), 512.
-    https://doi.org/10.3390/math14030512
+citation("bhfvar")
+```
 
-Run `citation("bhfvar")` in R for BibTeX entries for both the paper and
-the package itself.
+> Lee, J., & Hooper, A. (2026). Disentangling signal from noise: A
+> Bayesian hybrid framework for variance decomposition in complex
+> surveys with post-hoc domains. *Mathematics*, 14(3), 512.
+> <https://doi.org/10.3390/math14030512>
 
 ## License
 
 MIT © JoonHo Lee
-
-## Contact
-
-- **Author**: JoonHo Lee
-- **Email**: <jlee296@ua.edu>
-- **Institution**: The University of Alabama
 
 # Package index
 
@@ -227,10 +165,6 @@ Functions for preparing survey data
 
 - [`prepare_bhf_data()`](https://joonho112.github.io/bhfvar/reference/prepare_bhf_data.md)
   : Prepare Data for BHF Model
-- [`validate_input_data()`](https://joonho112.github.io/bhfvar/reference/validate_input_data.md)
-  : Validate Input Data
-- [`validate_stan_data()`](https://joonho112.github.io/bhfvar/reference/validate_stan_data.md)
-  : Validate Stan Data
 
 ## Model Fitting
 
@@ -244,13 +178,13 @@ Functions for fitting the Bayesian model
 Functions for extracting and summarizing results
 
 - [`variance_decomposition()`](https://joonho112.github.io/bhfvar/reference/variance_decomposition.md)
-  : Extract Variance Decomposition Results
+  : Extract Article-Aligned Variance Decomposition Results
 - [`domain_estimates()`](https://joonho112.github.io/bhfvar/reference/domain_estimates.md)
-  : Extract Domain-Level Estimates
+  : Extract Domain-Level Estimand A or B Probabilities
 - [`overall_estimate()`](https://joonho112.github.io/bhfvar/reference/overall_estimate.md)
-  : Extract Overall Population Estimate
+  : Extract an Overall Estimand A or B Population Probability
 - [`log_lik()`](https://joonho112.github.io/bhfvar/reference/log_lik.md)
-  : Extract Log-Likelihood for LOO-CV
+  : Extract Raw or Pseudo Pointwise Log-Likelihood Contributions
 
 ## Utilities
 
@@ -270,47 +204,28 @@ Example datasets
 
 ### Getting Started
 
-- [bhfvar: Bayesian Hybrid Framework for Variance
-  Decomposition](https://joonho112.github.io/bhfvar/articles/introduction.md):
-
-  An introduction to the bhfvar package for Bayesian variance
-  decomposition in complex surveys with post-hoc domains, addressing
-  informative sampling and finite-sample variance inflation.
-
-- [Quick Start: Your First Variance Decomposition in 5
-  Minutes](https://joonho112.github.io/bhfvar/articles/quick-start.md):
-
-  Learn how to perform your first Bayesian variance decomposition with
-  bhfvar in just 5 minutes using the included synthetic data.
+- [Introduction to
+  bhfvar](https://joonho112.github.io/bhfvar/articles/introduction.md):
+- [Quick
+  Start](https://joonho112.github.io/bhfvar/articles/quick-start.md):
 
 ### Applied Guide
 
-- [Model Diagnostics and Convergence
-  Checking](https://joonho112.github.io/bhfvar/articles/diagnostics.md):
-
-  A comprehensive guide to assessing model convergence, diagnosing
-  problems, and validating results from bhfvar models.
+- [Diagnostics and Uncertainty
+  Boundaries](https://joonho112.github.io/bhfvar/articles/diagnostics.md):
+- [Scope and
+  Limitations](https://joonho112.github.io/bhfvar/articles/scientific-limitations.md):
 
 ### Methodology
 
-- [Methodology: The Bayesian Hybrid
-  Framework](https://joonho112.github.io/bhfvar/articles/methodology.md):
-
-  A detailed treatment of the Bayesian Hybrid Framework for variance
-  decomposition, including the statistical model, pseudo-likelihood, and
-  de-attenuation procedures.
-
-- [Understanding the Dual Estimand Framework: A, B, and
-  A\*](https://joonho112.github.io/bhfvar/articles/dual-estimands.md):
-
-  A detailed guide to the three variance decomposition estimands in
-  bhfvar: Policy (A), Descriptive (B), and Policy Adjusted (A\*), with
-  guidance on which to use for different research questions.
+- [Methodology and Implementation
+  Contract](https://joonho112.github.io/bhfvar/articles/methodology.md):
+- [Probability-Scale Estimands A, A\*, and
+  B](https://joonho112.github.io/bhfvar/articles/dual-estimands.md):
 
 ### Reference
 
-- [API Reference: Complete Function
-  Documentation](https://joonho112.github.io/bhfvar/articles/api-reference.md):
-
-  Comprehensive documentation of all exported functions in the bhfvar
-  package, with detailed parameter descriptions and usage examples.
+- [Public API and Object
+  Contracts](https://joonho112.github.io/bhfvar/articles/api-reference.md):
+- [Migrating from 0.3.0 to
+  0.5.0](https://joonho112.github.io/bhfvar/articles/migration-0.5.0.md):

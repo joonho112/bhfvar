@@ -1,4 +1,4 @@
-pandoc: '3.9'
+pandoc: '3.8'
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
@@ -7,8 +7,10 @@ articles:
   dual-estimands: dual-estimands.html
   introduction: introduction.html
   methodology: methodology.html
+  migration-0.5.0: migration-0.5.0.html
   quick-start: quick-start.html
-last_built: 2026-07-10T18:06Z
+  scientific-limitations: scientific-limitations.html
+last_built: 2026-08-14T15:24Z
 urls:
   reference: https://joonho112.github.io/bhfvar/reference
   article: https://joonho112.github.io/bhfvar/articles

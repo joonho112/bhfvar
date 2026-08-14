@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="../articles/introduction.html">Introduction</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics.html">Diagnostics</a></li>
+    <li><a class="dropdown-item" href="../articles/scientific-limitations.html">Scientific limitations</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Methodology Track</h6></li>
     <li><a class="dropdown-item" href="../articles/methodology.html">Bayesian Hybrid Framework</a></li>
@@ -30,11 +31,12 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Reference</h6></li>
     <li><a class="dropdown-item" href="../articles/api-reference.html">API Reference</a></li>
+    <li><a class="dropdown-item" href="../articles/migration-0.5.0.html">Migration from 0.3.0</a></li>
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.3.0</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul></li>
@@ -68,7 +70,7 @@
 <span>  warmup <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="va">iter</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  cores <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  adapt_delta <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  adapt_delta <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  max_treedepth <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  refresh <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -113,8 +115,8 @@ half of <code>iter</code>.</p></dd>
 
 <dt id="arg-adapt-delta">adapt_delta<a class="anchor" aria-label="anchor" href="#arg-adapt-delta"></a></dt>
 <dd><p>Numeric between 0 and 1. Target acceptance probability.
-Higher values (e.g., 0.95) reduce divergent transitions but slow sampling.
-Default is 0.90.</p></dd>
+Higher values reduce divergent transitions but slow sampling. Default is
+0.95.</p></dd>
 
 
 <dt id="arg-max-treedepth">max_treedepth<a class="anchor" aria-label="anchor" href="#arg-max-treedepth"></a></dt>
@@ -133,7 +135,19 @@ to suppress output.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of class <code>bhf_fit</code> containing:</p>
-<dl><dt>stanfit</dt>
+<dl><dt>schema_version</dt>
+<dd><p>Version of the fit-object contract</p></dd>
+
+<dt>contract_id</dt>
+<dd><p>Stable fit-object contract identifier</p></dd>
+
+<dt>package_version</dt>
+<dd><p>Package version that created the fit</p></dd>
+
+<dt>model_sha256</dt>
+<dd><p>SHA-256 fingerprint of the Stan source</p></dd>
+
+<dt>stanfit</dt>
 <dd><p>The stanfit object from rstan</p></dd>
 
 <dt>data</dt>
@@ -148,6 +162,10 @@ to suppress output.</p></dd>
 <dt>diagnostics</dt>
 <dd><p>MCMC diagnostics summary</p></dd>
 
+<dt>provenance</dt>
+<dd><p>Data, weight, population-share, sampling-variance,
+prior, sampling-control, and session metadata</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -158,6 +176,9 @@ typically improves sampling efficiency. Key parameters are:</p>
 
 <dt>sigma_state</dt>
 <dd><p>Between-domain standard deviation</p></dd>
+
+<dt>sigma_stratum</dt>
+<dd><p>Between-stratum design standard deviation</p></dd>
 
 <dt>sigma_psu</dt>
 <dd><p>Between-PSU standard deviation (within stratum)</p></dd>
@@ -170,7 +191,8 @@ typically improves sampling efficiency. Key parameters are:</p>
 
 <p>The function automatically checks for:</p><ul><li><p>Divergent transitions (should be 0)</p></li>
 <li><p>Low Rhat values (should be &lt; 1.05)</p></li>
-<li><p>Adequate effective sample size (should be &gt; 100)</p></li>
+<li><p>Legacy rstan <code>n_eff</code> (should be &gt; 100; this is not labeled as
+bulk or tail ESS)</p></li>
 <li><p>Tree depth saturation</p></li>
 </ul><p>Warnings are issued if any diagnostics suggest convergence problems.</p>
     </div>

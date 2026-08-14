@@ -1,37 +1,40 @@
-# Extract Log-Likelihood for LOO-CV
+# Extract Raw or Pseudo Pointwise Log-Likelihood Contributions
 
-Extracts the log-likelihood matrix for use with the loo package for
-leave-one-out cross-validation.
+Aggregation only sums stored observation contributions. It does not
+refit the model and does not establish ordinary observation- or
+cluster-level LOO.
 
 ## Usage
 
 ``` r
-log_lik(fit)
+log_lik(
+  fit,
+  kind = c("pseudo", "raw"),
+  aggregate = c("observation", "psu", "stratum")
+)
 ```
 
 ## Arguments
 
 - fit:
 
-  An object of class `bhf_fit` from
-  [`bhf_fit()`](https://joonho112.github.io/bhfvar/reference/bhf_fit.md).
+  A versioned `bhf_fit` object.
+
+- kind:
+
+  `"pseudo"` (default) or `"raw"`.
+
+- aggregate:
+
+  `"observation"`, `"psu"`, or `"stratum"`.
 
 ## Value
 
-A matrix of dimension (n_iterations x N) containing pointwise
-log-likelihood values.
+A draw-by-unit `bhf_log_lik` matrix with explicit `kind`, `aggregate`,
+and interpretation metadata.
 
-## Examples
+## Details
 
-``` r
-if (FALSE) { # \dontrun{
-# After fitting
-fit <- bhf_fit(prepared_data, model = model)
-
-# Get log-likelihood and compute LOO
-library(loo)
-ll <- log_lik(fit)
-loo_result <- loo(ll)
-print(loo_result)
-} # }
-```
+The default pseudo contributions target the fitted pseudo-likelihood.
+Aggregation is arithmetic only; this function does not establish
+ordinary observation- or cluster-level LOO validity.

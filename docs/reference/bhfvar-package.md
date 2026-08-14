@@ -1,21 +1,20 @@
 # bhfvar: Bayesian Hybrid Framework for Variance Decomposition
 
-The bhfvar package implements the Bayesian Hybrid Framework for variance
-decomposition in complex surveys with post-hoc domains. It provides
-tools for separating substantive geographic variation from design
-artifacts and sampling noise.
+The bhfvar package implements an article-informed crossed state/stratum
+model with PSUs nested within strata, pseudo-likelihood survey weights,
+and probability-scale variance decompositions for post-hoc domains.
 
-## Key Features
+## Supported workflow
 
-- Bayesian Pseudo-Likelihood estimation for design consistency
+- Crossed state and stratum effects with PSU effects nested in stratum
 
-- Hybrid generalized linear mixed models with domain and PSU effects
+- Globally mean-one likelihood-weight scaling (legacy D2 is deprecated)
 
-- Dual Estimand Framework: Policy (A/A\*) and Descriptive (B) estimands
+- Probability-scale Estimands A, A\*, and B with explicit gaps
 
-- De-attenuation for finite-sample variance inflation correction
+- Fixed supplied or Taylor-linearized sampling variances for A\*
 
-- Comprehensive diagnostic and visualization tools
+- Versioned prepared-data, fit, and extractor result contracts
 
 ## Main Functions
 
@@ -52,7 +51,29 @@ The recommended workflow is:
     and
     [`domain_estimates()`](https://joonho112.github.io/bhfvar/reference/domain_estimates.md)
 
-## Design Philosophy
+## What has and has not been established
+
+The implementation is verified against the model specified in Appendix A
+of the accompanying article: a frozen reference oracle, algebraic
+property tests, and centering-invariant tests all pass within their
+tested contracts.
+
+Interval calibration is a separate question and has not been
+established. An internal simulation study found coverage of central 90\\
+nominal for some quantities, which is consistent with the general
+behaviour of unadjusted pseudo-posteriors (see the interpretation
+boundary below). Users should not assume nominal frequentist coverage.
+The restricted-data application reported in the article is not
+reproduced by this package.
+
+## Interpretation boundary
+
+A\* conditions on supplied or Taylor-estimated sampling variances; their
+estimation uncertainty is not propagated. Pseudo-posterior intervals and
+pseudo log likelihood do not automatically have ordinary posterior
+coverage or ordinary observation-level LOO interpretations.
+
+## Compilation design
 
 This package uses a "defensive" programming approach where the Stan
 model is compiled explicitly by the user once per session, rather than
@@ -77,7 +98,7 @@ with post-hoc domains. *Mathematics*, 14(3), 512.
 
 Useful links:
 
-- <https://joonho112.github.io/bhfvar>
+- <https://joonho112.github.io/bhfvar/>
 
 - <https://github.com/joonho112/bhfvar>
 

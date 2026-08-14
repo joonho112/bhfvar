@@ -11,7 +11,7 @@ of design effect estimates needed for de-attenuation."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,6 +27,7 @@ of design effect estimates needed for de-attenuation."></head><body>
     <li><a class="dropdown-item" href="../articles/introduction.html">Introduction</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics.html">Diagnostics</a></li>
+    <li><a class="dropdown-item" href="../articles/scientific-limitations.html">Scientific limitations</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Methodology Track</h6></li>
     <li><a class="dropdown-item" href="../articles/methodology.html">Bayesian Hybrid Framework</a></li>
@@ -34,11 +35,12 @@ of design effect estimates needed for de-attenuation."></head><body>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Reference</h6></li>
     <li><a class="dropdown-item" href="../articles/api-reference.html">API Reference</a></li>
+    <li><a class="dropdown-item" href="../articles/migration-0.5.0.html">Migration from 0.3.0</a></li>
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.3.0</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul></li>
@@ -74,9 +76,14 @@ of design effect estimates needed for de-attenuation.</p>
 <span>  <span class="va">psu</span>,</span>
 <span>  <span class="va">weights</span>,</span>
 <span>  population_shares <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  use_deattenuation <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  weight_scaling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean_one"</span>, <span class="st">"legacy_d2"</span><span class="op">)</span>,</span>
+<span>  deattenuation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sampling_variances <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sampling_variance_method <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  use_deattenuation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  prior_alpha_mean <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  prior_alpha_sd <span class="op">=</span> <span class="fl">1.5</span></span>
+<span>  prior_alpha_sd <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  sigma_state_prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">sigma_state_prior_catalog</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -109,14 +116,36 @@ of design effect estimates needed for de-attenuation.</p>
 
 
 <dt id="arg-population-shares">population_shares<a class="anchor" aria-label="anchor" href="#arg-population-shares"></a></dt>
-<dd><p>Optional numeric vector of length S (number of domains)
-containing population shares for each domain. Must sum to 1. If NULL,
-shares are estimated from the weighted data.</p></dd>
+<dd><p>Optional named positive numeric vector whose names
+exactly match the observed complete-case domains. Values are normalized to
+sum to one in canonical domain order. If NULL, shares are estimated from
+retained raw survey weights.</p></dd>
+
+
+<dt id="arg-weight-scaling">weight_scaling<a class="anchor" aria-label="anchor" href="#arg-weight-scaling"></a></dt>
+<dd><p>Likelihood-weight scaling method. The default
+<code>"mean_one"</code> scales raw weights globally to sum to the retained sample
+size. <code>"legacy_d2"</code> is a warned sensitivity/reproduction path.</p></dd>
+
+
+<dt id="arg-deattenuation">deattenuation<a class="anchor" aria-label="anchor" href="#arg-deattenuation"></a></dt>
+<dd><p>Character mode: <code>"taylor"</code> (default), <code>"supplied"</code>,
+or <code>"none"</code>.</p></dd>
+
+
+<dt id="arg-sampling-variances">sampling_variances<a class="anchor" aria-label="anchor" href="#arg-sampling-variances"></a></dt>
+<dd><p>Named nonnegative domain sampling variances for
+<code>deattenuation = "supplied"</code>.</p></dd>
+
+
+<dt id="arg-sampling-variance-method">sampling_variance_method<a class="anchor" aria-label="anchor" href="#arg-sampling-variance-method"></a></dt>
+<dd><p>Provenance label for supplied variances:
+<code>"external_taylor"</code>, <code>"external_replicate"</code>, or <code>"external_other"</code>.</p></dd>
 
 
 <dt id="arg-use-deattenuation">use_deattenuation<a class="anchor" aria-label="anchor" href="#arg-use-deattenuation"></a></dt>
-<dd><p>Logical. If TRUE (default), computes and applies
-de-attenuation adjustment for finite-sample variance inflation.</p></dd>
+<dd><p>Deprecated logical compatibility argument. Use
+<code>deattenuation</code> instead.</p></dd>
 
 
 <dt id="arg-prior-alpha-mean">prior_alpha_mean<a class="anchor" aria-label="anchor" href="#arg-prior-alpha-mean"></a></dt>
@@ -125,17 +154,40 @@ Default is NULL, which estimates from data.</p></dd>
 
 
 <dt id="arg-prior-alpha-sd">prior_alpha_sd<a class="anchor" aria-label="anchor" href="#arg-prior-alpha-sd"></a></dt>
-<dd><p>Numeric. Prior SD for the intercept. Default is 1.5.</p></dd>
+<dd><p>Numeric. Prior SD for the intercept. Default is 0.5.</p></dd>
+
+
+<dt id="arg-sigma-state-prior">sigma_state_prior<a class="anchor" aria-label="anchor" href="#arg-sigma-state-prior"></a></dt>
+<dd><p>Article prior-sensitivity selector for the state
+random-effect SD. Exactly one of <code>"half_t3_2.5"</code> (baseline),
+<code>"half_normal_1"</code>, <code>"half_cauchy_2.5"</code>, or
+<code>"half_t3_5"</code>. Stratum and PSU SD priors remain half-t(3, 0, 2.5).</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of class <code>bhf_data</code> containing:</p>
-<dl><dt>stan_data</dt>
+<dl><dt>schema_version</dt>
+<dd><p>Prepared-data schema version.</p></dd>
+
+<dt>contract_id</dt>
+<dd><p>Stable prepared-data contract identifier.</p></dd>
+
+<dt>stan_data</dt>
 <dd><p>List of data formatted for Stan</p></dd>
 
 <dt>mapping</dt>
 <dd><p>List containing domain/strata/PSU label mappings</p></dd>
+
+<dt>row_provenance</dt>
+<dd><p>Original/retained/dropped row mapping and ledger.</p></dd>
+
+<dt>provenance</dt>
+<dd><p>Consolidated row, weight, share, vhat, and prior metadata.</p></dd>
+
+<dt>analysis_data</dt>
+<dd><p>Compact retained analysis frame with raw and
+likelihood weights.</p></dd>
 
 <dt>domain_summary</dt>
 <dd><p>Data frame with domain-level summary statistics</p></dd>
@@ -152,9 +204,8 @@ Default is NULL, which estimates from data.</p></dd>
 integers starting from 1 (required by Stan).</p></dd>
 
 <dt>Weight Scaling</dt>
-<dd><p>Weights are scaled using Method D2 from Pfeffermann
-et al. (1998) to have effective sample size within each domain.
-This is critical for proper pseudo-likelihood estimation.</p></dd>
+<dd><p>Positive raw weights are retained and globally
+normalized once in R to have mean one.</p></dd>
 
 <dt>Sampling Variance Estimation</dt>
 <dd><p>For each domain, estimates the
@@ -167,22 +218,25 @@ required by the Stan model.</p></dd>
 
 </dl></div>
     <div class="section level2">
-    <h2 id="weight-scaling-method-d-">Weight Scaling (Method D2)<a class="anchor" aria-label="anchor" href="#weight-scaling-method-d-"></a></h2>
+    <h2 id="weight-scaling">Weight Scaling<a class="anchor" aria-label="anchor" href="#weight-scaling"></a></h2>
 
 
-<p>Weights are scaled so that for each domain s:
-$$w^*_i = w_i \times \frac{n^{eff}_s}{\sum_{i \in s} w_i}$$
-where \(n^{eff}_s = (\sum w_i)^2 / \sum w_i^2\) is the effective sample size.
-This ensures the pseudo-likelihood contributes appropriate information.</p>
+<p>The default likelihood weight is
+$$w^*_i = w_i \times \frac{N}{\sum_i w_i},$$
+so the scaled weights sum to the retained sample size N while preserving all
+raw-weight ratios. Legacy D2 scaling is available only through the explicit
+warned <code>weight_scaling = "legacy_d2"</code> sensitivity path; it receives a
+final global sum-N normalization in R.</p>
     </div>
     <div class="section level2">
-    <h2 id="sampling-variance-estimation">Sampling Variance Estimation<a class="anchor" aria-label="anchor" href="#sampling-variance-estimation"></a></h2>
+    <h2 id="sampling-variance-contract">Sampling-variance contract<a class="anchor" aria-label="anchor" href="#sampling-variance-contract"></a></h2>
 
 
-<p>The estimated sampling variance for domain s is:
-$$\hat{V}_s = \frac{deff_s \times \hat{p}_s(1-\hat{p}_s)}{n_s}$$
-where \(deff_s\) is the design effect. A default value of 1.5 is used
-when the design effect cannot be reliably estimated.</p>
+<p>The default <code>deattenuation = "taylor"</code> uses the retained raw survey
+weights and the one-stage stratified PSU design. Singleton strata fail
+explicitly; no cap, floor, or default design effect is substituted.
+<code>deattenuation = "supplied"</code> treats named domain variances as fixed
+external inputs. Their estimation uncertainty is not propagated.</p>
     </div>
 
     <div class="section level2">
