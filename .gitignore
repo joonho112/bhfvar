@@ -1,5 +1,20 @@
+# R session / IDE state
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 .DS_Store
+.claude/
+
+# Build and check artifacts
+*.Rcheck/
+*.tar.gz
+inst/stan/*.rds
+src/*.o
+src/*.so
+src/*.dll
+
+# Project-internal working directories (not part of the package)
+log/
+output/
+dev/scratch/

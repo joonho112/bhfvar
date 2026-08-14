@@ -1,0 +1,62 @@
+name: platform-and-stan-opt-in
+
+"on":
+  workflow_dispatch:
+    inputs:
+      run_stan_parity:
+        description: "Run the tiny native Stan oracle-parity tier"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macos-latest, r: release}
+          - {os: windows-latest, r: release}
+          - {os: ubuntu-latest, r: devel}
+    runs-on: ${{ matrix.config.os }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      BHFVAR_RUN_STAN_PARITY: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+          cache-version: 1
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--no-manual")'
+          error-on: '"error"'
+
+  stan-parity:
+    if: ${{ inputs.run_stan_parity }}
+    runs-on: ubuntu-latest
+    env:
+      BHFVAR_RUN_STAN_PARITY: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          needs: check
+          cache-version: 1
+      - name: Run frozen tiny Stan parity tier
+        shell: Rscript {0}
+        run: testthat::test_local(filter = "stan-oracle-parity")
