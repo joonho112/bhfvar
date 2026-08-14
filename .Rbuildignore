@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.claude$
+# Local editor/tool state directories at the package root.
+^\.[A-Za-z][A-Za-z0-9_-]*/
 ^\.git$
 ^\.github$
 ^\.idea$
