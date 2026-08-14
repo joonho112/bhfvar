@@ -1,3 +1,64 @@
+.bhf_get_rstan_auto_write <- function() {
+  rstan::rstan_options("auto_write")
+}
+
+.bhf_set_rstan_auto_write <- function(value) {
+  .bhf_assert_flag(value, "auto_write")
+  rstan::rstan_options(auto_write = value)
+  invisible(value)
+}
+
+.bhf_rstan_stan_model <- function(...) rstan::stan_model(...)
+
+.bhf_locate_stan_file <- function() {
+  installed <- system.file("stan", "bhf_hybrid.stan", package = "bhfvar")
+  candidates <- unique(c(
+    installed,
+    file.path(getwd(), "inst", "stan", "bhf_hybrid.stan")
+  ))
+  candidates <- candidates[nzchar(candidates) & file.exists(candidates)]
+  if (!length(candidates)) return("")
+  normalizePath(candidates[[1L]], mustWork = TRUE)
+}
+
+.bhf_sha256_file <- function(path) {
+  if (!is.character(path) || length(path) != 1L || !nzchar(path) ||
+      !file.exists(path)) {
+    stop("Cannot hash a missing Stan model file.", call. = FALSE)
+  }
+  sha256sum <- get0(
+    "sha256sum",
+    envir = asNamespace("tools"),
+    mode = "function",
+    inherits = FALSE
+  )
+  if (!is.null(sha256sum)) {
+    hash <- unname(sha256sum(path))
+  } else if (requireNamespace("digest", quietly = TRUE)) {
+    hash <- digest::digest(path, algo = "sha256", file = TRUE)
+  } else {
+    stop(
+      "SHA-256 support requires this R version's tools::sha256sum() or ",
+      "the 'digest' package.",
+      call. = FALSE
+    )
+  }
+  hash <- tolower(as.character(hash))
+  if (length(hash) != 1L || !grepl("^[0-9a-f]{64}$", hash)) {
+    stop("Failed to compute a valid SHA-256 model fingerprint.", call. = FALSE)
+  }
+  hash
+}
+
+.bhf_model_sha256 <- function() {
+  stan_file <- .bhf_locate_stan_file()
+  if (!nzchar(stan_file)) {
+    stop("Stan model file not found; cannot record model SHA-256.",
+         call. = FALSE)
+  }
+  .bhf_sha256_file(stan_file)
+}
+
 #' Compile the BHF Stan Model
 #'
 #' Compiles the Stan model for the Bayesian Hybrid Framework. This function
@@ -48,23 +109,24 @@
 #'
 #' @export
 compile_bhf_model <- function(verbose = TRUE, auto_write = TRUE) {
-  
+  .bhf_assert_flag(verbose, "verbose")
+  .bhf_assert_flag(auto_write, "auto_write")
+
   if (verbose) {
     message("=== Compiling BHF Stan Model ===")
     message("This may take 30-60 seconds on first run...")
   }
   
-  # Set rstan options
-  rstan::rstan_options(auto_write = auto_write)
-  
-  # Find the Stan file in the package
-  stan_file <- system.file("stan", "bhf_hybrid.stan", package = "bhfvar")
-  
+  old_auto_write <- .bhf_get_rstan_auto_write()
+  on.exit(.bhf_set_rstan_auto_write(old_auto_write), add = TRUE)
+  .bhf_set_rstan_auto_write(auto_write)
+
+  stan_file <- .bhf_locate_stan_file()
   if (stan_file == "" || !file.exists(stan_file)) {
     stop(
       "Stan model file not found. ",
       "This usually means the package was not installed correctly.\n",
-      "Try reinstalling: remotes::install_github('joonho112/bhfvar')",
+      "Reinstall from an authorized bhfvar source archive or checkout.",
       call. = FALSE
     )
   }
@@ -73,12 +135,17 @@ compile_bhf_model <- function(verbose = TRUE, auto_write = TRUE) {
     message("Stan file location: ", stan_file)
   }
   
-  # Compile the model
   tryCatch({
-    model <- rstan::stan_model(
+    model <- .bhf_rstan_stan_model(
       file = stan_file,
       verbose = verbose
     )
+    model_sha256 <- .bhf_sha256_file(stan_file)
+    model <- tryCatch({
+      attr(model, "bhfvar_model_sha256") <- model_sha256
+      attr(model, "bhfvar_model_path") <- stan_file
+      model
+    }, error = function(e) model)
     
     if (verbose) {
       message("\n=== Compilation Successful ===")
@@ -106,23 +173,23 @@ compile_bhf_model <- function(verbose = TRUE, auto_write = TRUE) {
 #' Get Path to Stan Model File
 #'
 #' Returns the file path to the BHF Stan model included in the package.
-#' This is useful if you want to inspect or modify the model code.
+#' This is useful for inspecting and hashing the exact bundled model source.
 #'
 #' @return Character string with the path to the Stan file.
 #'
 #' @examples
+#' \dontrun{
 #' # Get the path
 #' stan_path <- get_stan_file_path()
 #' print(stan_path)
 #'
 #' # Read and view the model code
-#' \dontrun{
 #' cat(readLines(stan_path), sep = "\n")
 #' }
 #'
 #' @export
 get_stan_file_path <- function() {
-  stan_file <- system.file("stan", "bhf_hybrid.stan", package = "bhfvar")
+  stan_file <- .bhf_locate_stan_file()
   
   if (stan_file == "") {
     stop("Stan model file not found in package.", call. = FALSE)

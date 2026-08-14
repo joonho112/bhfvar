@@ -1,9 +1,9 @@
 #' Synthetic Survey Data for BHF Package Examples
 #'
-#' A synthetic dataset that mimics the structure of complex survey data
-#' for demonstrating the Bayesian Hybrid Framework methodology. This data
-#' was generated to have similar properties to the NSECE 2019 data used
-#' in the original paper, but contains no actual restricted data.
+#' A legacy synthetic dataset retained for examples and 0.3.0 migration. It
+#' mimics a complex survey structure but contains no restricted NSECE data. It
+#' is not the scientific-validation fixture and must not be used to claim
+#' reproduction of the article's restricted-data results.
 #'
 #' @format A data frame with 1,598 observations and 5 variables:
 #' \describe{
@@ -32,15 +32,10 @@
 #'   \item Verifying installation
 #' }
 #'
-#' @section Generation:
-#' Generated using Python script in dev/py/01_generate_synthetic_data.py.
-#' The generation process includes:
-#' \enumerate{
-#'   \item Hierarchical random effects (state and PSU levels)
-#'   \item Stratified, clustered sampling structure
-#'   \item Log-normal weight distribution
-#'   \item Binary outcomes from Bernoulli distribution
-#' }
+#' @section Provenance:
+#' The exact historical generator is not part of the current source contract.
+#' The package preserves this data object for compatibility; scientific
+#' validation uses separately versioned fixtures and frozen provenance.
 #'
 #' @source
 #' Synthetic data generated for the bhfvar package. Not derived from
