@@ -31,19 +31,30 @@ intervals.
 
 ### Interval calibration
 
-**Frequentist coverage of the posterior intervals has not been established.**
+**Coverage has been measured for one design family. It is not established in
+general.**
 
-In an internal simulation study, coverage of central 90% intervals was below
-nominal for several quantities. This is consistent with theory rather than
-surprising: the fitted target is a survey-weighted pseudo-likelihood, and
-credible intervals from an unadjusted pseudo-posterior are not guaranteed to
-attain nominal frequentist coverage. A sandwich-type or design-effect
-adjustment is not implemented in this version.
+A simulation study of 400 fits under the design used in the accompanying
+article found central 90% intervals covering their targets at nominal rates for
+the primary estimands. Pooled coverage across `var_between_A`,
+`var_between_A_star`, `var_between_B`, and `prop_between_A_star` was 0.900,
+with a 95% cluster-bootstrap interval of 0.871 to 0.928. Across all sixteen
+monitored quantities it was 0.892 (0.875 to 0.909).
+
+That study used a binary outcome, an intercept-only model, 20 domains, 8
+strata, 3 PSUs per stratum, 960 observations, and weight informativeness of
+either zero or moderate. **It does not establish coverage for other designs.**
+
+The fitted target is a survey-weighted pseudo-likelihood, and credible
+intervals from an unadjusted pseudo-posterior carry no general frequentist
+guarantee. A sandwich-type or design-effect adjustment is not implemented in
+this version.
 
 Practical consequence: **treat the intervals as pseudo-posterior credible
-intervals, not as calibrated confidence intervals.** If you need frequentist
-guarantees, use replication-based variance estimation on the point estimates,
-or wait for a version that implements a variance adjustment.
+intervals.** If your design departs substantially from the conditions above —
+in particular if the weights are strongly informative, or if you have far fewer
+domains — verify calibration for your own setting, or use replication-based
+variance estimation on the point estimates.
 
 ### Equivalence and small-effect resolution
 

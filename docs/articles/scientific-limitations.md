@@ -25,13 +25,20 @@ intervals around those quantities.
 
 ### Interval calibration
 
-**Frequentist coverage of the posterior intervals has not been
-established.**
+**Coverage has been measured for one design family. It is not
+established in general.**
 
-In an internal simulation study, coverage of central 90% intervals was
-below nominal for several quantities. This is consistent with theory
-rather than surprising. The fitted target is a survey-weighted
-pseudo-likelihood:
+A simulation study of 400 fits under the design used in the accompanying
+article found central 90% intervals covering their targets at nominal
+rates for the primary estimands: pooled coverage 0.900, 95%
+cluster-bootstrap interval 0.871 to 0.928. Across all sixteen monitored
+quantities it was 0.892 (0.875 to 0.909). That study used a binary
+outcome, an intercept-only model, 20 domains, 8 strata, 3 PSUs per
+stratum, 960 observations, and weight informativeness of either zero or
+moderate.
+
+**This does not establish coverage for other designs.** The fitted
+target is a survey-weighted pseudo-likelihood:
 
 ``` math
 \log L_{\text{BPL}} = \sum_{i \in \mathcal{S}} w_i^* \log P(Y_i \mid \eta_i)
@@ -44,22 +51,31 @@ attain nominal frequentist coverage. A sandwich-type or design-effect
 adjustment is **not implemented in this version**.
 
 Practical consequence: treat the intervals as pseudo-posterior credible
-intervals, not as calibrated confidence intervals. If you need
-frequentist guarantees, apply replication-based variance estimation to
-the point estimates.
+intervals. If your design departs substantially from the conditions
+above — in particular if the weights are strongly informative, or if you
+have far fewer domains — verify calibration for your own setting, or
+apply replication-based variance estimation to the point estimates.
 
 ### Equivalence and small-effect resolution
 
 Concluding that a domain gap is practically zero requires a posterior
-that is narrow relative to your equivalence margin. In internal testing
-at moderate sample sizes, the posterior for the relative gap was often
-wider than a 5% margin in high-variance settings, making such
-conclusions unavailable there — not because the estimates were wrong,
-but because the design could not resolve differences that small.
+that is narrow relative to your equivalence margin. In internal testing,
+the posterior for the relative gap between Estimands A and B was often
+wider than a 5% margin when the design effects were large, so such
+conclusions were unavailable there. The estimates were not wrong; the
+design could not resolve differences that small.
+
+Doubling the number of observations did **not** help. The precision of
+the relative gap is governed by the number of domains, not by the number
+of observations within them: the gap is a ratio of between-domain
+variance components, and those are estimated from the spread across
+domains. Adding PSUs or observations sharpens each domain’s mean while
+leaving that spread just as hard to separate from noise.
 
 **Check the width of your posterior against your margin before
-concluding equivalence.** A wide posterior inside a narrow margin is an
-inconclusive result, not evidence of equivalence.
+concluding equivalence, and expect the number of domains — not the
+sample size — to be the binding constraint.** A wide posterior inside a
+narrow margin is an inconclusive result, not evidence of equivalence.
 
 ### The article’s application
 
@@ -86,9 +102,10 @@ synthetic data are not a substitute.
 ## Why clean diagnostics are not enough
 
 Sampler diagnostics answer whether the sampler explored the posterior
-properly. In internal testing, every fit passed the diagnostics while
-interval coverage was still below nominal. Clean diagnostics are a
-precondition for interpreting a fit, not evidence about calibration.
+properly. Clean diagnostics are a precondition for interpreting a fit,
+not evidence about calibration. The two questions are separate: a
+sampler can explore a posterior perfectly while that posterior is the
+wrong width for frequentist purposes.
 
 ## Reporting practice
 

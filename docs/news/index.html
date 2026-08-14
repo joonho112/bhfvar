@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.0</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul></li>
@@ -55,6 +55,20 @@
       <small>Source: <a href="https://github.com/joonho112/bhfvar/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.1" id="bhfvar-051">bhfvar 0.5.1<a class="anchor" aria-label="anchor" href="#bhfvar-051"></a></h2>
+<div class="section level3">
+<h3 id="documentation-0-5-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-5-1"></a></h3>
+<ul><li>Updated the scope and limitations documents to report a simulation study of 400 fits. Under the design family used in the accompanying article, central 90% intervals covered their targets at nominal rates for the primary estimands: pooled coverage 0.900, 95% cluster-bootstrap interval 0.871 to 0.928.</li>
+<li>The previous text described coverage as below nominal. That description came from a smaller study of 24 fits whose cases had been selected for extreme configurations, and whose significance test did not account for the correlation between quantities computed from the same fit. It was not supported.</li>
+<li>The limitations text now states the conditions under which coverage was measured, and continues to note that coverage is not established for other designs and that no variance adjustment is implemented.</li>
+<li>Sharpened the guidance on equivalence: the number of domains, not the number of observations, is the binding constraint on resolving small gaps.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="scope-0-5-1">Scope<a class="anchor" aria-label="anchor" href="#scope-0-5-1"></a></h3>
+<ul><li>No change to the model, estimands, or API.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="bhfvar-050">bhfvar 0.5.0<a class="anchor" aria-label="anchor" href="#bhfvar-050"></a></h2>
 <p>This version changes the fitted model. Results are not comparable with those from version 0.3.0.</p>

@@ -36,11 +36,10 @@
 #' the accompanying article: a frozen reference oracle, algebraic property
 #' tests, and centering-invariant tests all pass within their tested contracts.
 #'
-#' Interval calibration is a separate question and has not been established.
-#' An internal simulation study found coverage of central 90\% intervals below
-#' nominal for some quantities, which is consistent with the general behaviour
-#' of unadjusted pseudo-posteriors (see the interpretation boundary below).
-#' Users should not assume nominal frequentist coverage. The restricted-data
+#' Interval calibration is a separate question. A simulation study of 400 fits
+#' under the article's design family found central 90\% intervals covering at
+#' nominal rates for the primary estimands, but coverage is not established for
+#' other designs and no variance adjustment is implemented. The restricted-data
 #' application reported in the article is not reproduced by this package.
 #'
 #' @section Interpretation boundary:

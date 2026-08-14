@@ -11,7 +11,7 @@ probability-scale variance decompositions for post-hoc domains."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@ probability-scale variance decompositions for post-hoc domains."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.0</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul></li>
@@ -103,11 +103,10 @@ probability-scale variance decompositions for post-hoc domains.</p>
 <p>The implementation is verified against the model specified in Appendix A of
 the accompanying article: a frozen reference oracle, algebraic property
 tests, and centering-invariant tests all pass within their tested contracts.</p>
-<p>Interval calibration is a separate question and has not been established.
-An internal simulation study found coverage of central 90\<!-- % intervals below -->
-nominal for some quantities, which is consistent with the general behaviour
-of unadjusted pseudo-posteriors (see the interpretation boundary below).
-Users should not assume nominal frequentist coverage. The restricted-data
+<p>Interval calibration is a separate question. A simulation study of 400 fits
+under the article's design family found central 90\<!-- % intervals covering at -->
+nominal rates for the primary estimands, but coverage is not established for
+other designs and no variance adjustment is implemented. The restricted-data
 application reported in the article is not reproduced by this package.</p>
     </div>
     <div class="section level2">

@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="news/index.html">Version 0.5.0</a></li>
+    <li><a class="dropdown-item" href="news/index.html">Version 0.5.1</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="news/index.html">Changelog</a></li>
   </ul>
@@ -151,7 +151,8 @@
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
-<p>Posterior intervals are <strong>pseudo-posterior credible intervals</strong>. Their frequentist coverage has not been established, and a sandwich-type variance adjustment is not implemented in this version. A* conditions on the sampling variances as fixed and does not propagate their estimation uncertainty. The model is intercept-only with a binary outcome. The article’s restricted-data NSECE application is not reproduced by this package.</p>
+<p>Posterior intervals are <strong>pseudo-posterior credible intervals</strong>. A simulation study of 400 fits found them covering at nominal rates under the article’s design family, but coverage is not established for other designs and a sandwich-type variance adjustment is not implemented in this version.</p>
+<p>A* conditions on the sampling variances as fixed and does not propagate their estimation uncertainty. The model is intercept-only with a binary outcome. The article’s restricted-data NSECE application is not reproduced by this package.</p>
 <p>See <code><a href="articles/scientific-limitations.html">vignette("scientific-limitations")</a></code> before using the package for substantive work.</p>
 </div>
 <div class="section level2">

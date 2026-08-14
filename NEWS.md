@@ -1,3 +1,27 @@
+# bhfvar 0.5.1
+
+## Documentation
+
+* Updated the scope and limitations documents to report a simulation study of
+  400 fits. Under the design family used in the accompanying article, central
+  90% intervals covered their targets at nominal rates for the primary
+  estimands: pooled coverage 0.900, 95% cluster-bootstrap interval 0.871 to
+  0.928.
+* The previous text described coverage as below nominal. That description came
+  from a smaller study of 24 fits whose cases had been selected for extreme
+  configurations, and whose significance test did not account for the
+  correlation between quantities computed from the same fit. It was not
+  supported.
+* The limitations text now states the conditions under which coverage was
+  measured, and continues to note that coverage is not established for other
+  designs and that no variance adjustment is implemented.
+* Sharpened the guidance on equivalence: the number of domains, not the number
+  of observations, is the binding constraint on resolving small gaps.
+
+## Scope
+
+* No change to the model, estimands, or API.
+
 # bhfvar 0.5.0
 
 This version changes the fitted model. Results are not comparable with those

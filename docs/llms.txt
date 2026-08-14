@@ -53,11 +53,14 @@ Latent-scale SDs and ICCs are reported separately.
 
 ## Scope
 
-Posterior intervals are **pseudo-posterior credible intervals**. Their
-frequentist coverage has not been established, and a sandwich-type
-variance adjustment is not implemented in this version. A\* conditions
-on the sampling variances as fixed and does not propagate their
-estimation uncertainty. The model is intercept-only with a binary
+Posterior intervals are **pseudo-posterior credible intervals**. A
+simulation study of 400 fits found them covering at nominal rates under
+the article’s design family, but coverage is not established for other
+designs and a sandwich-type variance adjustment is not implemented in
+this version.
+
+A\* conditions on the sampling variances as fixed and does not propagate
+their estimation uncertainty. The model is intercept-only with a binary
 outcome. The article’s restricted-data NSECE application is not
 reproduced by this package.
 

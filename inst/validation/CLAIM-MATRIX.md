@@ -41,7 +41,7 @@ resulting intervals have been established — see `SCIENTIFIC-LIMITATIONS.md`.
 
 | Component | Status | Note |
 |---|---|---|
-| Interval calibration | **not established** | See `SCIENTIFIC-LIMITATIONS.md` |
+| Interval calibration, in general | **not established** | Measured at nominal for one design family; see `SCIENTIFIC-LIMITATIONS.md` |
 | Sandwich / design-effect variance adjustment | not implemented | Planned |
 | $\hat V_s$ uncertainty propagation into A* | not implemented | A* conditions on fixed $\hat V_s$ |
 | Ordinary LOO/WAIC validity | not established | Pseudo-likelihood aggregation |
