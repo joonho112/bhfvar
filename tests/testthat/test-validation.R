@@ -46,12 +46,13 @@ test_that("validate_input_data catches non-positive weights", {
 })
 
 test_that("validate_input_data accepts valid data", {
+  n <- 60
   df <- data.frame(
-    outcome = c(0, 1, 1, 0),
-    state = c("A", "A", "B", "B"),
-    stratum = c(1, 1, 2, 2),
-    psu = c(1, 2, 3, 4),
-    weight = c(1, 2, 1, 1)
+    outcome = rep(c(0, 1), n / 2),
+    state = rep(c("A", "B", "C"), each = n / 3),
+    stratum = rep(seq_len(6), each = n / 6),
+    psu = seq_len(n),
+    weight = rep(c(1, 2), n / 2)
   )
   
   expect_silent(
@@ -78,9 +79,15 @@ test_that("scale_weights_d2 produces correct scaling", {
   # Create simple test data
   weights <- c(1, 2, 3, 4)
   domain_id <- c(1, 1, 2, 2)
+  domain_summary <- data.frame(
+    state_id = 1:2,
+    weight_sum = c(sum(weights[domain_id == 1]), sum(weights[domain_id == 2])),
+    eff_n = c(calc_eff_n(weights[domain_id == 1]),
+              calc_eff_n(weights[domain_id == 2]))
+  )
   
   # Scale weights
-  w_scaled <- scale_weights_d2(weights, domain_id)
+  w_scaled <- scale_weights_d2(weights, domain_id, domain_summary)
   
   # Check that sum of scaled weights equals eff_n per domain
   for (d in unique(domain_id)) {

@@ -11,3 +11,5 @@
 
 library(testthat)
 library(bhfvar)
+
+test_check("bhfvar")

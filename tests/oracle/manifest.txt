@@ -1,0 +1,16 @@
+oracle_version: 1.0.0
+freeze_date: 2026-07-12
+formula_authority: math14030512-probability-decomposition-v1
+authority_pdf_sha256: 7f1a4ec75c92c4add788d1b09cde1c0364e27a4ef6e154f293ec752329c05af7
+authority_proof_tex_sha256: a5c56f110229131a6a9c3c1265f142172bf437731a37880c63446fe6d4e6a7a8
+oracle_source_sha256: 03ff2fb87e1ca1124d671607774394b31da09a9254b79da8fd4cedf035897d72
+clean_smoke_sha256: 80c81b621ec0e780fa9eb7d4a17bee2eac71d8f5d7b4dc564e07e5a70d652be8
+gold_tests_sha256: ab8b54f6c20c819053aa81a8b815938051c93b0115b36a1ba376a002454d3dd9
+claims: E-SCALE-01,E-A-01,E-ASTAR-01,E-B-01,E-B-02,E-GAP-01
+default_tolerance: abs(x-y)<=1e-10+1e-8*max(abs(x),abs(y))
+gold_fixtures: no-design,informative-design,a-star-boundary,total-zero
+canonical_order: draw_id then explicit domain/row labels
+complexity: O(D*(N+S+H+J))
+package_dependency: none
+review_status: independent-formula-and-code-review-passed
+change_policy: immutable after Step 3.4; scientific correction requires a new oracle version and closure log
