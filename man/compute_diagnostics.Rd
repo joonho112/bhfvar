@@ -4,10 +4,19 @@
 \alias{compute_diagnostics}
 \title{Compute MCMC Diagnostics}
 \usage{
-compute_diagnostics(stanfit)
+compute_diagnostics(
+  stanfit,
+  max_treedepth = 12L,
+  pars = c("alpha", "sigma_state", "sigma_stratum", "sigma_psu")
+)
 }
 \arguments{
 \item{stanfit}{A stanfit object.}
+
+\item{max_treedepth}{Configured maximum tree depth used for this fit.}
+
+\item{pars}{Structural parameter names to diagnose. Generated quantities are
+intentionally excluded.}
 }
 \value{
 List of diagnostic summaries.

@@ -2,68 +2,25 @@
 % Please edit documentation in R/extractors.R
 \name{domain_estimates}
 \alias{domain_estimates}
-\title{Extract Domain-Level Estimates}
+\title{Extract Domain-Level Estimand A or B Probabilities}
 \usage{
-domain_estimates(fit, type = c("marginal", "conditional"), prob = 0.95)
+domain_estimates(fit, estimand = c("A", "B"), prob = 0.95, type = NULL)
 }
 \arguments{
-\item{fit}{An object of class \code{bhf_fit} from \code{bhf_fit()}.}
+\item{fit}{A versioned \code{bhf_fit} object.}
 
-\item{type}{Character. Type of probability to extract:
-\itemize{
-\item \code{"marginal"}: Marginal probabilities (integrating out within-domain variation)
-\item \code{"conditional"}: Conditional probabilities (given domain random effect)
-}
-Default is "marginal".}
+\item{estimand}{Either \code{"A"} or \code{"B"}.}
 
-\item{prob}{Numeric. Probability for credible intervals. Default is 0.95.}
+\item{prob}{Credible-interval probability.}
+
+\item{type}{Deprecated transition argument. \code{"conditional"} maps to A with
+a classed warning; \code{"marginal"} fails because it is not Estimand B.}
 }
 \value{
-A data frame with columns:
-\item{domain}{Domain label (from original data)}
-\item{domain_id}{Domain ID (1:S)}
-\item{mean}{Posterior mean}
-\item{sd}{Posterior standard deviation}
-\item{q025}{Lower credible interval bound}
-\item{q500}{Posterior median}
-\item{q975}{Upper credible interval bound}
-\item{pop_share}{Population share of domain}
-\item{reliability}{Reliability/shrinkage factor for domain}
+A \code{bhf_domain_estimates} data frame in canonical domain-ID order,
+with label/ID, population share, sample size, posterior summaries, dynamic
+interval bounds, and estimand metadata.
 }
 \description{
-Extracts posterior summaries of domain-specific probabilities from a
-fitted BHF model.
-}
-\details{
-The two types of probabilities differ in their interpretation:
-
-\describe{
-\item{Marginal probabilities}{Average probability for a randomly selected
-individual from the domain, integrating over all uncertainty. These are
-appropriate for population-level inference.}
-\item{Conditional probabilities}{Probability given the estimated domain
-random effect. These represent the model's "best guess" for the domain
-but ignore uncertainty in the random effect.}
-}
-}
-\examples{
-\dontrun{
-# After fitting
-fit <- bhf_fit(prepared_data, model = model)
-
-# Get domain estimates
-estimates <- domain_estimates(fit, type = "marginal")
-
-# View results
-head(estimates)
-
-# Plot estimates
-library(ggplot2)
-ggplot(estimates, aes(x = reorder(domain, mean), y = mean)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = q025, ymax = q975), width = 0.2) +
-  coord_flip() +
-  labs(x = "Domain", y = "Probability")
-}
-
+Extract Domain-Level Estimand A or B Probabilities
 }

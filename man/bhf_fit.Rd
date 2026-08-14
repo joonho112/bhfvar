@@ -12,7 +12,7 @@ bhf_fit(
   warmup = floor(iter/2),
   seed = 1234,
   cores = NULL,
-  adapt_delta = 0.9,
+  adapt_delta = 0.95,
   max_treedepth = 12,
   refresh = 200,
   ...
@@ -38,8 +38,8 @@ half of \code{iter}.}
 \code{min(chains, parallel::detectCores())}.}
 
 \item{adapt_delta}{Numeric between 0 and 1. Target acceptance probability.
-Higher values (e.g., 0.95) reduce divergent transitions but slow sampling.
-Default is 0.90.}
+Higher values reduce divergent transitions but slow sampling. Default is
+0.95.}
 
 \item{max_treedepth}{Integer. Maximum tree depth for NUTS. Default is 12.}
 
@@ -50,11 +50,17 @@ to suppress output.}
 }
 \value{
 An object of class \code{bhf_fit} containing:
+\item{schema_version}{Version of the fit-object contract}
+\item{contract_id}{Stable fit-object contract identifier}
+\item{package_version}{Package version that created the fit}
+\item{model_sha256}{SHA-256 fingerprint of the Stan source}
 \item{stanfit}{The stanfit object from rstan}
 \item{data}{The bhf_data object used for fitting}
 \item{model}{The compiled Stan model}
 \item{call}{The function call}
 \item{diagnostics}{MCMC diagnostics summary}
+\item{provenance}{Data, weight, population-share, sampling-variance,
+prior, sampling-control, and session metadata}
 }
 \description{
 Fits the BHF model using Hamiltonian Monte Carlo via Stan.
@@ -66,6 +72,7 @@ typically improves sampling efficiency. Key parameters are:
 \describe{
 \item{alpha}{Global intercept on logit scale}
 \item{sigma_state}{Between-domain standard deviation}
+\item{sigma_stratum}{Between-stratum design standard deviation}
 \item{sigma_psu}{Between-PSU standard deviation (within stratum)}
 }
 }
@@ -75,7 +82,8 @@ The function automatically checks for:
 \itemize{
 \item Divergent transitions (should be 0)
 \item Low Rhat values (should be < 1.05)
-\item Adequate effective sample size (should be > 100)
+\item Legacy rstan \code{n_eff} (should be > 100; this is not labeled as
+bulk or tail ESS)
 \item Tree depth saturation
 }
 Warnings are issued if any diagnostics suggest convergence problems.

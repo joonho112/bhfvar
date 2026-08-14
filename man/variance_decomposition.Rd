@@ -2,70 +2,30 @@
 % Please edit documentation in R/extractors.R
 \name{variance_decomposition}
 \alias{variance_decomposition}
-\title{Extract Variance Decomposition Results}
+\title{Extract Article-Aligned Variance Decomposition Results}
 \usage{
-variance_decomposition(fit, prob = 0.95, print = TRUE)
+variance_decomposition(fit, prob = 0.95, print = FALSE)
 }
 \arguments{
-\item{fit}{An object of class \code{bhf_fit} from \code{bhf_fit()}.}
+\item{fit}{A versioned \code{bhf_fit} object with schema \verb{0.5.0}.}
 
-\item{prob}{Numeric. Probability for credible intervals. Default is 0.95.}
+\item{prob}{Credible-interval probability.}
 
-\item{print}{Logical. If TRUE, prints a formatted summary. Default is TRUE.}
+\item{print}{Retained transition argument. If \code{TRUE}, prints the tidy table.}
 }
 \value{
-A list with components:
-\item{logit}{Variance components on logit scale (Estimand A)}
-\item{prob}{Variance components on probability scale (Estimand B)}
-\item{deatten}{De-attenuated variance components (Estimand A*)}
-\item{summary_table}{Formatted summary table}
+A \code{bhf_variance_decomposition} list with \code{latent}, \code{A}, \code{A_star},
+\code{B}, \code{gaps}, and \code{summary_table} components. \code{A_star$available} is \code{FALSE}
+when de-attenuation was disabled.
 }
 \description{
-Extracts and summarizes the variance decomposition from a fitted BHF model.
-Provides estimates for multiple estimands: Policy (A), Descriptive (B),
-and De-attenuated (A*).
+Summarizes separate latent diagnostics and probability-scale Estimands A,
+A*, and B. No legacy 0.3.0 quantity is silently reinterpreted.
 }
 \details{
-The function extracts three sets of variance components:
-
-\describe{
-\item{Estimand A (Policy, logit scale)}{
-Variance decomposition on the latent logit scale.
-\code{icc_state} = sigma_state^2 / (sigma_state^2 + sigma_psu^2 + pi^2/3)
-}
-\item{Estimand B (Descriptive, probability scale)}{
-Variance decomposition on the observed probability scale.
-\code{icc_prob = Var(p_s) / (Var(p_s) + E(p_s(1-p_s)))}
-}
-\item{Estimand A* (Policy adjusted, de-attenuated)}{
-Estimand B with finite-sample variance inflation removed.
-\code{icc_deatten = (Var(p_s) - V_hat) / (Var(p_s) - V_hat + E(p_s(1-p_s)))}
-}
-}
-}
-\section{Interpretation}{
-
-The ICC (Intraclass Correlation Coefficient) represents the proportion
-of total variance attributable to between-domain differences. Higher
-values indicate more geographic heterogeneity.
-
-The difference between ICC_B and ICC_A* represents the amount of
-apparent heterogeneity that is actually due to sampling noise rather
-than true substantive differences.
-}
-
-\examples{
-\dontrun{
-# After fitting
-fit <- bhf_fit(prepared_data, model = model)
-
-# Get variance decomposition
-vd <- variance_decomposition(fit)
-
-# Access specific components
-vd$logit$icc_mean      # ICC on logit scale
-vd$prob$icc_mean       # ICC on probability scale
-vd$deatten$icc_mean    # De-attenuated ICC
-}
-
+Estimands A, A*, and B are probability-scale decompositions;
+latent-scale SDs, variances, and ICCs are reported separately. A* treats
+sampling variances as fixed inputs and does not propagate their estimation
+uncertainty. Intervals are pseudo-posterior credible intervals; their
+frequentist coverage has not been established.
 }

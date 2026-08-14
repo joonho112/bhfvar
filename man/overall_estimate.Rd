@@ -2,24 +2,21 @@
 % Please edit documentation in R/extractors.R
 \name{overall_estimate}
 \alias{overall_estimate}
-\title{Extract Overall Population Estimate}
+\title{Extract an Overall Estimand A or B Population Probability}
 \usage{
-overall_estimate(fit, prob = 0.95)
+overall_estimate(fit, estimand = c("A", "B"), prob = 0.95)
 }
 \arguments{
-\item{fit}{An object of class \code{bhf_fit} from \code{bhf_fit()}.}
+\item{fit}{A versioned \code{bhf_fit} object.}
 
-\item{prob}{Numeric. Probability for credible interval. Default is 0.95.}
+\item{estimand}{Either \code{"A"} or \code{"B"}.}
+
+\item{prob}{Credible-interval probability.}
 }
 \value{
-A list with components:
-\item{mean}{Posterior mean}
-\item{sd}{Posterior standard deviation}
-\item{q025}{Lower credible interval bound}
-\item{q500}{Posterior median}
-\item{q975}{Upper credible interval bound}
+A \code{bhf_overall_estimate} list containing the estimand, interval
+contract, posterior summary, and population-share provenance.
 }
 \description{
-Extracts the posterior distribution of the overall (population-weighted)
-probability from a fitted BHF model.
+Extract an Overall Estimand A or B Population Probability
 }

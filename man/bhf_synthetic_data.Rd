@@ -22,10 +22,10 @@ actual survey responses.
 bhf_synthetic_data
 }
 \description{
-A synthetic dataset that mimics the structure of complex survey data
-for demonstrating the Bayesian Hybrid Framework methodology. This data
-was generated to have similar properties to the NSECE 2019 data used
-in the original paper, but contains no actual restricted data.
+A legacy synthetic dataset retained for examples and 0.3.0 migration. It
+mimics a complex survey structure but contains no restricted NSECE data. It
+is not the scientific-validation fixture and must not be used to claim
+reproduction of the article's restricted-data results.
 }
 \details{
 The data were generated with the following characteristics:
@@ -45,16 +45,11 @@ This synthetic data is suitable for:
 \item Verifying installation
 }
 }
-\section{Generation}{
+\section{Provenance}{
 
-Generated using Python script in dev/py/01_generate_synthetic_data.py.
-The generation process includes:
-\enumerate{
-\item Hierarchical random effects (state and PSU levels)
-\item Stratified, clustered sampling structure
-\item Log-normal weight distribution
-\item Binary outcomes from Bernoulli distribution
-}
+The exact historical generator is not part of the current source contract.
+The package preserves this data object for compatibility; scientific
+validation uses separately versioned fixtures and frozen provenance.
 }
 
 \examples{

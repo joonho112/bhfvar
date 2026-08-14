@@ -11,9 +11,9 @@ template:
 home:
   title: bhfvar - Bayesian Hybrid Framework for Variance Decomposition
   description: >
-    R package for variance decomposition in complex surveys with post-hoc 
-    domains, addressing informative sampling and finite-sample variance 
-    inflation through Bayesian multilevel modeling.
+    Experimental article-informed R package for complex-survey variance
+    decomposition for post-hoc domains in complex surveys, implementing the
+    model of Lee & Hooper (2026).
 
 authors:
   JoonHo Lee:
@@ -37,6 +37,8 @@ navbar:
           href: articles/quick-start.html
         - text: Diagnostics
           href: articles/diagnostics.html
+        - text: Scientific limitations
+          href: articles/scientific-limitations.html
         - text: "---"
         - text: "Methodology Track"
         - text: Bayesian Hybrid Framework
@@ -47,6 +49,8 @@ navbar:
         - text: "Reference"
         - text: API Reference
           href: articles/api-reference.html
+        - text: Migration from 0.3.0
+          href: articles/migration-0.5.0.html
 
 articles:
   - title: Getting Started
@@ -58,6 +62,7 @@ articles:
     navbar: ~
     contents:
       - diagnostics
+      - scientific-limitations
   - title: Methodology
     navbar: ~
     contents:
@@ -67,6 +72,7 @@ articles:
     navbar: ~
     contents:
       - api-reference
+      - migration-0.5.0
 
 reference:
   - title: Package
@@ -82,8 +88,6 @@ reference:
     desc: Functions for preparing survey data
     contents:
       - prepare_bhf_data
-      - validate_input_data
-      - validate_stan_data
   - title: Model Fitting
     desc: Functions for fitting the Bayesian model
     contents:
@@ -106,7 +110,7 @@ reference:
 
 news:
   releases:
-    - text: "Version 0.3.0"
+    - text: "Version 0.5.0"
       href: news/index.html
 
 footer:

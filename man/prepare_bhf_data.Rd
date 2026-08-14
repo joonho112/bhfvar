@@ -12,9 +12,14 @@ prepare_bhf_data(
   psu,
   weights,
   population_shares = NULL,
-  use_deattenuation = TRUE,
+  weight_scaling = c("mean_one", "legacy_d2"),
+  deattenuation = NULL,
+  sampling_variances = NULL,
+  sampling_variance_method = NULL,
+  use_deattenuation = NULL,
   prior_alpha_mean = NULL,
-  prior_alpha_sd = 1.5
+  prior_alpha_sd = 0.5,
+  sigma_state_prior = names(sigma_state_prior_catalog())
 )
 }
 \arguments{
@@ -30,22 +35,47 @@ prepare_bhf_data(
 
 \item{weights}{Character string. Name of the survey weight variable.}
 
-\item{population_shares}{Optional numeric vector of length S (number of domains)
-containing population shares for each domain. Must sum to 1. If NULL,
-shares are estimated from the weighted data.}
+\item{population_shares}{Optional named positive numeric vector whose names
+exactly match the observed complete-case domains. Values are normalized to
+sum to one in canonical domain order. If NULL, shares are estimated from
+retained raw survey weights.}
 
-\item{use_deattenuation}{Logical. If TRUE (default), computes and applies
-de-attenuation adjustment for finite-sample variance inflation.}
+\item{weight_scaling}{Likelihood-weight scaling method. The default
+\code{"mean_one"} scales raw weights globally to sum to the retained sample
+size. \code{"legacy_d2"} is a warned sensitivity/reproduction path.}
+
+\item{deattenuation}{Character mode: \code{"taylor"} (default), \code{"supplied"},
+or \code{"none"}.}
+
+\item{sampling_variances}{Named nonnegative domain sampling variances for
+\code{deattenuation = "supplied"}.}
+
+\item{sampling_variance_method}{Provenance label for supplied variances:
+\code{"external_taylor"}, \code{"external_replicate"}, or \code{"external_other"}.}
+
+\item{use_deattenuation}{Deprecated logical compatibility argument. Use
+\code{deattenuation} instead.}
 
 \item{prior_alpha_mean}{Numeric. Prior mean for the intercept on logit scale.
 Default is NULL, which estimates from data.}
 
-\item{prior_alpha_sd}{Numeric. Prior SD for the intercept. Default is 1.5.}
+\item{prior_alpha_sd}{Numeric. Prior SD for the intercept. Default is 0.5.}
+
+\item{sigma_state_prior}{Article prior-sensitivity selector for the state
+random-effect SD. Exactly one of \code{"half_t3_2.5"} (baseline),
+\code{"half_normal_1"}, \code{"half_cauchy_2.5"}, or
+\code{"half_t3_5"}. Stratum and PSU SD priors remain half-t(3, 0, 2.5).}
 }
 \value{
 An object of class \code{bhf_data} containing:
+\item{schema_version}{Prepared-data schema version.}
+\item{contract_id}{Stable prepared-data contract identifier.}
 \item{stan_data}{List of data formatted for Stan}
 \item{mapping}{List containing domain/strata/PSU label mappings}
+\item{row_provenance}{Original/retained/dropped row mapping and ledger.}
+\item{provenance}{Consolidated row, weight, share, vhat, and prior metadata.}
+\item{analysis_data}{Compact retained analysis frame with raw and
+likelihood weights.}
 \item{domain_summary}{Data frame with domain-level summary statistics}
 \item{input_info}{List recording input column names and settings}
 }
@@ -60,29 +90,31 @@ This function performs several critical transformations:
 \describe{
 \item{Index Recoding}{All grouping variables are recoded to consecutive
 integers starting from 1 (required by Stan).}
-\item{Weight Scaling}{Weights are scaled using Method D2 from Pfeffermann
-et al. (1998) to have effective sample size within each domain.
-This is critical for proper pseudo-likelihood estimation.}
+\item{Weight Scaling}{Positive raw weights are retained and globally
+normalized once in R to have mean one.}
 \item{Sampling Variance Estimation}{For each domain, estimates the
 sampling variance of the proportion using the design effect.}
 \item{PSU Structure}{Creates the nested PSU-within-stratum structure
 required by the Stan model.}
 }
 }
-\section{Weight Scaling (Method D2)}{
+\section{Weight Scaling}{
 
-Weights are scaled so that for each domain s:
-\deqn{w^*_i = w_i \times \frac{n^{eff}_s}{\sum_{i \in s} w_i}}
-where \eqn{n^{eff}_s = (\sum w_i)^2 / \sum w_i^2} is the effective sample size.
-This ensures the pseudo-likelihood contributes appropriate information.
+The default likelihood weight is
+\deqn{w^*_i = w_i \times \frac{N}{\sum_i w_i},}
+so the scaled weights sum to the retained sample size N while preserving all
+raw-weight ratios. Legacy D2 scaling is available only through the explicit
+warned \code{weight_scaling = "legacy_d2"} sensitivity path; it receives a
+final global sum-N normalization in R.
 }
 
-\section{Sampling Variance Estimation}{
+\section{Sampling-variance contract}{
 
-The estimated sampling variance for domain s is:
-\deqn{\hat{V}_s = \frac{deff_s \times \hat{p}_s(1-\hat{p}_s)}{n_s}}
-where \eqn{deff_s} is the design effect. A default value of 1.5 is used
-when the design effect cannot be reliably estimated.
+The default \code{deattenuation = "taylor"} uses the retained raw survey
+weights and the one-stage stratified PSU design. Singleton strata fail
+explicitly; no cap, floor, or default design effect is substituted.
+\code{deattenuation = "supplied"} treats named domain variances as fixed
+external inputs. Their estimation uncertainty is not propagated.
 }
 
 \examples{

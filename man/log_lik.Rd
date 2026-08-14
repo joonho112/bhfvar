@@ -2,31 +2,31 @@
 % Please edit documentation in R/extractors.R
 \name{log_lik}
 \alias{log_lik}
-\title{Extract Log-Likelihood for LOO-CV}
+\title{Extract Raw or Pseudo Pointwise Log-Likelihood Contributions}
 \usage{
-log_lik(fit)
+log_lik(
+  fit,
+  kind = c("pseudo", "raw"),
+  aggregate = c("observation", "psu", "stratum")
+)
 }
 \arguments{
-\item{fit}{An object of class \code{bhf_fit} from \code{bhf_fit()}.}
+\item{fit}{A versioned \code{bhf_fit} object.}
+
+\item{kind}{\code{"pseudo"} (default) or \code{"raw"}.}
+
+\item{aggregate}{\code{"observation"}, \code{"psu"}, or \code{"stratum"}.}
 }
 \value{
-A matrix of dimension (n_iterations x N) containing pointwise
-log-likelihood values.
+A draw-by-unit \code{bhf_log_lik} matrix with explicit \code{kind},
+\code{aggregate}, and interpretation metadata.
 }
 \description{
-Extracts the log-likelihood matrix for use with the loo package for
-leave-one-out cross-validation.
+Aggregation only sums stored observation contributions. It does not refit
+the model and does not establish ordinary observation- or cluster-level LOO.
 }
-\examples{
-\dontrun{
-# After fitting
-fit <- bhf_fit(prepared_data, model = model)
-
-# Get log-likelihood and compute LOO
-library(loo)
-ll <- log_lik(fit)
-loo_result <- loo(ll)
-print(loo_result)
-}
-
+\details{
+The default pseudo contributions target the fitted
+pseudo-likelihood. Aggregation is arithmetic only; this function does not
+establish ordinary observation- or cluster-level LOO validity.
 }

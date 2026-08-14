@@ -11,15 +11,15 @@ Character string with the path to the Stan file.
 }
 \description{
 Returns the file path to the BHF Stan model included in the package.
-This is useful if you want to inspect or modify the model code.
+This is useful for inspecting and hashing the exact bundled model source.
 }
 \examples{
+\dontrun{
 # Get the path
 stan_path <- get_stan_file_path()
 print(stan_path)
 
 # Read and view the model code
-\dontrun{
 cat(readLines(stan_path), sep = "\n")
 }
 
