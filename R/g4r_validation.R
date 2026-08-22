@@ -8,7 +8,7 @@
 }
 
 #' Frozen Gate G4-R Protocol
-#' @keywords internal
+#' @noRd
 bhf_g4r_protocol <- function() {
   protocol <- list(
     schema_version = "bhfvar-g4r-protocol-1.0.0",
@@ -63,7 +63,7 @@ bhf_g4r_protocol <- function() {
 }
 
 #' Calculate the Frozen G4-R Gap Statistic
-#' @keywords internal
+#' @noRd
 bhf_g4r_gap_metrics <- function(estimands,
                                 protocol = bhf_g4r_protocol()) {
   if (!is.list(estimands) || is.null(estimands$A$summary) ||
@@ -97,7 +97,7 @@ bhf_g4r_gap_metrics <- function(estimands,
 }
 
 #' Map a Prospective Candidate Index to Frozen Seeds
-#' @keywords internal
+#' @noRd
 bhf_g4r_candidate_seeds <- function(profile, candidate_index) {
   if (!is.character(profile) || length(profile) != 1L ||
       !profile %in% c("low", "high")) {
@@ -120,7 +120,7 @@ bhf_g4r_candidate_seeds <- function(profile, candidate_index) {
 }
 
 #' Fast Outcome-Free Gap Oracle for the Frozen Candidate Scan
-#' @keywords internal
+#' @noRd
 bhf_g4r_candidate_gap_oracle <- function(profile, effect_seed,
                                          protocol = bhf_g4r_protocol()) {
   dgp <- protocol$dgp
@@ -173,7 +173,7 @@ bhf_g4r_candidate_gap_oracle <- function(profile, effect_seed,
 }
 
 #' Select Frozen G4-R Regime Quotas from an Outcome-Blind Ledger
-#' @keywords internal
+#' @noRd
 bhf_g4r_select_candidates <- function(ledger,
                                       protocol = bhf_g4r_protocol()) {
   required <- c(
@@ -248,7 +248,7 @@ bhf_g4r_select_candidates <- function(ledger,
 }
 
 #' Select the Approved G4-R1 Sign-Agnostic Regime Quotas
-#' @keywords internal
+#' @noRd
 bhf_g4r1_select_candidates <- function(ledger,
                                        protocol = bhf_g4r_protocol()) {
   required <- c(
@@ -307,7 +307,7 @@ bhf_g4r1_select_candidates <- function(ledger,
 }
 
 #' Adjudicate One Frozen G4-R1 Gap Regime from Posterior Draws
-#' @keywords internal
+#' @noRd
 bhf_g4r1_regime_evidence <- function(delta_draw, a_between_draw,
                                      delta_truth, regime,
                                      protocol=bhf_g4r_protocol()) {
@@ -340,7 +340,7 @@ bhf_g4r1_regime_evidence <- function(delta_draw, a_between_draw,
 }
 
 #' Generate an Outcome-Free Expanded G4-R Truth
-#' @keywords internal
+#' @noRd
 generate_g4r_truth_only <- function(profile, effect_seed,
                                     vhat_state = NULL) {
   protocol <- bhf_g4r_protocol()
@@ -468,7 +468,7 @@ generate_g4r_truth_only <- function(profile, effect_seed,
 }
 
 #' Construct the Frozen Nonzero G4-R Sampling-Variance Truth
-#' @keywords internal
+#' @noRd
 bhf_g4r_vhat_from_truth <- function(truth,
                                     protocol = bhf_g4r_protocol()) {
   if (!is.list(truth) || is.null(truth$population_shares) ||
@@ -501,7 +501,7 @@ bhf_g4r_vhat_from_truth <- function(truth,
 }
 
 #' Generate an Outcome-Free G4-R Truth with Nonzero A-star Correction
-#' @keywords internal
+#' @noRd
 generate_g4r_truth_with_vhat <- function(profile, effect_seed) {
   zero <- generate_g4r_truth_only(profile, effect_seed)
   design <- bhf_g4r_vhat_from_truth(zero$truth)
@@ -518,7 +518,7 @@ generate_g4r_truth_with_vhat <- function(profile, effect_seed) {
 }
 
 #' Materialize the Frozen Nondegenerate G4-R Weight Arm
-#' @keywords internal
+#' @noRd
 bhf_g4r_weight_arm <- function(truth_only,
                                protocol = bhf_g4r_protocol()) {
   if (!inherits(truth_only, "bhf_g4r_truth_only") ||

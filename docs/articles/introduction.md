@@ -4,9 +4,9 @@
 
 `bhfvar` is an experimental implementation of a Bayesian
 pseudo-likelihood framework for decomposing binary-outcome variation
-across post-hoc domains in a complex survey. It separates a substantive
-domain effect from crossed stratum and PSU-within-stratum design
-effects.
+across post-hoc domains in a complex survey. It compares a domain-only
+reference standardization with a standardization that retains fitted
+stratum and PSU-within-stratum effects.
 
 The package addresses two distinct questions:
 
@@ -70,15 +70,18 @@ tests cover public result contracts.
 
 ## Scope
 
-The implementation is verified against the model specified in Appendix A
-of the accompanying article: a frozen reference oracle, algebraic
+The implementation is verified against the article’s main-text equations
+and Appendix B Stan program: a frozen reference oracle, algebraic
 property tests, and centering-invariant tests all pass.
 
-Interval calibration is a separate question and has not been
-established. Posterior intervals here are pseudo-posterior credible
-intervals; their frequentist coverage is not guaranteed, and a variance
-adjustment is not implemented in this version. The article’s
-restricted-data application is not reproduced by this package.
+Interval calibration is a separate question. In a reduced
+article-aligned balanced synthetic design, pooled primary 90% coverage
+was 0.900 (95% cluster interval 0.871 to 0.928), and fixed-condition
+rates ranged from 0.860 to 0.930. That pooled result met a preregistered
++/-5 percentage-point tolerance; it does not guarantee coverage in every
+condition or other designs. A variance adjustment is not implemented.
+The article’s restricted-data application is not reproduced by this
+package.
 
 A successful compile, fit, or extraction shows that the workflow ran. It
 says nothing about interval calibration. See
@@ -88,10 +91,15 @@ says nothing about interval calibration. See
 
 - A\* conditions on supplied or Taylor-estimated sampling variances;
   uncertainty in those estimates is not propagated.
+- A is a design-effect-zero reference standardization, not a causal or
+  policy intervention; A-versus-B is not specific to informative
+  sampling.
 - Pseudo-posterior intervals require design-aware interpretation.
 - [`log_lik()`](https://joonho112.github.io/bhfvar/reference/log_lik.md)
   does not establish ordinary observation- or cluster-level LOO.
-- No plotting API or posterior-predictive helper is supported.
+- Plotting helpers (`bhf_plot_*()`) need `ggplot2`, a suggested
+  dependency.
+- No posterior-predictive helper is supported.
 - The bundled legacy synthetic data are illustrative, not restricted
   NSECE data and not the confirmatory recovery fixture.
 

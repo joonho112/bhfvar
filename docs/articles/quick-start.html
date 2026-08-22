@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul>
@@ -180,10 +180,12 @@ limitation.</p>
 <h2 id="interpretation-checkpoint">Interpretation checkpoint<a class="anchor" aria-label="anchor" href="#interpretation-checkpoint"></a>
 </h2>
 <p>A workflow that runs cleanly tells you the pipeline worked; it tells
-you nothing about interval calibration. The intervals returned here are
-pseudo-posterior credible intervals whose frequentist coverage has not
-been established. See <code><a href="../articles/scientific-limitations.html">vignette("scientific-limitations")</a></code>
-before reporting them.</p>
+you nothing by itself about interval calibration. The intervals returned
+here are pseudo-posterior credible intervals. Repeated-sample coverage
+has been measured only in a reduced balanced synthetic design and is not
+guaranteed more generally. See
+<code><a href="../articles/scientific-limitations.html">vignette("scientific-limitations")</a></code> before reporting
+them.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

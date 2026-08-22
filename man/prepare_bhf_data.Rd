@@ -81,8 +81,8 @@ likelihood weights.}
 }
 \description{
 Transforms survey data into the format required by the BHF Stan model.
-This function handles index recoding, weight scaling, and computation
-of design effect estimates needed for de-attenuation.
+This function handles index recoding, weight scaling, and computation of
+Taylor-linearized domain sampling variances needed for de-attenuation.
 }
 \details{
 This function performs several critical transformations:
@@ -92,8 +92,9 @@ This function performs several critical transformations:
 integers starting from 1 (required by Stan).}
 \item{Weight Scaling}{Positive raw weights are retained and globally
 normalized once in R to have mean one.}
-\item{Sampling Variance Estimation}{For each domain, estimates the
-sampling variance of the proportion using the design effect.}
+\item{Sampling Variance Estimation}{For each domain, estimates the Taylor-
+linearized sampling variance of the proportion from the declared
+stratified PSU survey design and raw weights.}
 \item{PSU Structure}{Creates the nested PSU-within-stratum structure
 required by the Stan model.}
 }

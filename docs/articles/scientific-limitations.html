@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul>
@@ -92,8 +92,9 @@ it has not, and how to interpret its output. Read it before using
 <div class="section level2">
 <h2 id="what-has-been-verified">What has been verified<a class="anchor" aria-label="anchor" href="#what-has-been-verified"></a>
 </h2>
-<p>The implementation is checked against the model specified in Appendix
-A of the accompanying article (Lee &amp; Hooper, 2026).</p>
+<p>The implementation is checked against the article’s main-text
+equations and the Stan program in Appendix B (Lee &amp; Hooper,
+2026).</p>
 <table class="table">
 <colgroup>
 <col width="50%">
@@ -107,7 +108,8 @@ A of the accompanying article (Lee &amp; Hooper, 2026).</p>
 <tr class="odd">
 <td>Weighted pseudo-likelihood, crossed domain/stratum effects, nested
 PSUs</td>
-<td>line-level comparison with Appendix A; Stan contract tests</td>
+<td>line-level comparison with main-text equations and Appendix B; Stan
+contract tests</td>
 </tr>
 <tr class="even">
 <td>Population-weighted domain centering, within-stratum PSU
@@ -125,8 +127,8 @@ behaviour</td>
 </tr>
 <tr class="odd">
 <td>Package integrity</td>
-<td>
-<code>R CMD check</code> with no errors, warnings, or notes</td>
+<td>latest full source check: 0 errors, 0 warnings, 1
+<code>New submission</code> NOTE; tests passed</td>
 </tr>
 </tbody>
 </table>
@@ -140,19 +142,24 @@ the intervals around those quantities.</p>
 <div class="section level3">
 <h3 id="interval-calibration">Interval calibration<a class="anchor" aria-label="anchor" href="#interval-calibration"></a>
 </h3>
-<p><strong>Coverage has been measured for one design family. It is not
-established in general.</strong></p>
-<p>A simulation study of 400 fits under the design used in the
-accompanying article found central 90% intervals covering their targets
-at nominal rates for the primary estimands: pooled coverage 0.900, 95%
-cluster-bootstrap interval 0.871 to 0.928. Across all sixteen monitored
-quantities it was 0.892 (0.875 to 0.909). That study used a binary
-outcome, an intercept-only model, 20 domains, 8 strata, 3 PSUs per
-stratum, 960 observations, and weight informativeness of either zero or
-moderate.</p>
-<p><strong>This does not establish coverage for other designs.</strong>
-The fitted target is a survey-weighted pseudo-likelihood:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>L</mi><mtext mathvariant="normal">BPL</mtext></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi>𝒮</mi></mrow></munder><msubsup><mi>w</mi><mi>i</mi><mo>*</mo></msubsup><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><msub><mi>η</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log L_{\text{BPL}} = \sum_{i \in \mathcal{S}} w_i^* \log P(Y_i \mid \eta_i)</annotation></semantics></math></p>
+<p><strong>Coverage has been measured in a reduced article-aligned
+balanced synthetic outcome-replication design. It is not guaranteed in
+general or in every tested condition.</strong></p>
+<p>Across 400 confirmatory fits, pooled central 90% coverage for the
+four primary targets was 0.900, with a 95% cluster-bootstrap interval of
+0.871 to 0.928. The four fixed design cells were 0.930, 0.9175, 0.8925,
+and 0.860. The pooled mixture met the preregistered +/-5
+percentage-point tolerance around 0.90; this is a tolerance decision,
+not a claim of exact nominal coverage in each cell.</p>
+<p>The study used a binary outcome, an intercept-only model, 20 domains,
+8 strata, 3 PSUs per stratum, 960 observations, and an equal-weight grid
+crossing two bundled low/high variance profiles with two
+weight-informativeness settings. The article’s simulation retained a
+51-domain empirical survey skeleton and a wider scenario grid. This
+package study does not reproduce that design, an actual probability
+sample, or the restricted-data application.</p>
+<p>The fitted target is a survey-weighted pseudo-likelihood:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>L</mi><mtext mathvariant="normal">BPL</mtext></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>∈</mo><mi mathvariant="script">𝒮</mi></mrow></munder><msubsup><mi>w</mi><mi>i</mi><mo>*</mo></msubsup><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mo>∣</mo><msub><mi>η</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log L_{\text{BPL}} = \sum_{i \in \mathcal{S}} w_i^* \log P(Y_i \mid \eta_i)</annotation></semantics></math></p>
 <p>Weighting the log-likelihood changes the curvature of the target in a
 way that the posterior does not automatically account for, so credible
 intervals from an unadjusted pseudo-posterior are not guaranteed to
@@ -168,24 +175,30 @@ point estimates.</p>
 <div class="section level3">
 <h3 id="equivalence-and-small-effect-resolution">Equivalence and small-effect resolution<a class="anchor" aria-label="anchor" href="#equivalence-and-small-effect-resolution"></a>
 </h3>
-<p>Concluding that a domain gap is practically zero requires a posterior
-that is narrow relative to your equivalence margin. In internal testing,
-the posterior for the relative gap between Estimands A and B was often
-wider than a 5% margin when the design effects were large, so such
-conclusions were unavailable there. The estimates were not wrong; the
-design could not resolve differences that small.</p>
-<p>Doubling the number of observations did <strong>not</strong> help.
-The precision of the relative gap is governed by the number of domains,
-not by the number of observations within them: the gap is a ratio of
-between-domain variance components, and those are estimated from the
-spread across domains. Adding PSUs or observations sharpens each
-domain’s mean while leaving that spread just as hard to separate from
-noise.</p>
-<p><strong>Check the width of your posterior against your margin before
-concluding equivalence, and expect the number of domains — not the
-sample size — to be the binding constraint.</strong> A wide posterior
-inside a narrow margin is an inconclusive result, not evidence of
-equivalence.</p>
+<p>The equivalence-curve study is descriptive, not a causal
+decomposition of what controls resolution. Its arms were unpaired and
+changed multiple features. The doubled-domain arm also changed
+observations per cell and the population-share distribution, and the
+study did not measure a design-effect covariate.</p>
+<p>Doubling observations in the selected high-profile comparison reduced
+the stored signed relative-gap posterior SD from 0.04480 to 0.03383
+(ratio 0.755); the folded-SD ratio was 0.822. In the larger curve study,
+the median folded-SD ratio for the doubled-observation arm was 0.854.
+This is real shrinkage, though less than the simple
+independent-information benchmark; the equivalence pass rate did not
+improve in the unpaired selected cases.</p>
+<p>High-profile critical-gap roots required extrapolation outside
+observed support and are therefore unidentified. The low-profile root
+was model-sensitive, so no universal 1.5% threshold is claimed.
+Equal-bin curve averages describe the designed conditional curve, not
+the marginal declaration rate under the DGP.</p>
+<p><strong>Report the signed gap interval and, if using a binary
+equivalence rule, its margin and observed support.</strong> The
+A-versus-B gap is a standardization-sensitivity contrast: it measures
+sensitivity to retaining the fitted realized design composition and is
+not specific to informative sampling. The <code>gaps</code> element of
+<code><a href="../reference/variance_decomposition.html">variance_decomposition()</a></code> supplies the posterior gap
+summary.</p>
 </div>
 <div class="section level3">
 <h3 id="the-articles-application">The article’s application<a class="anchor" aria-label="anchor" href="#the-articles-application"></a>
@@ -205,7 +218,16 @@ and the bundled synthetic data are not a substitute.</p>
 supplied directly or estimated by Taylor linearization, the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><annotation encoding="application/x-tex">\hat V_s</annotation></semantics></math>
 are treated as known. Their estimation uncertainty is not propagated
-into the posterior for A*.</li>
+into the posterior for A*. A large zero-boundary mass indicates a
+boundary-dominated, nonregular diagnostic.</li>
+<li>
+<strong>A is a reference standardization.</strong> Setting fitted
+stratum and PSU effects to zero does not by itself define a causal or
+policy intervention.</li>
+<li>
+<strong>Latent ICC scope.</strong> Latent shares use pre-centering
+random-effect scale parameters, not empirical variances of realized
+centered effects.</li>
 <li>
 <strong>Pseudo log-likelihood is not ordinary
 log-likelihood.</strong> Aggregating the weighted pointwise
@@ -217,8 +239,8 @@ choice is explicit.</li>
 Covariates, non-binary outcomes, and further levels are not
 supported.</li>
 <li>
-<strong>No plotting API.</strong> Build graphics from the tidy
-extractor output.</li>
+<strong>Scope of the plots.</strong> The plotting helpers need
+<code>ggplot2</code>, a suggested dependency.</li>
 </ul>
 </div>
 <div class="section level2">

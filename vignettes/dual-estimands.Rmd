@@ -19,9 +19,9 @@ under `latent`; they are diagnostics, not aliases for A.
 
 | Quantity | Domain probability | Within component | Intended contrast |
 |---|---|---|---|
-| A | state-only predictor | Bernoulli | substantive domain distribution |
+| A | state-only predictor | Bernoulli | design-effect-zero reference standardization |
 | A* | same as A | same as A | A after fixed sampling-noise correction |
-| B | full state + stratum + nested-PSU predictor | Bernoulli + design mixture | realized design-composition distribution |
+| B | full state + stratum + nested-PSU predictor | Bernoulli + design mixture | realized-design-composition standardization |
 
 ## A
 
@@ -32,6 +32,10 @@ $$p^{A}_{sd}=\operatorname{logit}^{-1}(\alpha_d+u_{sd}).$$
 Population shares define the mean, between variance, within variance, total,
 and between proportion. The package never silently substitutes sample shares
 when exact supplied population shares are requested.
+
+A is a reference standardization under fitted stratum and PSU effects set to
+zero. It is not, without additional identification assumptions, a causal or
+policy intervention.
 
 ## A*
 
@@ -55,6 +59,10 @@ The mixture term is evaluated by weighted squared deviations, avoiding the
 cancellation-prone difference-of-moments form.
 
 ## Gaps and API
+
+The A-versus-B gap is sensitivity to whether the fitted realized design
+composition is retained. It can reflect fitted composition, nonlinearity,
+weighting, and model structure; it is not specific to informative sampling.
 
 ```{r api}
 vd <- variance_decomposition(fit)

@@ -12,6 +12,12 @@
 | `domain_estimates` | `(fit, estimand = c("A", "B"), prob = 0.95, type = NULL)` |
 | `overall_estimate` | `(fit, estimand = c("A", "B"), prob = 0.95)` |
 | `log_lik` | `(fit, kind = c("pseudo", "raw"), aggregate = c("observation", "psu", "stratum"))` |
+| `bhf_plot_variance` | `(x, components = c("between", "within", "total"), prob = 0.95)` |
+| `bhf_plot_icc` | `(x, prob = 0.95)` |
+| `bhf_plot_domains` | `(fit, estimand = c("A", "B"), prob = 0.95, n_domains = NULL)` |
+| `bhf_plot_shrinkage` | `(fit, estimand = c("A", "B"), prob = 0.95)` |
+| `bhf_astar_sensitivity` | `(fit, scale = c(0.5, 0.75, 1, 1.25, 1.5), prob = 0.95)` |
+| `bhf_plot_astar_sensitivity` | `(x, what = c("proportion", "between"))` |
 | `calc_eff_n` | `(weights)` |
 
 Function help pages are authoritative for argument-level details.
@@ -54,17 +60,53 @@ column names such as `q2.5` or `q97.5`.
 - `domain_estimates(type = "marginal")` errors; it is not B.
 - 0.3.0 result fields are not silently redefined.
 
-## Unsupported surfaces
+## Remaining unsupported surfaces
 
-There is no exported plotting method, reliability statistic, sandwich
-adjustment, ordinary LOO helper, or posterior-predictive-check helper.
-Use tidy outputs for local visualization without attributing a
-package-level plot API.
+There is no reliability statistic, sandwich adjustment, ordinary LOO
+helper, or posterior-predictive-check helper. The exported plot helpers
+below return `ggplot` objects when the suggested `ggplot2` package is
+installed.
+
+## Plots and diagnostics
+
+``` r
+
+# Probability-scale decomposition across A, A*, and B
+bhf_plot_variance(fit)
+
+# Latent shares formed from the pre-centering random-effect scale parameters
+bhf_plot_icc(fit)
+
+# Domain estimates, ordered, with intervals; n_domains keeps the extremes
+bhf_plot_domains(fit, estimand = "B", n_domains = 20)
+
+# Model-based estimate against the weighted raw proportion
+bhf_plot_shrinkage(fit)
+```
+
+All four need `ggplot2`, a suggested dependency. Each returns a `ggplot`
+object, so you can add layers or themes as usual.
+
+Estimand A\* subtracts a fixed sampling-variance correction and does not
+propagate the uncertainty in those variances. To see what that
+assumption is worth:
+
+``` r
+
+s <- bhf_astar_sensitivity(fit, scale = c(0.5, 0.75, 1, 1.25, 1.5))
+s
+bhf_plot_astar_sensitivity(s)
+```
+
+The `at zero` column is the posterior share of draws truncated at the
+zero boundary. A large share indicates a boundary-dominated, nonregular
+A\* summary; it does not make A\* mathematically undefined.
 
 ## Scope
 
 The API contracts and frozen-oracle tests pass within their scope: the
 functions return what they document, and the computed quantities match
-the article’s definitions. Interval calibration is a separate matter and
-has not been established — see
+the article’s definitions. Repeated-sample coverage has been measured
+only in a reduced balanced synthetic design and is not guaranteed more
+generally — see
 [`vignette("scientific-limitations")`](https://joonho112.github.io/bhfvar/articles/scientific-limitations.md).

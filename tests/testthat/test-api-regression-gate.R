@@ -91,7 +91,10 @@ test_that("namespace surface registers all current public methods", {
   exports <- c(
     "bhf_fit", "calc_eff_n", "compile_bhf_model", "domain_estimates",
     "get_stan_file_path", "log_lik", "overall_estimate",
-    "prepare_bhf_data", "variance_decomposition"
+    "prepare_bhf_data", "variance_decomposition",
+    "bhf_plot_variance", "bhf_plot_icc", "bhf_plot_domains",
+    "bhf_plot_shrinkage", "bhf_plot_astar_sensitivity",
+    "bhf_astar_sensitivity"
   )
   if (!file.exists(namespace_path)) {
     expect_setequal(getNamespaceExports("bhfvar"), exports)

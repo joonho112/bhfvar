@@ -45,18 +45,27 @@ The recommended workflow is:
 
 \section{What has and has not been established}{
 
-The implementation is verified against the model specified in Appendix A of
-the accompanying article: a frozen reference oracle, algebraic property
-tests, and centering-invariant tests all pass within their tested contracts.
+The implementation is verified against the main-text equations and the Stan
+program in Appendix B of the accompanying article: a frozen reference oracle,
+algebraic property tests, and centering-invariant tests all pass within their
+tested contracts.
 
-Interval calibration is a separate question. A simulation study of 400 fits
-under the article's design family found central 90\\% intervals covering at
-nominal rates for the primary estimands, but coverage is not established for
-other designs and no variance adjustment is implemented. The restricted-data
+Interval calibration is a separate question. In 400 fits from a reduced
+article-aligned balanced synthetic design, pooled primary 90\\% coverage was
+0.900 (95\\% cluster interval 0.871 to 0.928), while fixed-condition rates
+ranged from 0.860 to 0.930. This met a preregistered +/-5 percentage-point
+tolerance; it does not establish coverage for every condition or other
+designs. No variance adjustment is implemented. The restricted-data
 application reported in the article is not reproduced by this package.
 }
 
 \section{Interpretation boundary}{
+
+A is a design-effect-zero reference standardization, not a causal or policy
+intervention. The A-versus-B gap is a standardization-sensitivity contrast,
+not an informative-sampling-specific diagnostic. Latent ICCs use the
+pre-centering model scale parameters rather than empirical centered-effect
+variances.
 
 A* conditions on supplied or Taylor-estimated sampling variances; their
 estimation uncertainty is not propagated. Pseudo-posterior intervals and

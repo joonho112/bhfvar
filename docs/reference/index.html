@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul></li>
@@ -162,6 +162,66 @@
 
         </dt>
         <dd>Extract Raw or Pseudo Pointwise Log-Likelihood Contributions</dd>
+      </dl></div><div class="section level2">
+      <h2 id="plots">Plots<a class="anchor" aria-label="anchor" href="#plots"></a></h2>
+
+      <div class="section-desc"><p>Graphics for the recommended workflow (needs ggplot2)</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="bhf_plot_variance.html">bhf_plot_variance()</a></code>
+
+        </dt>
+        <dd>Plot the Probability-Scale Variance Decomposition</dd>
+
+        <dt>
+
+          <code><a href="bhf_plot_icc.html">bhf_plot_icc()</a></code>
+
+        </dt>
+        <dd>Plot Latent-Scale Intraclass Correlations</dd>
+
+        <dt>
+
+          <code><a href="bhf_plot_domains.html">bhf_plot_domains()</a></code>
+
+        </dt>
+        <dd>Plot Domain Estimates</dd>
+
+        <dt>
+
+          <code><a href="bhf_plot_shrinkage.html">bhf_plot_shrinkage()</a></code>
+
+        </dt>
+        <dd>Plot Shrinkage of Domain Estimates</dd>
+
+        <dt>
+
+          <code><a href="bhf_plot_astar_sensitivity.html">bhf_plot_astar_sensitivity()</a></code>
+
+        </dt>
+        <dd>Plot the A* Sampling-Variance Sensitivity</dd>
+      </dl></div><div class="section level2">
+      <h2 id="diagnostics">Diagnostics<a class="anchor" aria-label="anchor" href="#diagnostics"></a></h2>
+
+      <div class="section-desc"><p>Sensitivity of A* to its fixed inputs</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="bhf_astar_sensitivity.html">bhf_astar_sensitivity()</a></code>
+
+        </dt>
+        <dd>Sensitivity of Estimand A* to the Sampling Variances</dd>
       </dl></div><div class="section level2">
       <h2 id="utilities">Utilities<a class="anchor" aria-label="anchor" href="#utilities"></a></h2>
 

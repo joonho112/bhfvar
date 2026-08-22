@@ -1,6 +1,6 @@
 Package: bhfvar
 Title: Bayesian Hybrid Framework for Variance Decomposition in Complex Surveys
-Version: 0.5.1
+Version: 0.6.0
 Authors@R: 
     person("JoonHo", "Lee", email = "jlee296@ua.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0006-4019-8703"))
@@ -11,24 +11,26 @@ Description: Implements the Bayesian pseudo-likelihood framework for variance
     PSU effects carry the centering constraints given in the article. Estimands
     A, A*, and B are computed on the probability scale with explicit provenance
     and diagnostics. Posterior intervals are pseudo-posterior credible
-    intervals; their coverage has been measured for the article's design family
-    but is not guaranteed in general.
+    intervals. In a reduced balanced synthetic study, pooled primary 90 percent
+    coverage was 0.900 (cluster interval 0.871 to 0.928), but coverage is not
+    guaranteed for other designs or every tested condition.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Depends: 
     R (>= 4.0.0)
 Imports:
-    rstan (>= 2.26.0),
-    posterior (>= 1.0.0),
-    stats,
-    methods
-Suggests:
     digest,
+    methods,
+    posterior (>= 1.0.0),
+    rstan (>= 2.26.0),
+    stats,
+    survey
+Suggests:
+    ggplot2,
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown,
-    survey
+    rmarkdown
 LazyData: true
 VignetteBuilder: knitr
 Config/testthat/edition: 3

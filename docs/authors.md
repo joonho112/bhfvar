@@ -27,13 +27,13 @@ post-hoc domains.” *Mathematics*, **14**(3), 512.
     }
 
 Lee J (2026). *bhfvar: Bayesian Hybrid Framework for Variance
-Decomposition in Complex Surveys*. R package version 0.5.1,
+Decomposition in Complex Surveys*. R package version 0.6.0,
 <https://github.com/joonho112/bhfvar>.
 
     @Manual{,
       title = {bhfvar: Bayesian Hybrid Framework for Variance Decomposition in Complex Surveys},
       author = {JoonHo Lee},
       year = {2026},
-      note = {R package version 0.5.1},
+      note = {R package version 0.6.0},
       url = {https://github.com/joonho112/bhfvar},
     }

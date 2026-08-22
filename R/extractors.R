@@ -279,8 +279,9 @@
 #' @details Estimands A, A*, and B are probability-scale decompositions;
 #'   latent-scale SDs, variances, and ICCs are reported separately. A* treats
 #'   sampling variances as fixed inputs and does not propagate their estimation
-#'   uncertainty. Intervals are pseudo-posterior credible intervals; their
-#'   frequentist coverage has not been established.
+#'   uncertainty. Intervals are pseudo-posterior credible intervals. Repeated-
+#'   sample coverage has been measured only in a reduced balanced synthetic
+#'   design and is not guaranteed more generally.
 #' @export
 variance_decomposition <- function(fit, prob = 0.95, print = FALSE) {
   interval <- .bhf_interval_contract(prob)
@@ -608,10 +609,24 @@ overall_estimate <- function(fit, estimand = c("A", "B"), prob = 0.95) {
     )
   }
   summary <- as.list(.bhf_draw_summary(overall, interval, mean_field))
+  share_provenance <- fit$data$provenance$population_shares
+  if (!is.list(share_provenance)) {
+    .bhf_result_abort(
+      "bhf_fit_schema_error",
+      "The fit is missing population-share provenance."
+    )
+  }
+  population_shares <- list(
+    values = stats::setNames(
+      domain$shares, as.character(domain$mapping$label)
+    ),
+    provenance = share_provenance
+  )
   result <- c(
     list(
       schema_version = "0.5.0", estimand = estimand,
-      scale = "probability", interval = interval
+      scale = "probability", interval = interval,
+      population_shares = population_shares
     ),
     summary
   )

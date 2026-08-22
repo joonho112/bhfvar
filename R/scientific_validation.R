@@ -14,7 +14,7 @@
 #' Frozen Scientific Validation Plan
 #'
 #' Internal plan mirroring Gate G1. It is data/config only and launches no job.
-#' @keywords internal
+#' @noRd
 bhf_scientific_validation_plan <- function() {
   medium <- expand.grid(
     profile = c("low", "high"),
@@ -85,7 +85,7 @@ bhf_scientific_validation_plan <- function() {
 }
 
 #' Scientific Sensitivity Grid
-#' @keywords internal
+#' @noRd
 bhf_scientific_sensitivity_grid <- function() {
   data.frame(
     variant = c(
@@ -109,7 +109,7 @@ bhf_scientific_sensitivity_grid <- function() {
 }
 
 #' Materialize a Validation Job Without Sampling
-#' @keywords internal
+#' @noRd
 bhf_materialize_validation_job <- function(job, dgp, prior = "half_t3_2.5") {
   required <- c("job_id", "profile", "rho", "effect_seed", "outcome_seed")
   if (!is.list(job) || !all(required %in% names(job))) {
@@ -161,7 +161,7 @@ bhf_materialize_validation_job <- function(job, dgp, prior = "half_t3_2.5") {
 }
 
 #' Collect Frozen MCMC Diagnostics
-#' @keywords internal
+#' @noRd
 bhf_collect_validation_diagnostics <- function(fit, tier = c("tiny", "medium")) {
   tier <- match.arg(tier)
   if (!inherits(fit, "bhf_fit")) stop("fit must be a bhf_fit.", call. = FALSE)
@@ -194,7 +194,7 @@ bhf_collect_validation_diagnostics <- function(fit, tier = c("tiny", "medium")) 
 )
 
 #' Collect Scientific Target Draws
-#' @keywords internal
+#' @noRd
 bhf_collect_validation_targets <- function(fit) {
   if (!inherits(fit, "bhf_fit")) stop("fit must be a bhf_fit.", call. = FALSE)
   draws <- rstan::extract(
@@ -209,7 +209,7 @@ bhf_collect_validation_targets <- function(fit) {
 }
 
 #' Adjudicate Per-Fit Diagnostics Against Gate G1
-#' @keywords internal
+#' @noRd
 bhf_adjudicate_validation_diagnostics <- function(diagnostics,
                                                    tier = diagnostics$tier) {
   plan <- bhf_scientific_validation_plan()
@@ -247,7 +247,7 @@ bhf_adjudicate_validation_diagnostics <- function(diagnostics,
 }
 
 #' Check Whether a Validation Artifact Can Be Resumed
-#' @keywords internal
+#' @noRd
 bhf_validation_artifact_status <- function(path, config_hash,
                                            expected = list()) {
   if (!file.exists(path)) return(list(status = "missing", reusable = FALSE))

@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="news/index.html">Changelog</a></li>
   </ul>
@@ -84,7 +84,7 @@
 <div class="section level2">
 <h2 id="which-version-corresponds-to-the-article">Which version corresponds to the article?<a class="anchor" aria-label="anchor" href="#which-version-corresponds-to-the-article"></a>
 </h2>
-<p>The article cites <code>bhfvar</code> <strong>version 0.3.0</strong>. <strong>Version 0.5.0 is the version that implements the model given in Appendix A of the article.</strong></p>
+<p>The article cites <code>bhfvar</code> <strong>version 0.3.0</strong>. <strong>Version 0.5.0 is the version that implements the main-text equations and the Stan program in Appendix B of the article.</strong></p>
 <table class="table">
 <thead><tr>
 <th>Article component</th>
@@ -140,18 +140,18 @@
 <p>Three estimands are reported on the probability scale:</p>
 <ul>
 <li>
-<strong>A</strong> — the distribution induced by domain effects alone (policy estimand);</li>
+<strong>A</strong> — a design-effect-zero reference standardization based on <code>alpha + domain</code>; it is not by itself a causal or policy intervention;</li>
 <li>
-<strong>A*</strong> — A with a de-attenuation correction that removes estimated sampling variance from the between-domain component;</li>
+<strong>A*</strong> — an experimental fixed-input diagnostic that subtracts estimated domain sampling variance from A’s between-domain component;</li>
 <li>
-<strong>B</strong> — the distribution including each domain’s realized mixture of stratum and PSU design effects (descriptive estimand).</li>
+<strong>B</strong> — a standardization over each domain’s fitted, realized mixture of stratum and PSU effects.</li>
 </ul>
-<p>Latent-scale SDs and ICCs are reported separately.</p>
+<p>The A-versus-B gap is a standardization-sensitivity contrast; it is not specific to informative sampling. Latent-scale SDs and ICCs are model-scale diagnostics based on the pre-centering scale parameters and are reported separately.</p>
 </div>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
-<p>Posterior intervals are <strong>pseudo-posterior credible intervals</strong>. A simulation study of 400 fits found them covering at nominal rates under the article’s design family, but coverage is not established for other designs and a sandwich-type variance adjustment is not implemented in this version.</p>
+<p>Posterior intervals are <strong>pseudo-posterior credible intervals</strong>. In 400 fits from a reduced article-aligned balanced synthetic outcome-replication design, pooled primary 90% coverage was 0.900 with a 95% cluster-bootstrap interval of 0.871 to 0.928. The four fixed-condition rates ranged from 0.860 to 0.930. The pooled result met the preregistered ±5 percentage-point tolerance; it does not establish nominal coverage in every condition, for the article’s empirical design, or for other designs. A sandwich-type variance adjustment is not implemented in this version.</p>
 <p>A* conditions on the sampling variances as fixed and does not propagate their estimation uncertainty. The model is intercept-only with a binary outcome. The article’s restricted-data NSECE application is not reproduced by this package.</p>
 <p>See <code><a href="articles/scientific-limitations.html">vignette("scientific-limitations")</a></code> before using the package for substantive work.</p>
 </div>
@@ -234,7 +234,45 @@
 </tr>
 </tbody>
 </table>
-<p>There is no plotting API. Build graphics from the tidy extractor output.</p>
+<div class="section level3">
+<h3 id="plots-and-diagnostics">Plots and diagnostics<a class="anchor" aria-label="anchor" href="#plots-and-diagnostics"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Purpose</th>
+<th>Function</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Probability-scale decomposition across A, A*, B</td>
+<td><code><a href="reference/bhf_plot_variance.html">bhf_plot_variance()</a></code></td>
+</tr>
+<tr>
+<td>Latent scale-parameter shares</td>
+<td><code><a href="reference/bhf_plot_icc.html">bhf_plot_icc()</a></code></td>
+</tr>
+<tr>
+<td>Domain estimates with intervals</td>
+<td><code><a href="reference/bhf_plot_domains.html">bhf_plot_domains()</a></code></td>
+</tr>
+<tr>
+<td>Model-based versus weighted direct domain estimates</td>
+<td><code><a href="reference/bhf_plot_shrinkage.html">bhf_plot_shrinkage()</a></code></td>
+</tr>
+<tr>
+<td>Sensitivity of A* to the fixed sampling variances</td>
+<td>
+<code><a href="reference/bhf_astar_sensitivity.html">bhf_astar_sensitivity()</a></code>, <code><a href="reference/bhf_plot_astar_sensitivity.html">bhf_plot_astar_sensitivity()</a></code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Plotting needs <code>ggplot2</code>, a suggested dependency. Every extractor also returns tidy output if you would rather build the graphics yourself.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>

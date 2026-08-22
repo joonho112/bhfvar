@@ -128,8 +128,8 @@ scale_likelihood_weights <- function(raw_weights,
 #' Prepare Data for BHF Model
 #'
 #' Transforms survey data into the format required by the BHF Stan model.
-#' This function handles index recoding, weight scaling, and computation
-#' of design effect estimates needed for de-attenuation.
+#' This function handles index recoding, weight scaling, and computation of
+#' Taylor-linearized domain sampling variances needed for de-attenuation.
 #'
 #' @param data A data frame containing the survey data.
 #' @param outcome Character string. Name of the binary outcome variable (0/1).
@@ -180,8 +180,9 @@ scale_likelihood_weights <- function(raw_weights,
 #'     integers starting from 1 (required by Stan).}
 #'   \item{Weight Scaling}{Positive raw weights are retained and globally
 #'     normalized once in R to have mean one.}
-#'   \item{Sampling Variance Estimation}{For each domain, estimates the
-#'     sampling variance of the proportion using the design effect.}
+#'   \item{Sampling Variance Estimation}{For each domain, estimates the Taylor-
+#'     linearized sampling variance of the proportion from the declared
+#'     stratified PSU survey design and raw weights.}
 #'   \item{PSU Structure}{Creates the nested PSU-within-stratum structure
 #'     required by the Stan model.}
 #' }

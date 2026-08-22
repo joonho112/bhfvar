@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul>
@@ -132,6 +132,30 @@
 <td><code>(fit, kind = c("pseudo", "raw"), aggregate = c("observation", "psu", "stratum"))</code></td>
 </tr>
 <tr class="odd">
+<td><code>bhf_plot_variance</code></td>
+<td><code>(x, components = c("between", "within", "total"), prob = 0.95)</code></td>
+</tr>
+<tr class="even">
+<td><code>bhf_plot_icc</code></td>
+<td><code>(x, prob = 0.95)</code></td>
+</tr>
+<tr class="odd">
+<td><code>bhf_plot_domains</code></td>
+<td><code>(fit, estimand = c("A", "B"), prob = 0.95, n_domains = NULL)</code></td>
+</tr>
+<tr class="even">
+<td><code>bhf_plot_shrinkage</code></td>
+<td><code>(fit, estimand = c("A", "B"), prob = 0.95)</code></td>
+</tr>
+<tr class="odd">
+<td><code>bhf_astar_sensitivity</code></td>
+<td><code>(fit, scale = c(0.5, 0.75, 1, 1.25, 1.5), prob = 0.95)</code></td>
+</tr>
+<tr class="even">
+<td><code>bhf_plot_astar_sensitivity</code></td>
+<td><code>(x, what = c("proportion", "between"))</code></td>
+</tr>
+<tr class="odd">
 <td><code>calc_eff_n</code></td>
 <td><code>(weights)</code></td>
 </tr>
@@ -194,20 +218,51 @@ B.</li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="unsupported-surfaces">Unsupported surfaces<a class="anchor" aria-label="anchor" href="#unsupported-surfaces"></a>
+<h2 id="remaining-unsupported-surfaces">Remaining unsupported surfaces<a class="anchor" aria-label="anchor" href="#remaining-unsupported-surfaces"></a>
 </h2>
-<p>There is no exported plotting method, reliability statistic, sandwich
-adjustment, ordinary LOO helper, or posterior-predictive-check helper.
-Use tidy outputs for local visualization without attributing a
-package-level plot API.</p>
+<p>There is no reliability statistic, sandwich adjustment, ordinary LOO
+helper, or posterior-predictive-check helper. The exported plot helpers
+below return <code>ggplot</code> objects when the suggested
+<code>ggplot2</code> package is installed.</p>
+</div>
+<div class="section level2">
+<h2 id="plots-and-diagnostics">Plots and diagnostics<a class="anchor" aria-label="anchor" href="#plots-and-diagnostics"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Probability-scale decomposition across A, A*, and B</span></span>
+<span><span class="fu"><a href="../reference/bhf_plot_variance.html">bhf_plot_variance</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Latent shares formed from the pre-centering random-effect scale parameters</span></span>
+<span><span class="fu"><a href="../reference/bhf_plot_icc.html">bhf_plot_icc</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Domain estimates, ordered, with intervals; n_domains keeps the extremes</span></span>
+<span><span class="fu"><a href="../reference/bhf_plot_domains.html">bhf_plot_domains</a></span><span class="op">(</span><span class="va">fit</span>, estimand <span class="op">=</span> <span class="st">"B"</span>, n_domains <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Model-based estimate against the weighted raw proportion</span></span>
+<span><span class="fu"><a href="../reference/bhf_plot_shrinkage.html">bhf_plot_shrinkage</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+<p>All four need <code>ggplot2</code>, a suggested dependency. Each
+returns a <code>ggplot</code> object, so you can add layers or themes as
+usual.</p>
+<p>Estimand A* subtracts a fixed sampling-variance correction and does
+not propagate the uncertainty in those variances. To see what that
+assumption is worth:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bhf_astar_sensitivity.html">bhf_astar_sensitivity</a></span><span class="op">(</span><span class="va">fit</span>, scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1</span>, <span class="fl">1.25</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">s</span></span>
+<span><span class="fu"><a href="../reference/bhf_plot_astar_sensitivity.html">bhf_plot_astar_sensitivity</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>at zero</code> column is the posterior share of draws
+truncated at the zero boundary. A large share indicates a
+boundary-dominated, nonregular A* summary; it does not make A*
+mathematically undefined.</p>
 </div>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
 <p>The API contracts and frozen-oracle tests pass within their scope:
 the functions return what they document, and the computed quantities
-match the article’s definitions. Interval calibration is a separate
-matter and has not been established — see
+match the article’s definitions. Repeated-sample coverage has been
+measured only in a reduced balanced synthetic design and is not
+guaranteed more generally — see
 <code><a href="../articles/scientific-limitations.html">vignette("scientific-limitations")</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

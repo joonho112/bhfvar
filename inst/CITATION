@@ -22,6 +22,6 @@ bibentry(
   title    = "bhfvar: Bayesian Hybrid Framework for Variance Decomposition in Complex Surveys",
   author   = person(given = "JoonHo", family = "Lee"),
   year     = "2026",
-  note     = "R package version 0.5.1",
+  note     = "R package version 0.6.0",
   url      = "https://github.com/joonho112/bhfvar"
 )

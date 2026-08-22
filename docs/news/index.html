@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul></li>
@@ -56,13 +56,31 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.0" id="bhfvar-060">bhfvar 0.6.0<a class="anchor" aria-label="anchor" href="#bhfvar-060"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
+<ul><li>Added plotting helpers: <code><a href="../reference/bhf_plot_variance.html">bhf_plot_variance()</a></code> for the probability-scale decomposition across Estimands A, A*, and B; <code><a href="../reference/bhf_plot_icc.html">bhf_plot_icc()</a></code> for the latent-scale variance shares; <code><a href="../reference/bhf_plot_domains.html">bhf_plot_domains()</a></code> for domain estimates with intervals; and <code><a href="../reference/bhf_plot_shrinkage.html">bhf_plot_shrinkage()</a></code> for model-based versus weighted raw proportions. These cover the graphics the article’s recommended workflow asks for. They need <code>ggplot2</code>, which is a suggested dependency; without it they fail with a message pointing to the tidy extractor output.</li>
+<li>Added <code><a href="../reference/bhf_astar_sensitivity.html">bhf_astar_sensitivity()</a></code>, which recomputes Estimand A* with the supplied sampling variances multiplied by a range of factors, and <code><a href="../reference/bhf_plot_astar_sensitivity.html">bhf_plot_astar_sensitivity()</a></code> to draw the result. A* conditions on those variances as known (article Section 2.4); this shows what that assumption is worth without changing it. No refitting is involved.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-6-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-6-0"></a></h3>
+<ul><li>Replaced the earlier causal and threshold claims about A-versus-B equivalence. The study arms were unpaired and changed multiple design features; the high-profile critical gaps required extrapolation outside observed support. The public documentation now reports the observed curve and width patterns as descriptive, labels high-profile critical gaps unidentified, and does not claim that design-effect magnitude is the dominant cause or that a universal 1.5% threshold was established.</li>
+<li>Clarified that A is a design-effect-zero reference standardization, not a causal policy estimand, and that A-versus-B is a standardization-sensitivity contrast rather than an informative-sampling-specific diagnostic.</li>
+<li>Corrected the article cross-reference: the mathematical proofs are in Appendix A; the Stan program is in Appendix B.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="scope-0-6-0">Scope<a class="anchor" aria-label="anchor" href="#scope-0-6-0"></a></h3>
+<ul><li>No change to the model or to the estimand definitions.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.1" id="bhfvar-051">bhfvar 0.5.1<a class="anchor" aria-label="anchor" href="#bhfvar-051"></a></h2>
 <div class="section level3">
 <h3 id="documentation-0-5-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-5-1"></a></h3>
-<ul><li>Updated the scope and limitations documents to report a simulation study of 400 fits. Under the design family used in the accompanying article, central 90% intervals covered their targets at nominal rates for the primary estimands: pooled coverage 0.900, 95% cluster-bootstrap interval 0.871 to 0.928.</li>
+<ul><li>Updated the scope and limitations documents to report a simulation study of 400 fits. In a reduced article-aligned balanced synthetic design, pooled primary 90% coverage was 0.900 with a 95% cluster-bootstrap interval of 0.871 to 0.928. Fixed-condition rates ranged from 0.860 to 0.930. The pooled result met the preregistered +/-5 percentage-point tolerance; it did not establish nominal coverage in every condition or reproduce the article’s empirical design.</li>
 <li>The previous text described coverage as below nominal. That description came from a smaller study of 24 fits whose cases had been selected for extreme configurations, and whose significance test did not account for the correlation between quantities computed from the same fit. It was not supported.</li>
 <li>The limitations text now states the conditions under which coverage was measured, and continues to note that coverage is not established for other designs and that no variance adjustment is implemented.</li>
-<li>Sharpened the guidance on equivalence: the number of domains, not the number of observations, is the binding constraint on resolving small gaps.</li>
+<li>Earlier 0.5.1 wording named the number of domains as the binding equivalence constraint. The 0.6.0 record withdraws that unsupported causal attribution.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="scope-0-5-1">Scope<a class="anchor" aria-label="anchor" href="#scope-0-5-1"></a></h3>
@@ -74,7 +92,7 @@
 <p>This version changes the fitted model. Results are not comparable with those from version 0.3.0.</p>
 <div class="section level3">
 <h3 id="relationship-to-the-accompanying-article-0-5-0">Relationship to the accompanying article<a class="anchor" aria-label="anchor" href="#relationship-to-the-accompanying-article-0-5-0"></a></h3>
-<p>The accompanying article (Lee &amp; Hooper, 2026, <em>Mathematics</em> 14(3), 512, <a href="doi:10.3390/math14030512" class="uri">doi:10.3390/math14030512</a>) cites <code>bhfvar</code> version 0.3.0. Version 0.5.0 is the version that implements the model given in Appendix A of that article.</p>
+<p>The accompanying article (Lee &amp; Hooper, 2026, <em>Mathematics</em> 14(3), 512, <a href="doi:10.3390/math14030512" class="uri">doi:10.3390/math14030512</a>) cites <code>bhfvar</code> version 0.3.0. Version 0.5.0 is the version that implements the main-text equations and Stan program in Appendix B of that article.</p>
 <p>If you are following the article, use 0.5.0 or later. Version 0.3.0 remains available under the <code>v0.3.0</code> git tag for anyone who needs the exact code that existed when the article was published.</p>
 </div>
 <div class="section level3">
@@ -112,7 +130,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="scope-0-5-0">Scope<a class="anchor" aria-label="anchor" href="#scope-0-5-0"></a></h3>
-<p>Posterior intervals are pseudo-posterior credible intervals. Their frequentist coverage has not been established; see <code><a href="../articles/scientific-limitations.html">vignette("scientific-limitations")</a></code>. The article’s restricted-data application is not reproduced by this package.</p>
+<p>Posterior intervals are pseudo-posterior credible intervals. Their coverage has been measured only in a reduced balanced synthetic design and is not guaranteed more generally; see <code><a href="../articles/scientific-limitations.html">vignette("scientific-limitations")</a></code>. The article’s restricted-data application is not reproduced by this package.</p>
 </div>
 </div>
     <div class="section level2">

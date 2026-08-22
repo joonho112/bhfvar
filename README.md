@@ -13,7 +13,8 @@ hybrid framework of Lee & Hooper (2026).
 ## Which version corresponds to the article?
 
 The article cites `bhfvar` **version 0.3.0**. **Version 0.5.0 is the version
-that implements the model given in Appendix A of the article.**
+that implements the main-text equations and the Stan program in Appendix B of
+the article.**
 
 | Article component | 0.3.0 | 0.5.0 |
 |---|:-:|:-:|
@@ -45,20 +46,27 @@ scaled to mean one by default.
 
 Three estimands are reported on the probability scale:
 
-- **A** — the distribution induced by domain effects alone (policy estimand);
-- **A\*** — A with a de-attenuation correction that removes estimated sampling
-  variance from the between-domain component;
-- **B** — the distribution including each domain's realized mixture of stratum
-  and PSU design effects (descriptive estimand).
+- **A** — a design-effect-zero reference standardization based on
+  `alpha + domain`; it is not by itself a causal or policy intervention;
+- **A\*** — an experimental fixed-input diagnostic that subtracts estimated
+  domain sampling variance from A's between-domain component;
+- **B** — a standardization over each domain's fitted, realized mixture of
+  stratum and PSU effects.
 
-Latent-scale SDs and ICCs are reported separately.
+The A-versus-B gap is a standardization-sensitivity contrast; it is not specific
+to informative sampling. Latent-scale SDs and ICCs are model-scale diagnostics
+based on the pre-centering scale parameters and are reported separately.
 
 ## Scope
 
-Posterior intervals are **pseudo-posterior credible intervals**. A simulation
-study of 400 fits found them covering at nominal rates under the article's
-design family, but coverage is not established for other designs and a
-sandwich-type variance adjustment is not implemented in this version.
+Posterior intervals are **pseudo-posterior credible intervals**. In 400 fits
+from a reduced article-aligned balanced synthetic outcome-replication design,
+pooled primary 90% coverage was 0.900 with a 95% cluster-bootstrap interval of
+0.871 to 0.928. The four fixed-condition rates ranged from 0.860 to 0.930. The
+pooled result met the preregistered ±5 percentage-point tolerance; it does not
+establish nominal coverage in every condition, for the article's empirical
+design, or for other designs. A sandwich-type variance adjustment is not
+implemented in this version.
 
 A* conditions on the sampling variances as fixed and does not propagate their
 estimation uncertainty. The model is intercept-only with a binary outcome. The
@@ -122,7 +130,18 @@ variances alongside A*.
 | Extract | `variance_decomposition()`, `domain_estimates()`, `overall_estimate()`, `log_lik()` |
 | Utility | `calc_eff_n()` |
 
-There is no plotting API. Build graphics from the tidy extractor output.
+### Plots and diagnostics
+
+| Purpose | Function |
+|---|---|
+| Probability-scale decomposition across A, A\*, B | `bhf_plot_variance()` |
+| Latent scale-parameter shares | `bhf_plot_icc()` |
+| Domain estimates with intervals | `bhf_plot_domains()` |
+| Model-based versus weighted direct domain estimates | `bhf_plot_shrinkage()` |
+| Sensitivity of A\* to the fixed sampling variances | `bhf_astar_sensitivity()`, `bhf_plot_astar_sensitivity()` |
+
+Plotting needs `ggplot2`, a suggested dependency. Every extractor also returns
+tidy output if you would rather build the graphics yourself.
 
 ## Citation
 

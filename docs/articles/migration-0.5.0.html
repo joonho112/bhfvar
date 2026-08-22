@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul>
@@ -93,10 +93,10 @@ change<a class="anchor" aria-label="anchor" href="#read-this-first-your-code-wil
 <p>Version 0.5.0 keeps the same exported function names as 0.3.0.
 <strong>A script written for 0.3.0 will therefore run under 0.5.0
 without error — and return different numbers.</strong></p>
-<p>This is intentional. Version 0.5.0 fits the model given in Appendix A
-of the accompanying article; version 0.3.0 fitted a different model. The
-difference is not a bug fix in the numerical sense but a change in what
-is being estimated.</p>
+<p>This is intentional. Version 0.5.0 fits the main-text model and
+Appendix B Stan program of the accompanying article; version 0.3.0
+fitted a different model. The difference is not a bug fix in the
+numerical sense but a change in what is being estimated.</p>
 <p><strong>Do not compare results across the two versions.</strong> If
 you have published or circulated output from 0.3.0, re-run it under
 0.5.0 rather than assuming the values carry over.</p>
@@ -213,7 +213,7 @@ delete the calls — the checks still happen.</p>
 <span></span>
 <span><span class="co"># 0.5.0</span></span>
 <span><span class="fu"><a href="../reference/domain_estimates.html">domain_estimates</a></span><span class="op">(</span><span class="va">fit</span>, estimand <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span>   <span class="co"># replaces type = "conditional"</span></span>
-<span><span class="fu"><a href="../reference/domain_estimates.html">domain_estimates</a></span><span class="op">(</span><span class="va">fit</span>, estimand <span class="op">=</span> <span class="st">"B"</span><span class="op">)</span>   <span class="co"># the descriptive estimand</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/domain_estimates.html">domain_estimates</a></span><span class="op">(</span><span class="va">fit</span>, estimand <span class="op">=</span> <span class="st">"B"</span><span class="op">)</span>   <span class="co"># realized-design standardization</span></span></code></pre></div>
 <p><code>type = "conditional"</code> is deprecated and warns.
 <strong><code>type = "marginal"</code> now errors</strong> rather than
 being silently treated as B, because the 0.3.0 marginal quantity is not
@@ -271,15 +271,16 @@ fitting the older model.</p>
 <h2 id="which-version-does-the-article-cite">Which version does the article cite?<a class="anchor" aria-label="anchor" href="#which-version-does-the-article-cite"></a>
 </h2>
 <p>The accompanying article cites version 0.3.0. Version 0.5.0 is the
-version that implements the model in the article’s Appendix A. If you
-are following the article, use 0.5.0 or later. Version 0.3.0 remains
-available under the <code>v0.3.0</code> git tag.</p>
+version that implements the main-text equations and Appendix B Stan
+program. If you are following the article, use 0.5.0 or later. Version
+0.3.0 remains available under the <code>v0.3.0</code> git tag.</p>
 </div>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
-<p>Posterior intervals in 0.5.0 are pseudo-posterior credible intervals
-whose frequentist coverage has not been established. See
+<p>Posterior intervals in 0.5.0 are pseudo-posterior credible intervals.
+Coverage has been measured only in a reduced balanced synthetic design
+and is not guaranteed more generally. See
 <code><a href="../articles/scientific-limitations.html">vignette("scientific-limitations")</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

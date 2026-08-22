@@ -95,7 +95,9 @@ make_result_contract_fit <- function(enabled = TRUE) {
     original_row = c(2L, 4L, 5L, 8L, 9L, 10L),
     state_id = c(1L, 1L, 2L, 2L, 3L, 3L),
     stratum_id = c(1L, 1L, 1L, 2L, 2L, 2L),
-    psu_flat_id = c(1L, 1L, 2L, 3L, 4L, 4L)
+    psu_flat_id = c(1L, 1L, 2L, 3L, 4L, 4L),
+    y = c(0L, 1L, 0L, 1L, 1L, 1L),
+    raw_weight = c(1, 2, 1, 1, 2, 1)
   )
   data <- list(
     schema_version = "0.5.0",
@@ -109,6 +111,7 @@ make_result_contract_fit <- function(enabled = TRUE) {
       psu_flat_id = as.array(analysis_data$psu_flat_id),
       w_lik = as.array(c(0.5, 1.5, 0.75, 1.25, 0.8, 1.2)),
       w_state_pop_share = as.array(c(0.5, 0.3, 0.2)),
+      vhat_state = as.array(c(0.004, 0.005, 0.0075)),
       use_deattenuation = as.integer(enabled)
     ),
     mapping = list(
@@ -121,10 +124,24 @@ make_result_contract_fit <- function(enabled = TRUE) {
     ),
     analysis_data = analysis_data,
     domain_summary = data.frame(state_id = 1:3, n = c(2L, 2L, 2L)),
-    provenance = list(sampling_variances = list(
-      mode = if (enabled) "supplied" else "none",
-      fixed_input = enabled
-    ))
+    sampling_variance_info = list(
+      enabled = enabled,
+      provenance = list(
+        mode = if (enabled) "supplied" else "none",
+        fixed_input = enabled
+      )
+    ),
+    provenance = list(
+      population_shares = list(
+        source = "external_known",
+        values = stats::setNames(c(0.5, 0.3, 0.2), c("A", "B", "C")),
+        domain_labels = c("A", "B", "C")
+      ),
+      sampling_variances = list(
+        mode = if (enabled) "supplied" else "none",
+        fixed_input = enabled
+      )
+    )
   )
   class(data) <- c("bhf_data", "list")
   structure(

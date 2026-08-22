@@ -44,6 +44,28 @@ Functions for extracting and summarizing results
 - [`log_lik()`](https://joonho112.github.io/bhfvar/reference/log_lik.md)
   : Extract Raw or Pseudo Pointwise Log-Likelihood Contributions
 
+## Plots
+
+Graphics for the recommended workflow (needs ggplot2)
+
+- [`bhf_plot_variance()`](https://joonho112.github.io/bhfvar/reference/bhf_plot_variance.md)
+  : Plot the Probability-Scale Variance Decomposition
+- [`bhf_plot_icc()`](https://joonho112.github.io/bhfvar/reference/bhf_plot_icc.md)
+  : Plot Latent-Scale Intraclass Correlations
+- [`bhf_plot_domains()`](https://joonho112.github.io/bhfvar/reference/bhf_plot_domains.md)
+  : Plot Domain Estimates
+- [`bhf_plot_shrinkage()`](https://joonho112.github.io/bhfvar/reference/bhf_plot_shrinkage.md)
+  : Plot Shrinkage of Domain Estimates
+- [`bhf_plot_astar_sensitivity()`](https://joonho112.github.io/bhfvar/reference/bhf_plot_astar_sensitivity.md)
+  : Plot the A\* Sampling-Variance Sensitivity
+
+## Diagnostics
+
+Sensitivity of A\* to its fixed inputs
+
+- [`bhf_astar_sensitivity()`](https://joonho112.github.io/bhfvar/reference/bhf_astar_sensitivity.md)
+  : Sensitivity of Estimand A\* to the Sampling Variances
+
 ## Utilities
 
 Helper functions

@@ -79,7 +79,8 @@ Sampler diagnostics answer one question: did the sampler explore the posterior
 properly? They do not tell you whether the resulting intervals have the
 frequentist coverage you might expect.
 
-In internal testing, every fit passed the sampler diagnostics while interval
-coverage was still below nominal for several quantities. Sampler health is
-necessary but not sufficient. Treat clean diagnostics as a precondition for
-interpreting a fit, not as evidence about calibration.
+In the 400-fit reduced balanced synthetic study, sampler health and repeated-
+sample coverage were evaluated separately. Pooled primary 90% coverage was
+0.900, while the four fixed-condition rates ranged from 0.860 to 0.930. Sampler
+health is necessary but not sufficient: treat clean diagnostics as a
+precondition for interpreting a fit, not as evidence about calibration.

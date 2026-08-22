@@ -100,8 +100,9 @@ documented fixed-input limitation.
 ## Interpretation checkpoint
 
 A workflow that runs cleanly tells you the pipeline worked; it tells you
-nothing about interval calibration. The intervals returned here are
-pseudo-posterior credible intervals whose frequentist coverage has not
-been established. See
+nothing by itself about interval calibration. The intervals returned
+here are pseudo-posterior credible intervals. Repeated-sample coverage
+has been measured only in a reduced balanced synthetic design and is not
+guaranteed more generally. See
 [`vignette("scientific-limitations")`](https://joonho112.github.io/bhfvar/articles/scientific-limitations.md)
 before reporting them.

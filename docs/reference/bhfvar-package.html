@@ -11,7 +11,7 @@ probability-scale variance decompositions for post-hoc domains."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@ probability-scale variance decompositions for post-hoc domains."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul></li>
@@ -100,19 +100,27 @@ probability-scale variance decompositions for post-hoc domains.</p>
     <h2 id="what-has-and-has-not-been-established">What has and has not been established<a class="anchor" aria-label="anchor" href="#what-has-and-has-not-been-established"></a></h2>
 
 
-<p>The implementation is verified against the model specified in Appendix A of
-the accompanying article: a frozen reference oracle, algebraic property
-tests, and centering-invariant tests all pass within their tested contracts.</p>
-<p>Interval calibration is a separate question. A simulation study of 400 fits
-under the article's design family found central 90\<!-- % intervals covering at -->
-nominal rates for the primary estimands, but coverage is not established for
-other designs and no variance adjustment is implemented. The restricted-data
+<p>The implementation is verified against the main-text equations and the Stan
+program in Appendix B of the accompanying article: a frozen reference oracle,
+algebraic property tests, and centering-invariant tests all pass within their
+tested contracts.</p>
+<p>Interval calibration is a separate question. In 400 fits from a reduced
+article-aligned balanced synthetic design, pooled primary 90\<!-- % coverage was -->
+0.900 (95\<!-- % cluster interval 0.871 to 0.928), while fixed-condition rates -->
+ranged from 0.860 to 0.930. This met a preregistered +/-5 percentage-point
+tolerance; it does not establish coverage for every condition or other
+designs. No variance adjustment is implemented. The restricted-data
 application reported in the article is not reproduced by this package.</p>
     </div>
     <div class="section level2">
     <h2 id="interpretation-boundary">Interpretation boundary<a class="anchor" aria-label="anchor" href="#interpretation-boundary"></a></h2>
 
 
+<p>A is a design-effect-zero reference standardization, not a causal or policy
+intervention. The A-versus-B gap is a standardization-sensitivity contrast,
+not an informative-sampling-specific diagnostic. Latent ICCs use the
+pre-centering model scale parameters rather than empirical centered-effect
+variances.</p>
 <p>A* conditions on supplied or Taylor-estimated sampling variances; their
 estimation uncertainty is not propagated. Pseudo-posterior intervals and
 pseudo log likelihood do not automatically have ordinary posterior coverage

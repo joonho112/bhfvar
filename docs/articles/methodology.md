@@ -52,6 +52,11 @@ domain probabilities from observation-level predictors including stratum
 and nested PSU effects. Its within component is the sum of a Bernoulli
 component and a within-domain mixture component.
 
+A is therefore a design-effect-zero reference standardization, not a
+causal or policy intervention. The A-versus-B gap measures sensitivity
+to standardizing over the fitted realized design composition; it is not
+specific evidence of informative sampling.
+
 A\* keeps A’s mean and within component while applying
 
 ``` math
@@ -59,6 +64,11 @@ V_{B,A^*}=\max\left(0,V_{B,A}-\sum_s\pi_s\widehat V_s\right).
 ```
 
 Boundary and truncation flags are part of the output contract.
+
+The latent ICC quantities use the pre-centering random-effect scale
+parameters in the model variance formula. They are not empirical
+variances of the realized centered effects and do not by themselves
+select a random-effect structure.
 
 ## Sampling-variance provenance
 
@@ -81,13 +91,16 @@ establishes standard LOO/WAIC.
 
 The implementation matches the article’s specification: the model block,
 centering constraints, and generated quantities were checked line by
-line against Appendix A, and a frozen reference oracle computed
-independently in base R reproduces the Stan output.
+line against the main-text equations and Appendix B Stan program, and a
+frozen reference oracle computed independently in base R reproduces the
+Stan output.
 
-What this does not establish is the frequentist behaviour of the
-intervals. The fitted target is a survey-weighted pseudo-likelihood, and
-credible intervals from an unadjusted pseudo-posterior are not
-guaranteed to attain nominal coverage. An internal simulation study
-found coverage below nominal for several quantities, which is consistent
-with that theory. A sandwich-type adjustment is not implemented here.
-The article’s restricted-data application is not reproduced.
+What this does not establish is frequentist behaviour outside the tested
+scope. In a reduced article-aligned balanced synthetic design, pooled
+primary 90% coverage was 0.900 (95% cluster interval 0.871 to 0.928),
+with fixed-condition rates from 0.860 to 0.930. The pooled result met a
+preregistered +/-5 percentage-point tolerance; it was not evidence of
+nominal coverage in every condition, of full posterior calibration, or
+of the article’s empirical design. A sandwich-type adjustment is not
+implemented here. The article’s restricted-data application is not
+reproduced.

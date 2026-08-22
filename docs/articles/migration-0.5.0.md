@@ -6,10 +6,10 @@ Version 0.5.0 keeps the same exported function names as 0.3.0. **A
 script written for 0.3.0 will therefore run under 0.5.0 without error —
 and return different numbers.**
 
-This is intentional. Version 0.5.0 fits the model given in Appendix A of
-the accompanying article; version 0.3.0 fitted a different model. The
-difference is not a bug fix in the numerical sense but a change in what
-is being estimated.
+This is intentional. Version 0.5.0 fits the main-text model and Appendix
+B Stan program of the accompanying article; version 0.3.0 fitted a
+different model. The difference is not a bug fix in the numerical sense
+but a change in what is being estimated.
 
 **Do not compare results across the two versions.** If you have
 published or circulated output from 0.3.0, re-run it under 0.5.0 rather
@@ -66,7 +66,7 @@ domain_estimates(fit, type = "marginal")
 
 # 0.5.0
 domain_estimates(fit, estimand = "A")   # replaces type = "conditional"
-domain_estimates(fit, estimand = "B")   # the descriptive estimand
+domain_estimates(fit, estimand = "B")   # realized-design standardization
 ```
 
 `type = "conditional"` is deprecated and warns. **`type = "marginal"`
@@ -129,12 +129,13 @@ older model.
 ## Which version does the article cite?
 
 The accompanying article cites version 0.3.0. Version 0.5.0 is the
-version that implements the model in the article’s Appendix A. If you
-are following the article, use 0.5.0 or later. Version 0.3.0 remains
-available under the `v0.3.0` git tag.
+version that implements the main-text equations and Appendix B Stan
+program. If you are following the article, use 0.5.0 or later. Version
+0.3.0 remains available under the `v0.3.0` git tag.
 
 ## Scope
 
-Posterior intervals in 0.5.0 are pseudo-posterior credible intervals
-whose frequentist coverage has not been established. See
+Posterior intervals in 0.5.0 are pseudo-posterior credible intervals.
+Coverage has been measured only in a reduced balanced synthetic design
+and is not guaranteed more generally. See
 [`vignette("scientific-limitations")`](https://joonho112.github.io/bhfvar/articles/scientific-limitations.md).

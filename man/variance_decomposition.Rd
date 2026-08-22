@@ -26,6 +26,7 @@ A*, and B. No legacy 0.3.0 quantity is silently reinterpreted.
 Estimands A, A*, and B are probability-scale decompositions;
 latent-scale SDs, variances, and ICCs are reported separately. A* treats
 sampling variances as fixed inputs and does not propagate their estimation
-uncertainty. Intervals are pseudo-posterior credible intervals; their
-frequentist coverage has not been established.
+uncertainty. Intervals are pseudo-posterior credible intervals. Repeated-
+sample coverage has been measured only in a reduced balanced synthetic
+design and is not guaranteed more generally.
 }

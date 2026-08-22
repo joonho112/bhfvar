@@ -129,13 +129,18 @@ test_that("overall estimates verify population-share reconstruction", {
   expect_s3_class(a, "bhf_overall_estimate")
   expect_named(
     a,
-    c("schema_version", "estimand", "scale", "interval", "mean", "sd",
-      "lower", "median", "upper", "prob")
+    c("schema_version", "estimand", "scale", "interval",
+      "population_shares", "mean", "sd", "lower", "median", "upper",
+      "prob")
   )
   expect_equal(a$mean, mean(fit$.draws$p_bar_A))
   expect_equal(b$mean, mean(fit$.draws$p_bar_B))
   expect_identical(a$estimand, "A")
   expect_identical(b$estimand, "B")
+  expect_equal(a$population_shares$values, c(A = 0.5, B = 0.3, C = 0.2))
+  expect_identical(
+    a$population_shares$provenance$source, "external_known"
+  )
 
   broken <- fit
   broken$.draws$p_bar_B <- broken$.draws$p_bar_B + 0.01

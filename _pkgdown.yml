@@ -99,6 +99,18 @@ reference:
       - domain_estimates
       - overall_estimate
       - log_lik
+  - title: Plots
+    desc: Graphics for the recommended workflow (needs ggplot2)
+    contents:
+      - bhf_plot_variance
+      - bhf_plot_icc
+      - bhf_plot_domains
+      - bhf_plot_shrinkage
+      - bhf_plot_astar_sensitivity
+  - title: Diagnostics
+    desc: Sensitivity of A* to its fixed inputs
+    contents:
+      - bhf_astar_sensitivity
   - title: Utilities
     desc: Helper functions
     contents:
@@ -110,7 +122,7 @@ reference:
 
 news:
   releases:
-    - text: "Version 0.5.1"
+    - text: "Version 0.6.0"
       href: news/index.html
 
 footer:

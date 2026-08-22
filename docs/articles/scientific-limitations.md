@@ -6,16 +6,16 @@ for substantive work.
 
 ## What has been verified
 
-The implementation is checked against the model specified in Appendix A
-of the accompanying article (Lee & Hooper, 2026).
+The implementation is checked against the article’s main-text equations
+and the Stan program in Appendix B (Lee & Hooper, 2026).
 
 | Component | Evidence |
 |----|----|
-| Weighted pseudo-likelihood, crossed domain/stratum effects, nested PSUs | line-level comparison with Appendix A; Stan contract tests |
+| Weighted pseudo-likelihood, crossed domain/stratum effects, nested PSUs | line-level comparison with main-text equations and Appendix B; Stan contract tests |
 | Population-weighted domain centering, within-stratum PSU centering | invariant tests to numerical tolerance |
 | Estimands A, A\*, B on the probability scale | frozen reference oracle computed independently in base R |
 | Variance decomposition identities, gap definitions, boundary behaviour | algebraic property tests |
-| Package integrity | `R CMD check` with no errors, warnings, or notes |
+| Package integrity | latest full source check: 0 errors, 0 warnings, 1 `New submission` NOTE; tests passed |
 
 These checks establish that the code computes the quantities the article
 defines. They say nothing about the statistical properties of the
@@ -25,20 +25,26 @@ intervals around those quantities.
 
 ### Interval calibration
 
-**Coverage has been measured for one design family. It is not
-established in general.**
+**Coverage has been measured in a reduced article-aligned balanced
+synthetic outcome-replication design. It is not guaranteed in general or
+in every tested condition.**
 
-A simulation study of 400 fits under the design used in the accompanying
-article found central 90% intervals covering their targets at nominal
-rates for the primary estimands: pooled coverage 0.900, 95%
-cluster-bootstrap interval 0.871 to 0.928. Across all sixteen monitored
-quantities it was 0.892 (0.875 to 0.909). That study used a binary
-outcome, an intercept-only model, 20 domains, 8 strata, 3 PSUs per
-stratum, 960 observations, and weight informativeness of either zero or
-moderate.
+Across 400 confirmatory fits, pooled central 90% coverage for the four
+primary targets was 0.900, with a 95% cluster-bootstrap interval of
+0.871 to 0.928. The four fixed design cells were 0.930, 0.9175, 0.8925,
+and 0.860. The pooled mixture met the preregistered +/-5
+percentage-point tolerance around 0.90; this is a tolerance decision,
+not a claim of exact nominal coverage in each cell.
 
-**This does not establish coverage for other designs.** The fitted
-target is a survey-weighted pseudo-likelihood:
+The study used a binary outcome, an intercept-only model, 20 domains, 8
+strata, 3 PSUs per stratum, 960 observations, and an equal-weight grid
+crossing two bundled low/high variance profiles with two
+weight-informativeness settings. The article’s simulation retained a
+51-domain empirical survey skeleton and a wider scenario grid. This
+package study does not reproduce that design, an actual probability
+sample, or the restricted-data application.
+
+The fitted target is a survey-weighted pseudo-likelihood:
 
 ``` math
 \log L_{\text{BPL}} = \sum_{i \in \mathcal{S}} w_i^* \log P(Y_i \mid \eta_i)
@@ -58,24 +64,33 @@ apply replication-based variance estimation to the point estimates.
 
 ### Equivalence and small-effect resolution
 
-Concluding that a domain gap is practically zero requires a posterior
-that is narrow relative to your equivalence margin. In internal testing,
-the posterior for the relative gap between Estimands A and B was often
-wider than a 5% margin when the design effects were large, so such
-conclusions were unavailable there. The estimates were not wrong; the
-design could not resolve differences that small.
+The equivalence-curve study is descriptive, not a causal decomposition
+of what controls resolution. Its arms were unpaired and changed multiple
+features. The doubled-domain arm also changed observations per cell and
+the population-share distribution, and the study did not measure a
+design-effect covariate.
 
-Doubling the number of observations did **not** help. The precision of
-the relative gap is governed by the number of domains, not by the number
-of observations within them: the gap is a ratio of between-domain
-variance components, and those are estimated from the spread across
-domains. Adding PSUs or observations sharpens each domain’s mean while
-leaving that spread just as hard to separate from noise.
+Doubling observations in the selected high-profile comparison reduced
+the stored signed relative-gap posterior SD from 0.04480 to 0.03383
+(ratio 0.755); the folded-SD ratio was 0.822. In the larger curve study,
+the median folded-SD ratio for the doubled-observation arm was 0.854.
+This is real shrinkage, though less than the simple
+independent-information benchmark; the equivalence pass rate did not
+improve in the unpaired selected cases.
 
-**Check the width of your posterior against your margin before
-concluding equivalence, and expect the number of domains — not the
-sample size — to be the binding constraint.** A wide posterior inside a
-narrow margin is an inconclusive result, not evidence of equivalence.
+High-profile critical-gap roots required extrapolation outside observed
+support and are therefore unidentified. The low-profile root was
+model-sensitive, so no universal 1.5% threshold is claimed. Equal-bin
+curve averages describe the designed conditional curve, not the marginal
+declaration rate under the DGP.
+
+**Report the signed gap interval and, if using a binary equivalence
+rule, its margin and observed support.** The A-versus-B gap is a
+standardization-sensitivity contrast: it measures sensitivity to
+retaining the fitted realized design composition and is not specific to
+informative sampling. The `gaps` element of
+[`variance_decomposition()`](https://joonho112.github.io/bhfvar/reference/variance_decomposition.md)
+supplies the posterior gap summary.
 
 ### The article’s application
 
@@ -89,7 +104,14 @@ synthetic data are not a substitute.
 - **A\* conditions on fixed sampling variances.** Whether supplied
   directly or estimated by Taylor linearization, the $`\hat V_s`$ are
   treated as known. Their estimation uncertainty is not propagated into
-  the posterior for A\*.
+  the posterior for A\*. A large zero-boundary mass indicates a
+  boundary-dominated, nonregular diagnostic.
+- **A is a reference standardization.** Setting fitted stratum and PSU
+  effects to zero does not by itself define a causal or policy
+  intervention.
+- **Latent ICC scope.** Latent shares use pre-centering random-effect
+  scale parameters, not empirical variances of realized centered
+  effects.
 - **Pseudo log-likelihood is not ordinary log-likelihood.** Aggregating
   the weighted pointwise contributions does not establish ordinary
   observation- or cluster-level LOO/WAIC validity.
@@ -97,7 +119,8 @@ synthetic data are not a substitute.
   exposes both variants so the choice is explicit.
 - **Scope.** Intercept-only model, binary outcome. Covariates,
   non-binary outcomes, and further levels are not supported.
-- **No plotting API.** Build graphics from the tidy extractor output.
+- **Scope of the plots.** The plotting helpers need `ggplot2`, a
+  suggested dependency.
 
 ## Why clean diagnostics are not enough
 

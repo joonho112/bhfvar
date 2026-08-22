@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul>
@@ -111,7 +111,7 @@ diagnostics, not aliases for A.</p>
 <td>A</td>
 <td>state-only predictor</td>
 <td>Bernoulli</td>
-<td>substantive domain distribution</td>
+<td>design-effect-zero reference standardization</td>
 </tr>
 <tr class="even">
 <td>A*</td>
@@ -123,7 +123,7 @@ diagnostics, not aliases for A.</p>
 <td>B</td>
 <td>full state + stratum + nested-PSU predictor</td>
 <td>Bernoulli + design mixture</td>
-<td>realized design-composition distribution</td>
+<td>realized-design-composition standardization</td>
 </tr>
 </tbody>
 </table>
@@ -137,6 +137,9 @@ diagnostics, not aliases for A.</p>
 <p>Population shares define the mean, between variance, within variance,
 total, and between proportion. The package never silently substitutes
 sample shares when exact supplied population shares are requested.</p>
+<p>A is a reference standardization under fitted stratum and PSU effects
+set to zero. It is not, without additional identification assumptions, a
+causal or policy intervention.</p>
 </div>
 <div class="section level2">
 <h2 id="a-1">A*<a class="anchor" aria-label="anchor" href="#a-1"></a>
@@ -166,6 +169,10 @@ avoiding the cancellation-prone difference-of-moments form.</p>
 <div class="section level2">
 <h2 id="gaps-and-api">Gaps and API<a class="anchor" aria-label="anchor" href="#gaps-and-api"></a>
 </h2>
+<p>The A-versus-B gap is sensitivity to whether the fitted realized
+design composition is retained. It can reflect fitted composition,
+nonlinearity, weighting, and model structure; it is not specific to
+informative sampling.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/variance_decomposition.html">variance_decomposition</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="va">vd</span><span class="op">$</span><span class="va">A</span><span class="op">$</span><span class="va">summary</span></span>

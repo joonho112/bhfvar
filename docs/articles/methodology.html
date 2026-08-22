@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bhfvar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
 <li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
-    <li><a class="dropdown-item" href="../news/index.html">Version 0.5.1</a></li>
+    <li><a class="dropdown-item" href="../news/index.html">Version 0.6.0</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../news/index.html">Changelog</a></li>
   </ul>
@@ -149,11 +149,19 @@ when defined. A uses
 B instead obtains domain probabilities from observation-level predictors
 including stratum and nested PSU effects. Its within component is the
 sum of a Bernoulli component and a within-domain mixture component.</p>
+<p>A is therefore a design-effect-zero reference standardization, not a
+causal or policy intervention. The A-versus-B gap measures sensitivity
+to standardizing over the fitted realized design composition; it is not
+specific evidence of informative sampling.</p>
 <p>A* keeps A’s mean and within component while applying</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mrow><mi>B</mi><mo>,</mo><msup><mi>A</mi><mo>*</mo></msup></mrow></msub><mo>=</mo><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mi>V</mi><mrow><mi>B</mi><mo>,</mo><mi>A</mi></mrow></msub><mo>−</mo><munder><mo>∑</mo><mi>s</mi></munder><msub><mi>π</mi><mi>s</mi></msub><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 V_{B,A^*}=\max\left(0,V_{B,A}-\sum_s\pi_s\widehat V_s\right).
 </annotation></semantics></math></p>
 <p>Boundary and truncation flags are part of the output contract.</p>
+<p>The latent ICC quantities use the pre-centering random-effect scale
+parameters in the model variance formula. They are not empirical
+variances of the realized centered effects and do not by themselves
+select a random-effect structure.</p>
 </div>
 <div class="section level2">
 <h2 id="sampling-variance-provenance">Sampling-variance provenance<a class="anchor" aria-label="anchor" href="#sampling-variance-provenance"></a>
@@ -180,15 +188,18 @@ operation establishes standard LOO/WAIC.</p>
 </h2>
 <p>The implementation matches the article’s specification: the model
 block, centering constraints, and generated quantities were checked line
-by line against Appendix A, and a frozen reference oracle computed
-independently in base R reproduces the Stan output.</p>
-<p>What this does not establish is the frequentist behaviour of the
-intervals. The fitted target is a survey-weighted pseudo-likelihood, and
-credible intervals from an unadjusted pseudo-posterior are not
-guaranteed to attain nominal coverage. An internal simulation study
-found coverage below nominal for several quantities, which is consistent
-with that theory. A sandwich-type adjustment is not implemented here.
-The article’s restricted-data application is not reproduced.</p>
+by line against the main-text equations and Appendix B Stan program, and
+a frozen reference oracle computed independently in base R reproduces
+the Stan output.</p>
+<p>What this does not establish is frequentist behaviour outside the
+tested scope. In a reduced article-aligned balanced synthetic design,
+pooled primary 90% coverage was 0.900 (95% cluster interval 0.871 to
+0.928), with fixed-condition rates from 0.860 to 0.930. The pooled
+result met a preregistered +/-5 percentage-point tolerance; it was not
+evidence of nominal coverage in every condition, of full posterior
+calibration, or of the article’s empirical design. A sandwich-type
+adjustment is not implemented here. The article’s restricted-data
+application is not reproduced.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

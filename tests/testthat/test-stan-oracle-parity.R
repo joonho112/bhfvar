@@ -45,7 +45,7 @@ test_that("native parity tier is pinned to the frozen oracle artifacts", {
 
 test_that("Stan generated quantities match the frozen independent oracle", {
   if (!.bhf_run_stan_parity()) {
-    succeed("Set BHFVAR_RUN_STAN_PARITY=true for the native parity tier")
+    skip("Set BHFVAR_RUN_STAN_PARITY=true for the native parity tier")
   } else {
     skip_if_not_installed("rstan")
 

@@ -2,7 +2,7 @@
 
 Transforms survey data into the format required by the BHF Stan model.
 This function handles index recoding, weight scaling, and computation of
-design effect estimates needed for de-attenuation.
+Taylor-linearized domain sampling variances needed for de-attenuation.
 
 ## Usage
 
@@ -156,8 +156,9 @@ This function performs several critical transformations:
 
 - Sampling Variance Estimation:
 
-  For each domain, estimates the sampling variance of the proportion
-  using the design effect.
+  For each domain, estimates the Taylor- linearized sampling variance of
+  the proportion from the declared stratified PSU survey design and raw
+  weights.
 
 - PSU Structure:
 

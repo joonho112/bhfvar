@@ -30,10 +30,10 @@ resulting intervals have been established — see `SCIENTIFIC-LIMITATIONS.md`.
 | Estimand A, probability scale | Eq. (20) | verified | `p_state_A`, A decomposition | oracle parity, property tests |
 | Estimand A* de-attenuation | Eq. (19) | verified | `var_between_A_star`, floored at zero | de-attenuation tests |
 | Estimand B, realized design mixture | Eq. (21) | verified | `p_state_B` via weighted individual probabilities | B oracle parity |
-| B binomial and mixture components | Appendix A | verified | `within_binomial_state_B`, `within_mixture_state_B` | generated-quantity tests |
+| B binomial and mixture components | Appendix B | verified | `within_binomial_state_B`, `within_mixture_state_B` | generated-quantity tests |
 | Signed diagnostic gaps | §4 | verified | `gap_B_minus_A_*`, `gap_A_minus_A_star_*` | property tests |
 | Latent-scale SDs and ICCs | §3 | verified | latent generated quantities | `test-stan-core.R` |
-| Finite-population domain dispersion | Appendix A | verified | `sd_state_*` quantities | oracle parity |
+| Finite-population domain dispersion | Appendix B | verified | `sd_state_*` quantities | oracle parity |
 | Sampling variance $\hat V_s$ | §2.4 | verified | Taylor and supplied adapters | Taylor oracle tests |
 | Pointwise log-likelihood | — | verified | `log_lik_raw`, `log_lik_pseudo` | result contract tests |
 
@@ -41,13 +41,13 @@ resulting intervals have been established — see `SCIENTIFIC-LIMITATIONS.md`.
 
 | Component | Status | Note |
 |---|---|---|
-| Interval calibration, in general | **not established** | Measured at nominal for one design family; see `SCIENTIFIC-LIMITATIONS.md` |
+| Interval calibration, in general | **not established** | Pooled primary coverage 0.900 (0.871–0.928) in one reduced balanced synthetic design; fixed-cell range 0.860–0.930; see `SCIENTIFIC-LIMITATIONS.md` |
 | Sandwich / design-effect variance adjustment | not implemented | Planned |
 | $\hat V_s$ uncertainty propagation into A* | not implemented | A* conditions on fixed $\hat V_s$ |
 | Ordinary LOO/WAIC validity | not established | Pseudo-likelihood aggregation |
 | Restricted-data NSECE application | not reproduced | Requires Level 1 files |
 | Covariates, non-binary outcomes | unsupported | Intercept-only binary model |
-| Plotting API | unsupported | Build from tidy extractor output |
+| Plotting API | supported | `bhf_plot_*()`; needs `ggplot2` (Suggests) |
 
 ## Reference
 
